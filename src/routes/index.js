@@ -4,11 +4,12 @@ import Product from '~/pages/Product';
 import News from '~/pages/News'; 
 import Cart from '~/pages/Cart'; 
 import Profile from '~/pages/Profile'; 
+import Login from '~/pages/Login'; 
 
 const publicRoutes = [ 
     { 
         path: '/', 
-        component: Home 
+        component: Home, 
     },
     {
         path: '/product',
@@ -25,6 +26,11 @@ const publicRoutes = [
     { 
         path: '/profile', 
         component: Profile, 
+    },
+    { 
+        path: '/login', 
+        component: Login,
+        layout: null
     }, 
 ] 
 
