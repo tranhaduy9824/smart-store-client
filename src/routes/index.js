@@ -5,6 +5,7 @@ import News from '~/pages/News';
 import Cart from '~/pages/Cart'; 
 import Profile from '~/pages/Profile'; 
 import Login from '~/pages/Login'; 
+import Signup from '~/pages/Signup'; 
 
 const publicRoutes = [ 
     { 
@@ -30,6 +31,11 @@ const publicRoutes = [
     { 
         path: '/login', 
         component: Login,
+        layout: null
+    }, 
+    { 
+        path: '/signup', 
+        component: Signup,
         layout: null
     }, 
 ] 

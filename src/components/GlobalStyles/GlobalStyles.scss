@@ -5,7 +5,56 @@
     --primary: #5935b3;
     --black: #000;
     --white: #ffffff;
-    --border-radius: 20px
+    --border-radius: 20px;
+
+    --slide-in-from-left: slideInFromLeft;
+    --slide-in-from-right: slideInFromRight;
+    --slide-out-to-right: slideOutToRight;
+    --slide-out-to-left: slideOutToLeft;
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translate(-200%, -50%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translate(100%, -50%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutToRight {
+    from {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+    to {
+        transform: translate(100%, -50%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideOutToLeft {
+    from {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+    to {
+        transform: translate(-200%, -50%);
+        opacity: 0;
+    }
 }
 
 * {

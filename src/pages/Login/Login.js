@@ -8,6 +8,7 @@ import BoxInput from '~/components/BoxInput';
 import Button from '~/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
+import WrapperNullLayout from '../Components/WrapperNullLayout';
 
 const cx = classNames.bind(styles);
 
@@ -38,15 +39,13 @@ function Login() {
             refContainer.current.classList.add(cx('slide-out'));
             setTimeout(() => {
                 navigate('/signup');
-            }, 2000);
+            }, 400);
         }
     };
 
     return (
-        <div className={cx('wrapper')}>
-            <div className={cx('circle1')}></div>
-            <div className={cx('circle2')}></div>
-            <div ref={refContainer} className={cx('container')}>
+        <WrapperNullLayout>
+            <div ref={refContainer} className={cx('wrapper')}>
                 <div className={cx('box-content')}>
                     <div className={cx('background-login')}>
                         <img src={images.login_image} alt="Background login" />
@@ -101,7 +100,7 @@ function Login() {
                     </div>
                 </div>
             </div>
-        </div>
+        </WrapperNullLayout>
     );
 }
 
