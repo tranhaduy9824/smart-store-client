@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import classNames from 'classnames/bind';
 import styles from './Signup.module.scss';
 
@@ -15,11 +16,33 @@ function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
     const refContainer = useRef();
     const navigate = useNavigate(null);
 
-    const handleSignUp = () => {};
+    const handleSignUp = async () => {
+        if (password !== confirmPassword) {
+            alert('Passwords do not match');
+            return;
+        }
+
+        const userData = {
+            fullname,
+            email,
+            password
+        };
+
+        try {
+            await axios.post('/users/signup', userData);
+            alert('Signup successful!');
+            navigate('/login');
+        } catch (error) {
+            if (error.response && error.response.status === 409) {
+                alert('Mail exists');
+            } else {
+                alert('Signup failed: ' + error.message);    
+            } 
+        }
+    };
 
     useEffect(() => {
         if (refContainer.current) {
@@ -73,7 +96,7 @@ function Signup() {
                             <BoxInput
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                label="Password"
+                                label="Confirm Password"
                                 className={cx('input')}
                                 isPassword
                             />
