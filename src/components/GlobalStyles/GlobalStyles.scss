@@ -6,11 +6,15 @@
     --black: #000;
     --white: #ffffff;
     --border-radius: 20px;
+    --background: #333;
+    --color-times: #fbef41;
 
     --slide-in-from-left: slideInFromLeft;
     --slide-in-from-right: slideInFromRight;
     --slide-out-to-right: slideOutToRight;
     --slide-out-to-left: slideOutToLeft;
+    --show-item: showItem;
+    --hidden-item: hiddenItem;
 }
 
 @keyframes slideInFromLeft {
@@ -54,6 +58,28 @@
     to {
         transform: translate(-200%, -50%);
         opacity: 0;
+    }
+}
+
+@keyframes showItem {
+    from {
+        opacity: 0;
+        scale: 0;
+    }
+    to {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+@keyframes hiddenItem {
+    from {
+        opacity: 1;
+        scale: 1;
+    }
+    to {
+        opacity: 0;
+        scale: 0;
     }
 }
 

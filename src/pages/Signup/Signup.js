@@ -8,6 +8,7 @@ import images from '~/assets/images';
 import BoxInput from '~/components/BoxInput';
 import Button from '~/components/Button';
 import WrapperNullLayout from '../Components/WrapperNullLayout';
+import Alert from '~/components/Alert';
 
 const cx = classNames.bind(styles);
 
@@ -16,12 +17,15 @@ function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const refContainer = useRef();
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertContent, setAlertContent] = useState('');
+    const refWrapper = useRef();
     const navigate = useNavigate(null);
 
-    const handleSignUp = async () => {
+    const handleSignUp = async (e) => {
         if (password !== confirmPassword) {
-            alert('Passwords do not match');
+            setAlertContent("Passwords do not match")
+            setShowAlert(true);
             return;
         }
 
@@ -33,42 +37,54 @@ function Signup() {
 
         try {
             await axios.post('/users/signup', userData);
-            alert('Signup successful!');
-            navigate('/login');
+            setAlertContent("Signup successful!");
+            setShowAlert(true);
+            setTimeout(() => {
+                setShowAlert(false)
+                if (!showAlert) {
+                    if (refWrapper.current) {
+                        refWrapper.current.classList.add(cx('slide-out'));
+                        setTimeout(() => {
+                            navigate('/login');
+                        }, 500);
+                    }
+                } 
+            }, 1000)
         } catch (error) {
             if (error.response && error.response.status === 409) {
-                alert('Mail exists');
+                setAlertContent("Mail exists");
             } else {
-                alert('Signup failed: ' + error.message);    
+                setAlertContent("Fill full the information");
             } 
+            setShowAlert(true);
         }
     };
 
     useEffect(() => {
-        if (refContainer.current) {
-            refContainer.current.classList.add(cx('slide-in'));
+        if (refWrapper.current) {
+            refWrapper.current.classList.add(cx('slide-in'));
         }
 
         return () => {
-            if (refContainer.current) {
-                refContainer.current.classList.remove(cx('slide-in'));
+            if (refWrapper.current) {
+                refWrapper.current.classList.remove(cx('slide-in'));
             }
         };
     }, []);
 
     const handleNavLinkClick = (e) => {
         e.preventDefault();
-        if (refContainer.current) {
-            refContainer.current.classList.add(cx('slide-out'));
+        if (refWrapper.current) {
+            refWrapper.current.classList.add(cx('slide-out'));
             setTimeout(() => {
                 navigate('/login');
-            }, 400);
+            }, 500);
         }
     };
 
     return (
         <WrapperNullLayout>
-            <div ref={refContainer} className={cx('wrapper')}>
+            <div ref={refWrapper} className={cx('wrapper')}>
                 <div className={cx('box-content')}>
                     <div className={cx('content')}>
                         <div className={cx('box-signup')}>
@@ -100,7 +116,7 @@ function Signup() {
                                 className={cx('input')}
                                 isPassword
                             />
-                            <Button onClick={handleSignUp}>Sign Up</Button>
+                            <Button onClick={e => handleSignUp(e)}>Sign Up</Button>
                             <div className={cx('to-login')}>
                                 <p>Already have an account? <NavLink onClick={handleNavLinkClick} to="/login" className={cx('login')}>Login</NavLink></p>
                             </div>
@@ -111,6 +127,7 @@ function Signup() {
                     </div>
                 </div>
             </div>
+            {showAlert && <Alert show={showAlert} setShow={setShowAlert} onClose={() => setShowAlert(false)}>{alertContent}</Alert>}
         </WrapperNullLayout>
     );
 }

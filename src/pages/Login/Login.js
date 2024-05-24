@@ -39,7 +39,7 @@ function Login() {
             refContainer.current.classList.add(cx('slide-out'));
             setTimeout(() => {
                 navigate('/signup');
-            }, 400);
+            }, 500);
         }
     };
 
