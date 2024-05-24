@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
-function BoxInput({ value, onChange, label, email = false, isPassword = false, className }) {
+function BoxInput({ value, onChange, onKeyPress, label, email = false, isPassword = false, className }) {
     const [focus, setFocus] = useState(false);
     const [eye, setEye] = useState(false);
     const uniqueId = useId();
@@ -22,6 +22,7 @@ function BoxInput({ value, onChange, label, email = false, isPassword = false, c
                 id={`input-${uniqueId}`}
                 value={value}
                 onChange={onChange}
+                onKeyPress={onKeyPress}
                 type={email ? 'email' : (isPassword ? (!eye ? 'password' : 'text') : 'text')}
                 onFocus={() => setFocus(true)}
                 onBlur={() => !value && setFocus(false)}

@@ -19,44 +19,44 @@
 
 @keyframes slideInFromLeft {
     from {
-        transform: translate(-200%, -50%);
+        transform: translateX(-100%);
         opacity: 0;
     }
     to {
-        transform: translate(-50%, -50%);
+        transform: translateX(0);
         opacity: 1;
     }
 }
 
 @keyframes slideInFromRight {
     from {
-        transform: translate(100%, -50%);
+        transform: translateX(100%);
         opacity: 0;
     }
     to {
-        transform: translate(-50%, -50%);
+        transform: translateX(0);
         opacity: 1;
     }
 }
 
 @keyframes slideOutToRight {
     from {
-        transform: translate(-50%, -50%);
+        transform: translateX(0);
         opacity: 1;
     }
     to {
-        transform: translate(100%, -50%);
+        transform: translateX(100%);
         opacity: 0;
     }
 }
 
 @keyframes slideOutToLeft {
     from {
-        transform: translate(-50%, -50%);
+        transform: translateX(0);
         opacity: 1;
     }
     to {
-        transform: translate(-200%, -50%);
+        transform: translateX(-100%);
         opacity: 0;
     }
 }

@@ -22,7 +22,7 @@ function Signup() {
     const refWrapper = useRef();
     const navigate = useNavigate(null);
 
-    const handleSignUp = async (e) => {
+    const handleSignUp = async () => {
         if (password !== confirmPassword) {
             setAlertContent("Passwords do not match")
             setShowAlert(true);
@@ -60,6 +60,12 @@ function Signup() {
         }
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSignUp();
+        }
+    };    
+
     useEffect(() => {
         if (refWrapper.current) {
             refWrapper.current.classList.add(cx('slide-in'));
@@ -92,12 +98,14 @@ function Signup() {
                             <BoxInput
                                 value={fullname}
                                 onChange={(e) => setFullname(e.target.value)}
+                                onKeyPress={(e) => handleKeyPress(e)}
                                 label="Fullname"
                                 className={cx('input')}
                             />
                             <BoxInput
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                onKeyPress={(e) => handleKeyPress(e)}
                                 label="Email"
                                 className={cx('input')}
                                 email
@@ -105,6 +113,7 @@ function Signup() {
                             <BoxInput
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                onKeyPress={(e) => handleKeyPress(e)}
                                 label="Password"
                                 className={cx('input')}
                                 isPassword
@@ -112,11 +121,12 @@ function Signup() {
                             <BoxInput
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
+                                onKeyPress={(e) => handleKeyPress(e)}
                                 label="Confirm Password"
                                 className={cx('input')}
                                 isPassword
                             />
-                            <Button onClick={e => handleSignUp(e)}>Sign Up</Button>
+                            <Button onClick={handleSignUp}>Sign Up</Button>
                             <div className={cx('to-login')}>
                                 <p>Already have an account? <NavLink onClick={handleNavLinkClick} to="/login" className={cx('login')}>Login</NavLink></p>
                             </div>

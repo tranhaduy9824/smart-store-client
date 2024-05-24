@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Login.module.scss';
@@ -9,6 +10,7 @@ import Button from '~/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import WrapperNullLayout from '../Components/WrapperNullLayout';
+import Alert from '~/components/Alert';
 
 const cx = classNames.bind(styles);
 
@@ -16,27 +18,67 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
-    const refContainer = useRef();
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertContent, setAlertContent] = useState("");
+    const refWrapper = useRef();
     const navigate = useNavigate(null);
 
-    const handleLogin = () => {};
+    const handleLogin = async () => {
+        if (!email || !password) {
+            setAlertContent("Email and password are required.")
+            setShowAlert(true)
+            return
+        }
+
+        const authData = {
+            email,
+            password
+        }
+
+        try {
+            const response = await axios.post("/users/login", authData);
+            sessionStorage.setItem('token', response.data.token);
+            setAlertContent("Login successful!")
+            setShowAlert(true)
+            setTimeout(() => {
+                setShowAlert(false)
+                if (!showAlert) {
+                    if (refWrapper.current) {
+                        refWrapper.current.classList.add(cx('slide-hidden'));
+                        setTimeout(() => {
+                            navigate('/');
+                        }, 500);
+                    }
+                } 
+            }, 1000)
+        } catch (error) {
+            setAlertContent("Email or password is incorrect.")
+            setShowAlert(true);
+        }
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
+    };    
 
     useEffect(() => {
-        if (refContainer.current) {
-            refContainer.current.classList.add(cx('slide-in'));
+        if (refWrapper.current) {
+            refWrapper.current.classList.add(cx('slide-in'));
         }
 
         return () => {
-            if (refContainer.current) {
-                refContainer.current.classList.remove(cx('slide-in'));
+            if (refWrapper.current) {
+                refWrapper.current.classList.remove(cx('slide-in'));
             }
         };
     }, []);
 
     const handleNavLinkClick = (e) => {
         e.preventDefault();
-        if (refContainer.current) {
-            refContainer.current.classList.add(cx('slide-out'));
+        if (refWrapper.current) {
+            refWrapper.current.classList.add(cx('slide-out'));
             setTimeout(() => {
                 navigate('/signup');
             }, 500);
@@ -45,7 +87,7 @@ function Login() {
 
     return (
         <WrapperNullLayout>
-            <div ref={refContainer} className={cx('wrapper')}>
+            <div ref={refWrapper} className={cx('wrapper')}>
                 <div className={cx('box-content')}>
                     <div className={cx('background-login')}>
                         <img src={images.login_image} alt="Background login" />
@@ -56,6 +98,7 @@ function Login() {
                             <BoxInput
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                onKeyPress={(e) => handleKeyPress(e)}
                                 label="Email"
                                 className={cx('input')}
                                 email
@@ -63,6 +106,7 @@ function Login() {
                             <BoxInput
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                onKeyPress={(e) => handleKeyPress(e)}
                                 label="Password"
                                 className={cx('input')}
                                 isPassword
@@ -100,6 +144,7 @@ function Login() {
                     </div>
                 </div>
             </div>
+            {showAlert && <Alert show={showAlert} setShow={setShowAlert} onClose={() => setShowAlert(false)}>{alertContent}</Alert>}
         </WrapperNullLayout>
     );
 }

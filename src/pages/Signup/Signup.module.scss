@@ -1,8 +1,4 @@
 .wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 80%;
     height: 85%;
     background-color: var(--white);
@@ -10,17 +6,13 @@
     border-radius: calc(var(--border-radius) * 2);
     overflow: hidden;
     opacity: 0;
-    transform: translateX(-100%);
-    transition: transform 0.5s ease, opacity 0.5s ease;
 
     &.slide-in {
         animation: var(--slide-in-from-left) 0.5s ease forwards;
-        transform: translateX(0);
     }
 
     &.slide-out {
         animation: var(--slide-out-to-left) 0.5s ease forwards;
-        transform: translateX(100%);
     }
 }
 

@@ -8,7 +8,7 @@ function WrapperNullLayout({ className, children }) {
         <div className={cx('wrapper', {className: className})}>
             <div className={cx('circle1')}></div>
             <div className={cx('circle2')}></div>
-            {children}
+            <div className={cx('content')}>{children}</div>
         </div>
      );
 }
