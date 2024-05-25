@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import CryptoJS from 'crypto-js';
 import { NavLink, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Login.module.scss';
@@ -11,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import WrapperNullLayout from '../Components/WrapperNullLayout';
 import Alert from '~/components/Alert';
+import { LoginSocialFacebook } from 'reactjs-social-login';
 
 const cx = classNames.bind(styles);
 
@@ -20,8 +22,25 @@ function Login() {
     const [rememberMe, setRememberMe] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [alertContent, setAlertContent] = useState("");
+    const [inputFocused, setInputFocused] = useState(false);
     const refWrapper = useRef();
     const navigate = useNavigate(null);
+    const secretKey = process.env.REACT_APP_SECRET_KEY;
+    const facebookId = process.env.REACT_APP_FACEBOOK_ID;
+
+    const navigateHome = () => {
+        setTimeout(() => {
+            setShowAlert(false)
+            if (!showAlert) {
+                if (refWrapper.current) {
+                    refWrapper.current.classList.add(cx('slide-hidden'));
+                    setTimeout(() => {
+                        navigate('/');
+                    }, 500);
+                }
+            } 
+        }, 1000)
+    }
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -38,30 +57,64 @@ function Login() {
         try {
             const response = await axios.post("/users/login", authData);
             sessionStorage.setItem('token', response.data.token);
+
+            if (rememberMe) {
+                const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString()
+                localStorage.setItem('rememberedEmail', email);
+                localStorage.setItem('rememberedPassword', encryptedPassword);
+            } else {
+                localStorage.removeItem('rememberedEmail');
+                localStorage.removeItem('rememberedPassword')
+            }
+
             setAlertContent("Login successful!")
             setShowAlert(true)
-            setTimeout(() => {
-                setShowAlert(false)
-                if (!showAlert) {
-                    if (refWrapper.current) {
-                        refWrapper.current.classList.add(cx('slide-hidden'));
-                        setTimeout(() => {
-                            navigate('/');
-                        }, 500);
-                    }
-                } 
-            }, 1000)
+            navigateHome()
         } catch (error) {
             setAlertContent("Email or password is incorrect.")
             setShowAlert(true);
         }
     };
 
+    const handleLoginFacebook = async (data) => {
+        const { name, email } = data
+        
+        const fbUserData = {
+            email,
+            name
+        }
+
+        try {
+            const response = await axios.post("/users/facebook-login", fbUserData);
+            sessionStorage.setItem('token', response.data.token)
+
+            setAlertContent("Login successful!")
+            setShowAlert(true)
+            navigateHome()
+        } catch (error) {
+            setAlertContent(error.toString())
+            setShowAlert(true)
+        }
+    }
+
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             handleLogin();
         }
     };    
+
+    useEffect(() => {
+        const savedEmail = localStorage.getItem('rememberedEmail');
+        const encryptedPassword = localStorage.getItem('rememberedPassword');
+
+        if (savedEmail && encryptedPassword) {
+            const savedPassword = CryptoJS.AES.decrypt(encryptedPassword, secretKey).toString(CryptoJS.enc.Utf8)
+            setEmail(savedEmail);
+            setPassword(savedPassword);
+            setRememberMe(true);
+            setInputFocused(true);
+        }
+    }, [])
 
     useEffect(() => {
         if (refWrapper.current) {
@@ -102,6 +155,7 @@ function Login() {
                                 label="Email"
                                 className={cx('input')}
                                 email
+                                onFocus={inputFocused}
                             />
                             <BoxInput
                                 value={password}
@@ -110,6 +164,7 @@ function Login() {
                                 label="Password"
                                 className={cx('input')}
                                 isPassword
+                                onFocus={inputFocused}
                             />
                             <div className={cx('remember-me')}>
                                 <input
@@ -131,7 +186,17 @@ function Login() {
                             </div>
                             <div className={cx('login-outside')}>
                                 <div className={cx('fb-icon')}>
-                                    <FontAwesomeIcon icon={faFacebookF} />
+                                    <LoginSocialFacebook
+                                        appId={facebookId}
+                                        onResolve={(response) => {
+                                            handleLoginFacebook(response.data)
+                                        }}
+                                        onReject={(error) => {
+                                            console.log(error)
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faFacebookF} />
+                                    </LoginSocialFacebook>
                                 </div>
                                 <div className={cx('gg-icon')}>
                                     <FontAwesomeIcon icon={faGoogle} />

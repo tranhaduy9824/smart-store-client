@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './BoxInput.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
-function BoxInput({ value, onChange, onKeyPress, label, email = false, isPassword = false, className }) {
+function BoxInput({ value, onChange, onKeyPress, label, email = false, onFocus, isPassword = false, className }) {
     const [focus, setFocus] = useState(false);
     const [eye, setEye] = useState(false);
     const uniqueId = useId();
@@ -14,6 +14,12 @@ function BoxInput({ value, onChange, onKeyPress, label, email = false, isPasswor
     const handleEyePassword = () => {
         setEye(!eye)
     }
+
+    useEffect(() => {
+        if (onFocus) {
+            setFocus(true);
+        }
+    }, [onFocus]);
 
     return (
         <div className={cx('wrapper', className)}>
