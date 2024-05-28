@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import WrapperNullLayout from '../Components/WrapperNullLayout';
 import Alert from '~/components/Alert';
-import { LoginSocialFacebook } from 'reactjs-social-login';
+import { LoginSocialFacebook, LoginSocialGoogle } from 'reactjs-social-login';
 
 const cx = classNames.bind(styles);
 
@@ -26,7 +26,8 @@ function Login() {
     const refWrapper = useRef();
     const navigate = useNavigate(null);
     const secretKey = process.env.REACT_APP_SECRET_KEY;
-    const facebookId = process.env.REACT_APP_FACEBOOK_ID;
+    const facebookId = process.env.REACT_APP_FACEBOOK_APP_ID;
+    const googleId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
     const navigateHome = () => {
         setTimeout(() => {
@@ -86,6 +87,29 @@ function Login() {
 
         try {
             const response = await axios.post("/users/facebook-login", fbUserData);
+            sessionStorage.setItem('token', response.data.token)
+
+            setAlertContent("Login successful!")
+            setShowAlert(true)
+            navigateHome()
+        } catch (error) {
+            setAlertContent(error.toString())
+            setShowAlert(true)
+        }
+    }
+
+    const handleLoginGoogle = async (data) => {
+        const { name, email } = data
+        
+        const ggUserData = {
+            email,
+            name
+        }
+
+        console.log(ggUserData);
+
+        try {
+            const response = await axios.post("/users/google-login", ggUserData);
             sessionStorage.setItem('token', response.data.token)
 
             setAlertContent("Login successful!")
@@ -184,9 +208,8 @@ function Login() {
                                 <span>Or</span>
                                 <hr />
                             </div>
-                            <div className={cx('login-outside')}>
-                                <div className={cx('fb-icon')}>
-                                    <LoginSocialFacebook
+                            <div className={cx('login-social')}>
+                                <LoginSocialFacebook
                                         appId={facebookId}
                                         onResolve={(response) => {
                                             handleLoginFacebook(response.data)
@@ -195,12 +218,24 @@ function Login() {
                                             console.log(error)
                                         }}
                                     >
+                                    <div className={cx('fb-icon', 'btn-login-social')}>
                                         <FontAwesomeIcon icon={faFacebookF} />
-                                    </LoginSocialFacebook>
-                                </div>
-                                <div className={cx('gg-icon')}>
-                                    <FontAwesomeIcon icon={faGoogle} />
-                                </div>
+                                    </div>
+                                </LoginSocialFacebook>
+                                <LoginSocialGoogle
+                                    client_id={googleId}
+                                    scope="openid profile email"
+                                    onResolve={(response) => {
+                                        handleLoginGoogle(response.data)
+                                    }}
+                                    onReject={(error) => {
+                                        console.log(error)
+                                    }}
+                                >
+                                    <div className={cx('gg-icon', 'btn-login-social')}>
+                                        <FontAwesomeIcon icon={faGoogle} />
+                                    </div>
+                                </LoginSocialGoogle>
                             </div>
                             <div className={cx('to-signup')}>
                                 <p>Don't have an account? <NavLink onClick={handleNavLinkClick} to="/signup" className={cx('signup')}>Sign Up</NavLink></p>
