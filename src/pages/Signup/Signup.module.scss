@@ -1,19 +1,15 @@
-.wrapper {
+.wrapper-animation {
     width: 80%;
     height: 85%;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
     background-color: var(--white);
     border: 5px solid var(--primary);
     border-radius: calc(var(--border-radius) * 2);
     overflow: hidden;
-    opacity: 0;
-
-    &.slide-in {
-        animation: var(--slide-in-from-left) 0.5s ease forwards;
-    }
-
-    &.slide-out {
-        animation: var(--slide-out-to-left) 0.5s ease forwards;
-    }
 }
 
 .box-content {

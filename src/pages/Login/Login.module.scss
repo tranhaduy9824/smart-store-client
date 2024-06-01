@@ -1,23 +1,15 @@
-.wrapper {
+.wrapper-animation {
     width: 80%;
     height: 85%;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
     background-color: var(--white);
     border: 5px solid var(--primary);
     border-radius: calc(var(--border-radius) * 2);
     overflow: hidden;
-    opacity: 0;
-
-    &.slide-in {
-        animation: var(--slide-in-from-right) 0.5s ease forwards;
-    }
-
-    &.slide-out {
-        animation: var(--slide-out-to-right) 0.5s ease forwards;
-    }
-
-    &.slide-hidden {
-        animation: var(--hidden-item) 0.5s ease-in-out;
-    }
 }
 
 .box-content {
@@ -79,6 +71,7 @@
             text-align: end;
             font-weight: 500;
             margin-bottom: 20px;
+            cursor: pointer;
         }
 
         .line-or {
