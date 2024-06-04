@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { hideAlert, showAlert } from '~/redux/actions/alert';
+import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import classNames from 'classnames/bind';
@@ -8,19 +10,17 @@ import images from '~/assets/images';
 import BoxInput from '~/components/BoxInput';
 import Button from '~/components/Button';
 import WrapperNullLayout from '../Components/WrapperNullLayout';
-import Alert from '~/components/Alert';
 import WrapperAnimation from '~/components/WrapperAnimation';
 
 const cx = classNames.bind(styles);
 
 function Signup() {
+    const dispatch = useDispatch();
     const [show, setShow] = useState(true)
     const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [showAlert, setShowAlert] = useState(false);
-    const [alertContent, setAlertContent] = useState('');
     const navigate = useNavigate(null);
 
     const handleNavLinkClick = (e) => {
@@ -33,8 +33,7 @@ function Signup() {
 
     const handleSignUp = async () => {
         if (password !== confirmPassword) {
-            setAlertContent("Passwords do not match")
-            setShowAlert(true);
+            dispatch(showAlert('Passwords do not match!'));
             return;
         }
 
@@ -46,24 +45,20 @@ function Signup() {
 
         try {
             await axios.post('/users/signup', userData);
-            setAlertContent("Signup successful!");
-            setShowAlert(true);
+            dispatch(showAlert('Signup successful!'));
             setTimeout(() => {
-                setShowAlert(false)
-                if (!showAlert) {
-                    setShow(false)
-                    setTimeout(() => {
-                        navigate('/login');
-                    }, 500);
-                } 
+                dispatch(hideAlert())
+                setShow(false)
+                setTimeout(() => {
+                    navigate('/login');
+                }, 500);
             }, 1000)
         } catch (error) {
             if (error.response && error.response.status === 409) {
-                setAlertContent("Mail exists");
+                dispatch(showAlert('Mail exists!'));
             } else {
-                setAlertContent("Fill full the information");
+                dispatch(showAlert('Fill full the information!'));
             } 
-            setShowAlert(true);
         }
     };
 
@@ -124,7 +119,6 @@ function Signup() {
                     </div>
                 </div>
             </WrapperAnimation>
-            {showAlert && <Alert show={showAlert} setShow={setShowAlert} onClose={() => setShowAlert(false)}>{alertContent}</Alert>}
         </WrapperNullLayout>
     );
 }

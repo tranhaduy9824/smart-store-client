@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ForgotPassword.module.scss';
+import axios from 'axios';
 
 import WrapperModel from '../WrapperModel';
 import images from '~/assets/images';
@@ -14,8 +15,13 @@ function ForgotPassword({ show, onClose, email }) {
     const [focused, setFocused] = useState(false);
     const [statusEmail, setStatusEmail] = useState(false);
 
-    const handleSendEmail = () => {
-        setStatusEmail(true);
+    const handleSendEmail = async () => {
+        try {
+            await axios.post('/users/forgot-password', {email: inputEmail})
+            setStatusEmail(true)
+        } catch (error) {
+            console.log('User not exist!');
+        }
     };
 
     useEffect(() => {

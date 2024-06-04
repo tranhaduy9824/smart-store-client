@@ -6,6 +6,7 @@ import Cart from '~/pages/Cart';
 import Profile from '~/pages/Profile'; 
 import Login from '~/pages/Login'; 
 import Signup from '~/pages/Signup'; 
+import ResetPassword from '~/pages/ResetPassword';
 
 const publicRoutes = [ 
     { 
@@ -37,7 +38,12 @@ const publicRoutes = [
         path: '/signup', 
         component: Signup,
         layout: null
-    }, 
+    },
+    {
+        path: '/reset-password/:id/:token',
+        component: ResetPassword,
+        layout: null
+    }
 ] 
 
 const privateRoutes = [] 

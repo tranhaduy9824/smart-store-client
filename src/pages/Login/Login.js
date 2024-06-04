@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { hideAlert, showAlert } from '~/redux/actions/alert';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -11,7 +13,6 @@ import Button from '~/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import WrapperNullLayout from '../Components/WrapperNullLayout';
-import Alert from '~/components/Alert';
 import { LoginSocialFacebook, LoginSocialGoogle } from 'reactjs-social-login';
 import WrapperAnimation from '~/components/WrapperAnimation';
 import ForgotPassword from '~/components/ForgotPassword';
@@ -19,14 +20,13 @@ import ForgotPassword from '~/components/ForgotPassword';
 const cx = classNames.bind(styles);
 
 function Login() {
+    const dispatch = useDispatch();
     const [show, setShow] = useState(true);
     const [typeOut, setTypeOut] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
-    const [alertContent, setAlertContent] = useState('');
     const [inputFocused, setInputFocused] = useState(false);
     const navigate = useNavigate(null);
     const secretKey = process.env.REACT_APP_SECRET_KEY;
@@ -35,14 +35,12 @@ function Login() {
 
     const navigateHome = () => {
         setTimeout(() => {
-            setShowAlert(false);
-            if (!showAlert) {
-                setTypeOut('hiddenItem');
-                setShow(false);
-                setTimeout(() => {
-                    navigate('/');
-                }, 500);
-            }
+            dispatch(hideAlert());
+            setTypeOut('hiddenItem');
+            setShow(false);
+            setTimeout(() => {
+                navigate('/');
+            }, 500);
         }, 1000);
     };
 
@@ -57,8 +55,7 @@ function Login() {
 
     const handleLogin = async () => {
         if (!email || !password) {
-            setAlertContent('Email and password are required.');
-            setShowAlert(true);
+            dispatch(showAlert('Email and password are required!'));
             return;
         }
 
@@ -80,12 +77,10 @@ function Login() {
                 localStorage.removeItem('rememberedPassword');
             }
 
-            setAlertContent('Login successful!');
-            setShowAlert(true);
+            dispatch(showAlert('Login successful!'));
             navigateHome();
         } catch (error) {
-            setAlertContent('Email or password is incorrect.');
-            setShowAlert(true);
+            dispatch(showAlert('Email or password is incorrect!'));
         }
     };
 
@@ -101,12 +96,10 @@ function Login() {
             const response = await axios.post('/users/facebook-login', fbUserData);
             sessionStorage.setItem('token', response.data.token);
 
-            setAlertContent('Login successful!');
-            setShowAlert(true);
+            dispatch(showAlert('Login successful!'));
             navigateHome();
         } catch (error) {
-            setAlertContent(error.toString());
-            setShowAlert(true);
+            dispatch(showAlert(error.toString()));
         }
     };
 
@@ -124,12 +117,10 @@ function Login() {
             const response = await axios.post('/users/google-login', ggUserData);
             sessionStorage.setItem('token', response.data.token);
 
-            setAlertContent('Login successful!');
-            setShowAlert(true);
+            dispatch(showAlert('Login successful!'));
             navigateHome();
         } catch (error) {
-            setAlertContent(error.toString());
-            setShowAlert(true);
+            dispatch(showAlert(error.toString()));
         }
     };
 
@@ -248,11 +239,6 @@ function Login() {
                 </div>
             </WrapperAnimation>
             {showForgotPassword && <ForgotPassword show={showForgotPassword} onClose={() => setShowForgotPassword(false)} email={email} />}
-            {showAlert && (
-                <Alert show={showAlert} onClose={() => setShowAlert(false)}>
-                    {alertContent}
-                </Alert>
-            )}
         </WrapperNullLayout>
     );
 }

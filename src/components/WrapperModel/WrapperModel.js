@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames/bind";
 import styles from './WrapperModel.module.scss'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +11,10 @@ const cx = classNames.bind(styles);
 function WrapperModel({ show, onClose, className, classIcon, children }) {
     const [hidden, setHidden] = useState(!show)
 
+    useEffect(() => {
+        setHidden(!show)
+    }, [show])
+
     const handleClose = () => {
         setHidden(true)
 
@@ -20,7 +24,7 @@ function WrapperModel({ show, onClose, className, classIcon, children }) {
     }
 
     return (
-        <div className={cx('wrapper', { [className]: className })} onClick={handleClose}>
+        <div className={cx('wrapper', { [className]: className, hidden: hidden })} onClick={handleClose}>
             <WrapperAnimation showItem hiddenItem show={!hidden}>
                 <div className={cx('content')} onClick={e => e.stopPropagation()}>
                     {children}
