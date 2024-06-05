@@ -3,6 +3,11 @@ import { publicRoutes } from '~/routes';
 import DefaultLayout from '~/layouts/DefaultLayout';
 import { Fragment } from 'react';
 
+import Alert from './components/Alert';
+import Loading from './components/Loading';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+
 function App() {
     return (
         <Router>
@@ -24,7 +29,11 @@ function App() {
                                 path={route.path}
                                 element={
                                     <Layout>
-                                        <Page />
+                                        <Provider store={store}>
+                                            <Page />
+                                            <Loading />
+                                            <Alert />
+                                        </Provider>
                                     </Layout>
                                 }
                             />

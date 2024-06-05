@@ -7,6 +7,7 @@ import Profile from '~/pages/Profile';
 import Login from '~/pages/Login'; 
 import Signup from '~/pages/Signup'; 
 import ResetPassword from '~/pages/ResetPassword';
+import WrapperNullLayout from '~/pages/Components/WrapperNullLayout';
 
 const publicRoutes = [ 
     { 
@@ -32,17 +33,17 @@ const publicRoutes = [
     { 
         path: '/login', 
         component: Login,
-        layout: null
+        layout: WrapperNullLayout
     }, 
     { 
         path: '/signup', 
         component: Signup,
-        layout: null
+        layout: WrapperNullLayout
     },
     {
         path: '/reset-password/:id/:token',
         component: ResetPassword,
-        layout: null
+        layout: WrapperNullLayout
     }
 ] 
 

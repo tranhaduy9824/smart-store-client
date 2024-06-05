@@ -3,18 +3,12 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import GlobalStyles from './components/GlobalStyles';
-import Alert from './components/Alert';
-import { Provider } from 'react-redux';
-import { storeAlert } from './redux/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <GlobalStyles>
-            <Provider store={storeAlert}>
-                <App />
-                <Alert />
-            </Provider>
+            <App />
         </GlobalStyles>
     </React.StrictMode>,
 );

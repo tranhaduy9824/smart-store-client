@@ -4,6 +4,7 @@ import styles from './WrapperAnimation.module.scss';
 const cx = classNames.bind(styles);
 
 function WrapperAnimation({ show, inFromLeft, inFromRight, outToLeft, outToRight, showItem, hiddenItem, className, children }) {
+
     const classes = cx('wrapper', {
         'in-from-left': inFromLeft && show,
         'in-from-right': inFromRight && show,

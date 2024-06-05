@@ -1,9 +1,10 @@
 import { useDispatch } from 'react-redux';
 import { hideAlert, showAlert } from '~/redux/actions/alert';
-import { useEffect, useState } from 'react';
+import { hideLoading, showLoading } from '~/redux/actions/loading';
+import { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Login.module.scss';
 
@@ -12,7 +13,6 @@ import BoxInput from '~/components/BoxInput';
 import Button from '~/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
-import WrapperNullLayout from '../Components/WrapperNullLayout';
 import { LoginSocialFacebook, LoginSocialGoogle } from 'reactjs-social-login';
 import WrapperAnimation from '~/components/WrapperAnimation';
 import ForgotPassword from '~/components/ForgotPassword';
@@ -29,6 +29,7 @@ function Login() {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [inputFocused, setInputFocused] = useState(false);
     const navigate = useNavigate(null);
+    const { state } = useLocation(null)
     const secretKey = process.env.REACT_APP_SECRET_KEY;
     const facebookId = process.env.REACT_APP_FACEBOOK_APP_ID;
     const googleId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -65,6 +66,7 @@ function Login() {
         };
 
         try {
+            dispatch(showLoading())
             const response = await axios.post('/users/login', authData);
             sessionStorage.setItem('token', response.data.token);
 
@@ -77,9 +79,11 @@ function Login() {
                 localStorage.removeItem('rememberedPassword');
             }
 
+            dispatch(hideLoading())
             dispatch(showAlert('Login successful!'));
             navigateHome();
         } catch (error) {
+            dispatch(hideLoading())
             dispatch(showAlert('Email or password is incorrect!'));
         }
     };
@@ -93,12 +97,15 @@ function Login() {
         };
 
         try {
+            dispatch(showLoading())
             const response = await axios.post('/users/facebook-login', fbUserData);
             sessionStorage.setItem('token', response.data.token);
 
+            dispatch(hideLoading())
             dispatch(showAlert('Login successful!'));
             navigateHome();
         } catch (error) {
+            dispatch(hideLoading())
             dispatch(showAlert(error.toString()));
         }
     };
@@ -114,12 +121,15 @@ function Login() {
         console.log(ggUserData);
 
         try {
+            dispatch(showLoading())
             const response = await axios.post('/users/google-login', ggUserData);
             sessionStorage.setItem('token', response.data.token);
 
+            dispatch(hideLoading())
             dispatch(showAlert('Login successful!'));
             navigateHome();
         } catch (error) {
+            dispatch(hideLoading())
             dispatch(showAlert(error.toString()));
         }
     };
@@ -144,9 +154,10 @@ function Login() {
     }, []);
 
     return (
-        <WrapperNullLayout>
+        <Fragment>
             <WrapperAnimation
-                inFromRight
+                showItem={state?.animation === 'showItem' || state?.animation !== 'inFromRight'}
+                inFromRight={state?.animation === 'inFromRight'}
                 outToRight={typeOut === 'outToRight'}
                 hiddenItem={typeOut === 'hiddenItem'}
                 show={show}
@@ -239,7 +250,7 @@ function Login() {
                 </div>
             </WrapperAnimation>
             {showForgotPassword && <ForgotPassword show={showForgotPassword} onClose={() => setShowForgotPassword(false)} email={email} />}
-        </WrapperNullLayout>
+        </Fragment>
     );
 }
 

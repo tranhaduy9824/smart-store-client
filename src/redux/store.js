@@ -1,10 +1,12 @@
 import { combineReducers, createStore } from 'redux';
 import alertReducer from './reducers/alertReducer';
+import loadingReducer from './reducers/loadingReducer';
 
 const rootReducer = combineReducers({
     alert: alertReducer,
+    loading: loadingReducer
 });
 
-const storeAlert = createStore(rootReducer);
+const store = createStore(rootReducer);
 
-export { storeAlert };
+export { store };

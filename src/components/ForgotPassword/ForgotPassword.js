@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ForgotPassword.module.scss';
@@ -7,20 +8,26 @@ import WrapperModel from '../WrapperModel';
 import images from '~/assets/images';
 import BoxInput from '../BoxInput';
 import Button from '../Button';
+import { showAlert } from '~/redux/actions/alert';
+import { hideLoading, showLoading } from '~/redux/actions/loading';
 
 const cx = classNames.bind(styles);
 
 function ForgotPassword({ show, onClose, email }) {
+    const dispatch = useDispatch()
     const [inputEmail, setInputEmail] = useState(email);
     const [focused, setFocused] = useState(false);
     const [statusEmail, setStatusEmail] = useState(false);
 
     const handleSendEmail = async () => {
         try {
+            dispatch(showLoading())
             await axios.post('/users/forgot-password', {email: inputEmail})
+            dispatch(hideLoading())
             setStatusEmail(true)
         } catch (error) {
-            console.log('User not exist!');
+            dispatch(hideLoading())
+            dispatch(showAlert('User not exist!'));
         }
     };
 
@@ -28,7 +35,13 @@ function ForgotPassword({ show, onClose, email }) {
         if (inputEmail) {
             setFocused(true);
         }
-    }, []);
+    }, [inputEmail]);
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSendEmail();
+        }
+    };
 
     return (
         <WrapperModel show={show} onClose={onClose} classIcon={cx('icon-close')}>
@@ -50,6 +63,7 @@ function ForgotPassword({ show, onClose, email }) {
                             label="Enter email"
                             email
                             onFocus={focused}
+                            onKeyPress={(e) => handleKeyPress(e)}
                         />
                         <Button onClick={handleSendEmail}>Send email</Button>
                     </div>
