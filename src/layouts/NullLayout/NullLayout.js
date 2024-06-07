@@ -1,9 +1,9 @@
 import classNames from "classnames/bind";
-import styles from './WrapperNullLayout.module.scss'
+import styles from './NullLayout.module.scss'
 
 const cx = classNames.bind(styles)
 
-function WrapperNullLayout({ className, children }) {
+function NullLayout({ className, children }) {
     return ( 
         <div className={cx('wrapper', {className: className})}>
             <div className={cx('circle1')}></div>
@@ -13,4 +13,4 @@ function WrapperNullLayout({ className, children }) {
      );
 }
 
-export default WrapperNullLayout;
+export default NullLayout;

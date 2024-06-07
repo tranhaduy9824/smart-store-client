@@ -6,9 +6,12 @@
     --black: #000;
     --white: #ffffff;
     --border-radius: 20px;
-    --background: #AAD4C8;
+    --background: #f3f3f3;
+    --background-sub: #AAD4C8;
     --color-times: #FF5B64;
     --second-text: #5e5e5e;
+    --border-color: #c5c5c5;
+    --horizontal-spacing: 30px;
 
     --slide-in-from-left: slideInFromLeft;
     --slide-in-from-right: slideInFromRight;
@@ -88,6 +91,10 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+
+    &:focus-visible {
+        outline: none;
+    }
 }
 
 html {

@@ -28,13 +28,13 @@ function App() {
                                 key={index}
                                 path={route.path}
                                 element={
-                                    <Layout>
-                                        <Provider store={store}>
+                                    <Provider store={store}>
+                                        <Layout>
                                             <Page />
                                             <Loading />
                                             <Alert />
-                                        </Provider>
-                                    </Layout>
+                                        </Layout>
+                                    </Provider>
                                 }
                             />
                         );

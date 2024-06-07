@@ -9,8 +9,12 @@ function Loading() {
     const { show } = useSelector((state) => state.loading)
 
     return (
-        <WrapperModel show={show} noClose classIcon={cx('icon-close')}>
-            <div className={cx('wrapper')}></div>
+        <WrapperModel show={show} noClose classIcon={cx('icon-close')} className={cx('bgr-color')}>
+            <div className={cx('wrapper')}>
+                <div className={cx('box1')}></div>
+                <div className={cx('box2')}></div>
+                <div className={cx('box3')}></div>
+            </div>
         </WrapperModel>
     );
 }
