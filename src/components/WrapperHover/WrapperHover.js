@@ -1,15 +1,26 @@
 import classNames from 'classnames/bind';
 import styles from './WrapperHover.module.scss';
+import { NavLink } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
-function WrapperHover({ start, end, content, children, className }) {
+function WrapperHover({ noIcon, start, end, right, content, children, className, classNameWrapper }) {
     return (
-        <div className={cx('wrapper')}>
+        <div className={cx('wrapper', { [classNameWrapper]: classNameWrapper })}>
             {children}
-            <div className={cx('icon')}></div>
-            <div className={cx('content-hover', { start: start, end: end })}>
-                <div className={cx('content', { [className]: className })}>{content}</div>
+            {!noIcon && <div className={cx('icon')}></div>}
+            <div className={cx('content-hover', { start: start, end: end, right: right })}>
+                <div className={cx('content', { [className]: className })}>
+                    {Array.isArray(content) ? (
+                        <ul>
+                            {content.map((item, index) => (
+                                <li key={index}><NavLink>{item}</NavLink></li>
+                            ))}
+                        </ul>
+                    ) : (
+                        content
+                    )}
+                </div>
             </div>
         </div>
     );

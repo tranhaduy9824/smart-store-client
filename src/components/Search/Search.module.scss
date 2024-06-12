@@ -104,6 +104,7 @@
     overflow-x: hidden;
     border: 1px solid var(--border-color);
     background-color: var(--white);
+    z-index: 99;
 
     .item-result {
         display: flex;

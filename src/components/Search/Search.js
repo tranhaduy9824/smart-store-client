@@ -14,6 +14,7 @@ const cx = classNames.bind(styles);
 
 function Search() {
     const [inputValue, setInputValue] = useState('');
+    const [selectedValue, setSelectedValue] = useState('0');
     const [inputing, setInputing] = useState(true);
     const [results, setResults] = useState([]);
     const [showLoading, setShowLoading] = useState(false);
@@ -87,20 +88,20 @@ function Search() {
     return (
         <div className={cx('wrapper')}>
             <div className={cx('box-search')}>
-                <select className={cx('select-category')}>
-                    <option value="0" selected>
+                <select className={cx('select-category')} value={selectedValue} onChange={e => setSelectedValue(e.target.value)}>
+                    <option value="0">
                         All Categories
                     </option>
-                    <option value="0" selected>
+                    <option value="1" >
                         All Categories
                     </option>
-                    <option value="0" selected>
+                    <option value="2" >
                         All Categories
                     </option>
-                    <option value="0" selected>
+                    <option value="3" >
                         All Categories
                     </option>
-                    <option value="0" selected>
+                    <option value="4" >
                         All Categories
                     </option>
                 </select>

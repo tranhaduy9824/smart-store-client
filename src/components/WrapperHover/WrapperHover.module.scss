@@ -21,6 +21,13 @@
         &.end {
             right: 0;
         }
+
+        &.right {
+            left: calc(100% + 2px);
+            top: 50%;
+            transform: translateY(-50%);
+            border-top: 0;
+        }
     }
 }
 
