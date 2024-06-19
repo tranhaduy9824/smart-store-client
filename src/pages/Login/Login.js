@@ -90,10 +90,12 @@ function Login() {
 
     const handleLoginFacebook = async (data) => {
         const { name, email } = data;
+        const avatar = data.picture.data.url
 
         const fbUserData = {
             email,
             name,
+            avatar
         };
 
         try {
