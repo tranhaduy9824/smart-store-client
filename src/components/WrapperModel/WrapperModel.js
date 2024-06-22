@@ -7,7 +7,7 @@ import WrapperAnimation from "../WrapperAnimation";
 
 const cx = classNames.bind(styles);
 
-function WrapperModel({ show, onClose, noClose, className, classIcon, children }) {
+function WrapperModel({ show, onClose, noClose, className, classNameContent, classIcon, children }) {
     const [hidden, setHidden] = useState(!show);
     const [classHidden, setClassHidden] = useState(hidden);
 
@@ -38,7 +38,7 @@ function WrapperModel({ show, onClose, noClose, className, classIcon, children }
             onClick={!noClose ? handleClose : undefined}
         >
             <WrapperAnimation showItem hiddenItem show={!hidden}>
-                <div className={cx('content')} onClick={e => e.stopPropagation()}>
+                <div className={cx('content', { [classNameContent]: classNameContent })} onClick={e => e.stopPropagation()}>
                     {children}
                     {!noClose && (
                         <FontAwesomeIcon

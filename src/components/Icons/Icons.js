@@ -286,3 +286,41 @@ export const MailIcon = () => (
         <path d="M28 9.6h-25.6c-1.323 0-2.4 1.077-2.4 2.4v14.4c0 1.323 1.077 2.4 2.4 2.4h25.6c1.323 0 2.4-1.077 2.4-2.4v-14.4c0-1.323-1.077-2.4-2.4-2.4zM28 11.2c0.047 0 0.093 0.005 0.139 0.013l-12.051 8.034c-0.464 0.31-1.311 0.31-1.775 0l-12.051-8.034c0.045-0.008 0.091-0.013 0.139-0.013h25.6zM28 27.2h-25.6c-0.441 0-0.8-0.359-0.8-0.8v-13.705l11.825 7.883c0.498 0.332 1.136 0.498 1.775 0.498s1.277-0.166 1.775-0.498l11.825-7.883v13.705c0 0.441-0.359 0.8-0.8 0.8z"></path>
     </svg>
 );
+
+export const FashionIcon = () => (
+    <img width="100" height="100" src="https://img.icons8.com/ios/100/shirt.png" alt="shirt" />
+);
+
+export const ElectronicIcon = () => (
+    <img
+        width="100"
+        height="100"
+        src="https://img.icons8.com/external-smashingstocks-detailed-outline-smashing-stocks/100/external-electronic-device-networking-smashingstocks-detailed-outline-smashing-stocks.png"
+        alt="external-electronic-device-networking-smashingstocks-detailed-outline-smashing-stocks"
+    />
+);
+
+export const FoodIcon = () => (
+    <img
+        width="100"
+        height="100"
+        src="https://img.icons8.com/external-tanah-basah-basic-outline-tanah-basah/100/external-food-and-drink-food-delivery-tanah-basah-basic-outline-tanah-basah.png"
+        alt="external-food-and-drink-food-delivery-tanah-basah-basic-outline-tanah-basah"
+    />
+);
+
+export const HousewareIcon = () => (
+    <img
+        width="100"
+        height="100"
+        src="https://img.icons8.com/pastel-glyph/100/kitchenwares--v2.png"
+        alt="kitchenwares--v2"
+    />
+);
+
+export const QuickViewIcon = () => (
+    <svg aria-hidden="true" role="img" focusable="false" viewBox="0 0 32 32">
+        <path d="M12.566 11.434l-9.834-9.834h6.069c0.442 0 0.8-0.358 0.8-0.8s-0.358-0.8-0.8-0.8h-8c-0.442 0-0.8 0.358-0.8 0.8v8c0 0.442 0.358 0.8 0.8 0.8s0.8-0.358 0.8-0.8v-6.069l9.834 9.834c0.156 0.156 0.361 0.234 0.566 0.234s0.409-0.078 0.566-0.234c0.312-0.312 0.312-0.819 0-1.131zM31.2 0h-8c-0.442 0-0.8 0.358-0.8 0.8s0.358 0.8 0.8 0.8h6.069l-9.834 9.834c-0.313 0.312-0.313 0.819 0 1.131 0.156 0.156 0.361 0.234 0.566 0.234s0.409-0.078 0.566-0.234l9.834-9.834v6.069c0 0.442 0.358 0.8 0.8 0.8s0.8-0.358 0.8-0.8v-8c0-0.442-0.358-0.8-0.8-0.8zM12.566 19.434c-0.312-0.312-0.819-0.312-1.131 0l-9.834 9.834v-6.069c0-0.442-0.358-0.8-0.8-0.8s-0.8 0.358-0.8 0.8v8c0 0.442 0.358 0.8 0.8 0.8h8c0.442 0 0.8-0.358 0.8-0.8s-0.358-0.8-0.8-0.8h-6.069l9.834-9.834c0.312-0.312 0.312-0.819 0-1.131zM31.2 22.4c-0.442 0-0.8 0.358-0.8 0.8v6.069l-9.834-9.834c-0.312-0.312-0.819-0.312-1.131 0s-0.312 0.819 0 1.131l9.834 9.834h-6.069c-0.442 0-0.8 0.358-0.8 0.8s0.358 0.8 0.8 0.8h8c0.442 0 0.8-0.358 0.8-0.8v-8c0-0.442-0.358-0.8-0.8-0.8z"></path>
+    </svg>
+);
+

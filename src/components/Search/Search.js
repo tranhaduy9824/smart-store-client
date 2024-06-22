@@ -9,6 +9,7 @@ import { LoadingIcon, SearchIcon } from '../Icons';
 import useDebounce from '~/hooks/useDebounce';
 import images from '~/assets/images';
 import { NavLink } from 'react-router-dom';
+import RatingStar from '../RatingStar';
 
 const cx = classNames.bind(styles);
 
@@ -44,7 +45,7 @@ function Search() {
         {
             image: images.test,
             name: 'Wayfair Basics Dinner Plate Storage',
-            rating: 3,
+            rating: 2.4,
             price: 32.55,
             sale: 50,
         },
@@ -151,21 +152,7 @@ function Search() {
                                     {result.name}
                                 </NavLink>
                                 <div className={cx('rating-item')}>
-                                    <span className={cx('star-icon')}>
-                                        <FontAwesomeIcon icon={faStarDone} />
-                                    </span>
-                                    <span className={cx('star-icon')}>
-                                        <FontAwesomeIcon icon={faStarDone} />
-                                    </span>
-                                    <span className={cx('star-icon')}>
-                                        <FontAwesomeIcon icon={faStarHalfAlt} />
-                                    </span>
-                                    <span className={cx('star-icon')}>
-                                        <FontAwesomeIcon icon={faStarYet} />
-                                    </span>
-                                    <span className={cx('star-icon')}>
-                                        <FontAwesomeIcon icon={faStarYet} />
-                                    </span>
+                                    <RatingStar rating={result.rating} />
                                 </div>
                                 <div className={cx('price-item')}>
                                     {result.sale ? (

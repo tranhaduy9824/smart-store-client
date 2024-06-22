@@ -43,14 +43,14 @@ li {
         display: block;
         animation: var(--show-item) 0.2s linear;
     }
-}
 
-a {
-    display: block;
-    width: 100%;
-    border-bottom: 1px solid #eee;
-    padding: 9px 0;
-    transition: color 0.3s ease-in-out;
+    a {
+        display: block;
+        width: 100%;
+        border-bottom: 1px solid #eee;
+        padding: 9px 0;
+        transition: color 0.3s ease-in-out;
+    }
 }
 
 .right-icon {
