@@ -29,7 +29,7 @@ function Login() {
     const [showForgotPassword, setShowForgotPassword] = useState(false);
     const [inputFocused, setInputFocused] = useState(false);
     const navigate = useNavigate(null);
-    const { state } = useLocation(null)
+    const { state } = useLocation(null);
     const secretKey = process.env.REACT_APP_SECRET_KEY;
     const facebookId = process.env.REACT_APP_FACEBOOK_APP_ID;
     const googleId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -56,7 +56,7 @@ function Login() {
 
     const handleLogin = async () => {
         if (!email || !password) {
-            dispatch(showAlert('Email and password are required!'));
+            dispatch(showAlert('Email và mật khẩu là bắt buộc!'));
             return;
         }
 
@@ -66,7 +66,7 @@ function Login() {
         };
 
         try {
-            dispatch(showLoading())
+            dispatch(showLoading());
             const response = await axios.post('/users/login', authData);
             sessionStorage.setItem('token', response.data.token);
 
@@ -79,35 +79,35 @@ function Login() {
                 localStorage.removeItem('rememberedPassword');
             }
 
-            dispatch(hideLoading())
-            dispatch(showAlert('Login successful!'));
+            dispatch(hideLoading());
+            dispatch(showAlert('Đăng nhập thành công!'));
             navigateHome();
         } catch (error) {
-            dispatch(hideLoading())
-            dispatch(showAlert('Email or password is incorrect!'));
+            dispatch(hideLoading());
+            dispatch(showAlert('Email hoặc mật khẩu không đúng!'));
         }
     };
 
     const handleLoginFacebook = async (data) => {
         const { name, email } = data;
-        const avatar = data.picture.data.url
+        const avatar = data.picture.data.url;
 
         const fbUserData = {
             email,
             name,
-            avatar
+            avatar,
         };
 
         try {
-            dispatch(showLoading())
+            dispatch(showLoading());
             const response = await axios.post('/users/facebook-login', fbUserData);
             sessionStorage.setItem('token', response.data.token);
 
-            dispatch(hideLoading())
-            dispatch(showAlert('Login successful!'));
+            dispatch(hideLoading());
+            dispatch(showAlert('Đăng nhập thành công!'));
             navigateHome();
         } catch (error) {
-            dispatch(hideLoading())
+            dispatch(hideLoading());
             dispatch(showAlert(error.toString()));
         }
     };
@@ -123,15 +123,15 @@ function Login() {
         console.log(ggUserData);
 
         try {
-            dispatch(showLoading())
+            dispatch(showLoading());
             const response = await axios.post('/users/google-login', ggUserData);
             sessionStorage.setItem('token', response.data.token);
 
-            dispatch(hideLoading())
-            dispatch(showAlert('Login successful!'));
+            dispatch(hideLoading());
+            dispatch(showAlert('Đăng nhập thành công!'));
             navigateHome();
         } catch (error) {
-            dispatch(hideLoading())
+            dispatch(hideLoading());
             dispatch(showAlert(error.toString()));
         }
     };
@@ -172,7 +172,7 @@ function Login() {
                         </div>
                         <div className={cx('content')}>
                             <div className={cx('box-login')}>
-                                <p className={cx('title')}>Login</p>
+                                <p className={cx('title')}>Đăng nhập</p>
                                 <BoxInput
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -186,7 +186,7 @@ function Login() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     onKeyPress={(e) => handleKeyPress(e)}
-                                    label="Password"
+                                    label="Mật khẩu"
                                     className={cx('input')}
                                     isPassword
                                     onFocus={inputFocused}
@@ -198,12 +198,12 @@ function Login() {
                                         checked={rememberMe}
                                         onChange={() => setRememberMe(!rememberMe)}
                                     />
-                                    <label htmlFor="rememberMe">Remember Me</label>
+                                    <label htmlFor="rememberMe">Nhớ mật khẩu</label>
                                 </div>
                                 <div className={cx('forgot-password')}>
-                                    <p onClick={() => setShowForgotPassword(true)}>Forgot Password?</p>
+                                    <p onClick={() => setShowForgotPassword(true)}>Quên mật khẩu?</p>
                                 </div>
-                                <Button onClick={handleLogin}>Login</Button>
+                                <Button onClick={handleLogin}>Đăng nhập</Button>
                                 <div className={cx('line-or')}>
                                     <hr />
                                     <span>Or</span>
@@ -240,9 +240,9 @@ function Login() {
                                 </div>
                                 <div className={cx('to-signup')}>
                                     <p>
-                                        Don't have an account?{' '}
+                                        Bạn chưa có tài khoản?{' '}
                                         <NavLink onClick={handleNavLinkClick} to="/signup" className={cx('signup')}>
-                                            Sign Up
+                                            Đăng ký
                                         </NavLink>
                                     </p>
                                 </div>
@@ -251,7 +251,9 @@ function Login() {
                     </div>
                 </div>
             </WrapperAnimation>
-            {showForgotPassword && <ForgotPassword show={showForgotPassword} onClose={() => setShowForgotPassword(false)} email={email} />}
+            {showForgotPassword && (
+                <ForgotPassword show={showForgotPassword} onClose={() => setShowForgotPassword(false)} email={email} />
+            )}
         </Fragment>
     );
 }

@@ -10,6 +10,7 @@ import useDebounce from '~/hooks/useDebounce';
 import images from '~/assets/images';
 import { NavLink } from 'react-router-dom';
 import RatingStar from '../RatingStar';
+import { formatPrice } from '~/handle/formatPrice';
 
 const cx = classNames.bind(styles);
 
@@ -33,27 +34,27 @@ function Search() {
             image: images.test,
             name: 'Farmat Farmhouse Soft White',
             rating: 4,
-            price: 40.0,
+            price: 40000,
             sale: 10,
         },
         {
             image: images.test,
             name: 'Miko The Panda Water Bottle',
             rating: 3.5,
-            price: 10.0,
+            price: 10000,
         },
         {
             image: images.test,
             name: 'Wayfair Basics Dinner Plate Storage',
             rating: 2.4,
-            price: 32.55,
+            price: 32000,
             sale: 50,
         },
         {
             image: images.test,
             name: 'Wayfair Basics Dinner Plate Storage',
             rating: 3,
-            price: 32.55,
+            price: 32000,
             sale: 50,
         },
     ];
@@ -91,19 +92,19 @@ function Search() {
             <div className={cx('box-search')}>
                 <select className={cx('select-category')} value={selectedValue} onChange={e => setSelectedValue(e.target.value)}>
                     <option value="0">
-                        All Categories
+                        Tất cả danh mục
                     </option>
                     <option value="1" >
-                        All Categories
+                        Tất cả danh mục
                     </option>
                     <option value="2" >
-                        All Categories
+                        Tất cả danh mục
                     </option>
                     <option value="3" >
-                        All Categories
+                        Tất cả danh mục
                     </option>
                     <option value="4" >
-                        All Categories
+                        Tất cả danh mục
                     </option>
                 </select>
                 <div className={cx('space-dash')}>
@@ -115,7 +116,7 @@ function Search() {
                         ref={inputRef}
                         onChange={(e) => setInputValue(e.target.value)}
                         onFocus={handleInputing}
-                        placeholder="I'm searching for..."
+                        placeholder="Tôi đang tìm kiếm..."
                     />
                     {inputValue && inputing && !showLoading && (
                         <span
@@ -158,16 +159,16 @@ function Search() {
                                     {result.sale ? (
                                         <>
                                             <span className={cx('sale-price')}>
-                                                ${(result.price * (100 - result.sale)) / 100}
+                                                {formatPrice((result.price * (100 - result.sale)) / 100)}
                                             </span>
                                             <del>
                                                 <i>
-                                                    <span className={cx('price-old')}>${result.price}</span>
+                                                    <span className={cx('price-old')}>{formatPrice(result.price)}</span>
                                                 </i>
                                             </del>
                                         </>
                                     ) : (
-                                        <span className={cx('price')}>${result.price}</span>
+                                        <span className={cx('price')}>{formatPrice(result.price)}</span>
                                     )}
                                 </div>
                             </div>

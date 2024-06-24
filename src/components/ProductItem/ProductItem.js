@@ -10,6 +10,8 @@ import { QuickViewIcon } from '../Icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as faHeartFull } from '@fortawesome/free-solid-svg-icons';
 import WrapperModel from '../WrapperModel';
+import { formatPrice } from '~/handle/formatPrice';
+import snippet from '~/handle/snippet';
 
 const cx = classNames.bind(styles);
 
@@ -42,6 +44,11 @@ function ProductItem({ data, index, item, currentIndex, className }) {
         }
     };
 
+    const price = formatPrice(item.price);
+    const priceSale = formatPrice((item.price * (100 - item.sale)) / 100);
+    const priceQuantity = formatPrice(item.price * quantityValue);
+    const priceSaleQuantity = formatPrice(((item.price * (100 - item.sale)) / 100) * quantityValue);
+
     return (
         <>
             <div
@@ -67,17 +74,15 @@ function ProductItem({ data, index, item, currentIndex, className }) {
                     <div className={cx('price')}>
                         {item.sale ? (
                             <>
-                                <span className={cx('sale-price')}>
-                                    ${((item.price * (100 - item.sale)) / 100).toFixed(2)}
-                                </span>
+                                <span className={cx('sale-price')}>{priceSale}</span>
                                 <del>
                                     <i>
-                                        <span className={cx('price-old')}>${item.price.toFixed(2)}</span>
+                                        <span className={cx('price-old')}>{snippet(price.concat(priceSale), 10 - priceSale.length)}</span>
                                     </i>
                                 </del>
                             </>
                         ) : (
-                            <span className={cx('price')}>${item.price.toFixed(2)}</span>
+                            <span className={cx('price')}>{price}</span>
                         )}
                     </div>
                 </div>
@@ -92,15 +97,9 @@ function ProductItem({ data, index, item, currentIndex, className }) {
                         </span>
                     </div>
                     <div className={cx('total')}>
-                        Total:{' '}
-                        <span>
-                            $
-                            {!item.sale
-                                ? (item.price * quantityValue).toFixed(2)
-                                : (((item.price * (100 - item.sale)) / 100) * quantityValue).toFixed(2)}
-                        </span>
+                        Total: <span>{!item.sale ? priceQuantity : priceSaleQuantity}</span>
                     </div>
-                    <Button className={cx('btn-add-cart')}>Add to cart</Button>
+                    <Button className={cx('btn-add-cart')}>Thêm giỏ hàng</Button>
                 </div>
                 <div className={cx('btn-action')}>
                     <span onClick={() => setShowQuickView(true)}>
@@ -139,17 +138,15 @@ function ProductItem({ data, index, item, currentIndex, className }) {
                     <div className={cx('price')}>
                         {item.sale ? (
                             <>
-                                <span className={cx('sale-price')}>
-                                    ${((item.price * (100 - item.sale)) / 100).toFixed(2)}
-                                </span>
+                                <span className={cx('sale-price')}>{priceSale}</span>
                                 <del>
                                     <i>
-                                        <span className={cx('price-old')}>${item.price.toFixed(2)}</span>
+                                        <span className={cx('price-old')}>{price}</span>
                                     </i>
                                 </del>
                             </>
                         ) : (
-                            <span className={cx('price')}>${item.price.toFixed(2)}</span>
+                            <span className={cx('price')}>{price}</span>
                         )}
                     </div>
                     <div className={cx('des')}>
@@ -168,15 +165,9 @@ function ProductItem({ data, index, item, currentIndex, className }) {
                         </span>
                     </div>
                     <div className={cx('total')}>
-                        Total:{' '}
-                        <span>
-                            $
-                            {!item.sale
-                                ? (item.price * quantityValue).toFixed(2)
-                                : (((item.price * (100 - item.sale)) / 100) * quantityValue).toFixed(2)}
-                        </span>
+                        Total: <span>{!item.sale ? priceQuantity : priceSaleQuantity}</span>
                     </div>
-                    <Button className={cx('btn-add-cart')}>Add to cart</Button>
+                    <Button className={cx('btn-add-cart')}>Thêm giỏ hàng</Button>
                 </div>
             </WrapperModel>
         </>

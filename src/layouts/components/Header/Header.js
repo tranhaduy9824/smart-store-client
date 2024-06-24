@@ -15,7 +15,7 @@ import ButtonIcon from '~/components/ButtonIcon';
 import WrapperHover from '~/components/WrapperHover';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button';
 import ItemHover from './ItemHover/ItemHover';
 
@@ -34,7 +34,7 @@ function Header() {
                 <div className={cx('box-btn-user')}>
                     <div className={cx('support')}>
                         <span>0867 125 575</span>
-                        <p>Support 24/7</p>
+                        <p>Hỗ trợ 24/7</p>
                     </div>
                     <WrapperHover content="Đăng nhập" end className={cx('box-hover')}>
                         <ButtonIcon to="/login" className={cx('icon-header-user', 'account-icon')}>
@@ -53,8 +53,8 @@ function Header() {
                             </ButtonIcon>
                             <NavLink to="/cart">
                                 <div className={cx('cart-text')}>
-                                    <span className={cx('title')}>My cart</span>
-                                    <span className={cx('cart-price-total')}>$0.00</span>
+                                    <span className={cx('title')}>Giỏ hàng của tôi</span>
+                                    <span className={cx('cart-price-total')}>0 VND</span>
                                 </div>
                             </NavLink>
                         </div>
@@ -68,25 +68,25 @@ function Header() {
                         noIcon
                         content={
                             <ul>
-                                <ItemHover>Daily Deals</ItemHover>
-                                <ItemHover>Recommend</ItemHover>
-                                <ItemHover index={0} contentHover={['Man', 'Women', 'Orther']}>
-                                    Fashion
+                                <ItemHover>Ưu đãi hôm nay</ItemHover>
+                                <ItemHover>Gợi ý</ItemHover>
+                                <ItemHover index={0} contentHover={['Nam', 'Nữ', 'Khác']}>
+                                    Thời trang
                                 </ItemHover>
-                                <ItemHover index={1} contentHover={['Laptop', 'Mobile', 'Accessory']}>
-                                    Electronic Device
+                                <ItemHover index={1} contentHover={['Máy tính', 'Điện thoại', 'Phụ kiện']}>
+                                    Thiết bị điện tử
                                 </ItemHover>
-                                <ItemHover index={2} contentHover={['Motobike', 'Car', 'Car accessory']}>
-                                    Car
+                                <ItemHover index={2} contentHover={['Xe máy', 'Xe hơi', 'Phụ kiện xe']}>
+                                    Xe
                                 </ItemHover>
-                                <ItemHover index={3} contentHover={['Food', 'Drink', 'Ingredient']}>
-                                    Food and Drink
+                                <ItemHover index={3} contentHover={['Đồ ăn', 'Thức uống', 'Nguyên liệu']}>
+                                    Đồ ăn và thức uống
                                 </ItemHover>
                                 <ItemHover
                                     index={4}
-                                    contentHover={['Interior', 'Household appliances', 'Small household appliances']}
+                                    contentHover={['Nội địa', 'Thiết bị gia dụng', 'Đồ gia dụng nhỏ']}
                                 >
-                                    HouseWare
+                                    Đồ gia dụng
                                 </ItemHover>
                             </ul>
                         }
@@ -98,7 +98,7 @@ function Header() {
                             classNameSub={cx('item-categories')}
                             classNameIcon={cx('icon-item-categories')}
                         >
-                            Shop by category
+                            Sản phẩm theo thể loại
                         </Button>
                     </WrapperHover>
                 </div>
@@ -109,7 +109,7 @@ function Header() {
                         classNameSub={cx('item-navigate')}
                         classNameIcon={cx('icon-left-item')}
                     >
-                        Deals Today
+                        Ưu đãi hôm nay
                     </Button>
                     <Button
                         iconLeft={<SaleIcon />}
@@ -117,42 +117,22 @@ function Header() {
                         classNameSub={cx('item-navigate')}
                         classNameIcon={cx('icon-left-item')}
                     >
-                        Special Prices
+                        Giá đặc biệt
                     </Button>
-                    <WrapperHover content={['Man', 'Women', 'Orther']} classNameWrapper={cx('wrapper-hover-navigate')}>
-                        <Button
-                            iconRight={<DownIcon />}
-                            className={cx('wrapper-item-navigate')}
-                            classNameSub={cx('item-navigate')}
-                            classNameIcon={cx('icon-right-item')}
-                        >
-                            Fresh
-                        </Button>
-                    </WrapperHover>
-                    <WrapperHover content={['Man', 'Women', 'Orther']} classNameWrapper={cx('wrapper-hover-navigate')}>
-                        <Button
-                            iconRight={<DownIcon />}
-                            className={cx('wrapper-item-navigate')}
-                            classNameSub={cx('item-navigate')}
-                            classNameIcon={cx('icon-right-item')}
-                        >
-                            Frozen
-                        </Button>
-                    </WrapperHover>
                     <Button className={cx('wrapper-item-navigate')} classNameSub={cx('item-navigate')}>
-                        Demos
+                        Trang chủ
                     </Button>
-                    <WrapperHover content={['Man', 'Women', 'Orther']} classNameWrapper={cx('wrapper-hover-navigate')}>
+                    <WrapperHover content={['Sản phẩm', 'Giỏ hàng', 'Thanh toán']} classNameWrapper={cx('wrapper-hover-navigate')}>
                         <Button
                             iconRight={<DownIcon />}
                             className={cx('wrapper-item-navigate')}
                             classNameSub={cx('item-navigate')}
                             classNameIcon={cx('icon-right-item')}
                         >
-                            Shop
+                            Sản phẩm
                         </Button>
                     </WrapperHover>
-                    <WrapperHover content={['Man', 'Women', 'Orther']} classNameWrapper={cx('wrapper-hover-navigate')}>
+                    <WrapperHover content={['Blog mặc định', 'Bài đăng đơn']} classNameWrapper={cx('wrapper-hover-navigate')}>
                         <Button
                             iconRight={<DownIcon />}
                             className={cx('wrapper-item-navigate')}
@@ -162,18 +142,18 @@ function Header() {
                             Blog
                         </Button>
                     </WrapperHover>
-                    <WrapperHover content={['Man', 'Women', 'Orther']} classNameWrapper={cx('wrapper-hover-navigate')}>
+                    <WrapperHover content={['Về chúng tôi', 'Liên hệ chúng tôi', 'Câu hỏi thường gặp', 'Trang 404', 'Sắp ra mắt']} classNameWrapper={cx('wrapper-hover-navigate')}>
                         <Button
                             iconRight={<DownIcon />}
                             className={cx('wrapper-item-navigate')}
                             classNameSub={cx('item-navigate')}
                             classNameIcon={cx('icon-right-item')}
                         >
-                            Pages
+                            Trang
                         </Button>
                     </WrapperHover>
                     <Button className={cx('wrapper-item-navigate')} classNameSub={cx('item-navigate')}>
-                        Brand
+                        Thương hiệu
                     </Button>
                 </div>
                 <div className={cx('recently-view')}>
@@ -200,7 +180,7 @@ function Header() {
                             classNameSub={cx('item-recently')}
                             classNameIcon={cx('icon-item-recently')}
                         >
-                            Recently Viewed
+                            Đã xem gần đây
                         </Button>
                     </WrapperHover>
                 </div>

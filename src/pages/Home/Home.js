@@ -10,6 +10,7 @@ import { NavLink } from 'react-router-dom';
 import { ElectronicIcon, FashionIcon, FoodIcon, HousewareIcon } from '~/components/Icons';
 import SlideHome from './SlideHome';
 import ProductItem from '~/components/ProductItem';
+import snippet from '~/handle/snippet';
 
 const cx = classNames.bind(styles);
 
@@ -22,56 +23,48 @@ function Home() {
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 20.0,
+            price: 20000,
             sale: 20,
         },
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 20.0,
+            price: 20000,
             sale: 20,
         },
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 20.0,
+            price: 20000,
             sale: 20,
         },
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 20.0,
+            price: 20000,
             sale: 20,
         },
     ];
 
     const categoriesMain = [
-        'Fashion',
-        'Electronic',
-        'Food',
-        'Houseware',
-        'Fashion',
-        'Electronic',
-        'Food',
-        'Houseware',
-        'Fashion',
-        'Electronic',
-        'Food',
-        'Houseware',
+        'Thời trang',
+        'Thiết bị điện tử',
+        'Đồ ăn',
+        'Đồ gia dụng'
     ];
 
     const IconComponents = {
-        Fashion: FashionIcon,
-        Electronic: ElectronicIcon,
-        Food: FoodIcon,
-        Houseware: HousewareIcon,
+        'Thời trang': FashionIcon,
+        'Thiết bị điện tử': ElectronicIcon,
+        'Đồ ăn': FoodIcon,
+        'Đồ gia dụng': HousewareIcon,
     };
 
     const listRecommend = [
         {
             images: [images.test, images.background_slide, images.check_email_image],
             name: 'Famart Farmhouse Soft White',
-            price: 20.0,
+            price: 20000,
             sale: 20,
             rating: 3.5,
             numberRating: 2,
@@ -79,21 +72,21 @@ function Home() {
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 13.0,
+            price: 13000,
             rating: 3,
             numberRating: 1,
         },
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 10.0,
+            price: 10000,
             rating: 5,
             numberRating: 0,
         },
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 54.0,
+            price: 54000,
             sale: 35,
             rating: 2.4,
             numberRating: 10,
@@ -101,7 +94,7 @@ function Home() {
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 15.0,
+            price: 150000,
             sale: 10,
             rating: 4.5,
             numberRating: 3,
@@ -109,7 +102,7 @@ function Home() {
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 15.0,
+            price: 15000,
             sale: 10,
             rating: 5,
             numberRating: 5,
@@ -117,7 +110,7 @@ function Home() {
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 15.0,
+            price: 15000,
             sale: 10,
             rating: 4.2,
             numberRating: 4,
@@ -125,7 +118,7 @@ function Home() {
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 15.0,
+            price: 15000,
             sale: 10,
             rating: 5,
             numberRating: 0,
@@ -133,7 +126,7 @@ function Home() {
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 15.0,
+            price: 15000,
             sale: 10,
             rating: 4.2,
             numberRating: 16,
@@ -141,7 +134,7 @@ function Home() {
         {
             images: [images.test],
             name: 'Famart Farmhouse Soft White',
-            price: 15.0,
+            price: 15000,
             sale: 10,
             rating: 4.2,
             numberRating: 4,
@@ -182,7 +175,7 @@ function Home() {
                             style={{ transform: `translateX(calc(-${currentIndex * 100}% - ${currentIndex * 20}px))` }}
                         >
                             <div className={cx('content')}>
-                                <h2 className={cx('heading')}>{item.sale}% SALE OFF</h2>
+                                <h2 className={cx('heading')}>Giảm giá {item.sale}%</h2>
                                 <h3 className={cx('name')}>{item.name}</h3>
                                 <p className={cx('price')}>
                                     <span>${((item.price * (100 - item.sale)) / 100).toFixed(2)}</span>
@@ -190,7 +183,7 @@ function Home() {
                                         <del>${item.price.toFixed(2)}</del>
                                     </i>
                                 </p>
-                                <Button className={cx('btn-buy')}>Buy Now</Button>
+                                <Button className={cx('btn-buy')}>Mua ngay</Button>
                             </div>
                             <div className={cx('image')}>
                                 <img src={item.images[0]} alt="Image" />
@@ -213,8 +206,8 @@ function Home() {
                     data={categoriesMain}
                     setCurrentIndex={setCurrentIndexCategory}
                     showNumber={8}
-                    title="Browse by Category"
-                    subTitle="All Categories"
+                    title="Tìm kiếm bằng danh mục"
+                    subTitle="Xem tất cả"
                     link="/product"
                 >
                     {categoriesMain.map((item, index) => (
@@ -227,7 +220,7 @@ function Home() {
                         >
                             <NavLink>
                                 {React.createElement(IconComponents[item] || 'div')}
-                                <p>{item}</p>
+                                <p>{snippet(item, 6)}</p>
                             </NavLink>
                         </div>
                     ))}
@@ -239,8 +232,8 @@ function Home() {
                         data={listRecommend}
                         setCurrentIndex={setCurrentIndexRecommend}
                         showNumber={5}
-                        title="Recommend"
-                        subTitle="All Recommed"
+                        title="Gợi ý"
+                        subTitle="Xem tất cả"
                         link="/product"
                         classNameSlide={cx('list-recommend')}
                     >
@@ -261,8 +254,8 @@ function Home() {
                         data={listRecommend}
                         setCurrentIndex={setCurrentIndexNews}
                         showNumber={5}
-                        title="News"
-                        subTitle="All News"
+                        title="Mới nhất"
+                        subTitle="Xem tất cả"
                         link="/product"
                         classNameSlide={cx('list-news')}
                     >

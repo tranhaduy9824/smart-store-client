@@ -18,7 +18,7 @@ function Alert() {
         <WrapperModel show={show} onClose={onClose}>
             <div className={cx('wrapper')}>
                 <div className={cx('title')}>
-                    <span>Notification</span>
+                    <span>Thông báo</span>
                 </div>
                 <p className={cx('message')}>{message}</p>
             </div>

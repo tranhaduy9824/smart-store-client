@@ -25,8 +25,8 @@ function Footer() {
                         </span>
                     </div>
                     <div className={cx('content-item')}>
-                        <div className={cx('content-title')}>Free Shipping</div>
-                        <div className={cx('content-des')}>For all orders over $200</div>
+                        <div className={cx('content-title')}>Miễn phí vận chuyển</div>
+                        <div className={cx('content-des')}>Đối với tất cả các đơn hàng trên 2.000.000 VND</div>
                     </div>
                 </div>
                 <div className={cx('footer-top-item')}>
@@ -36,8 +36,8 @@ function Footer() {
                         </span>
                     </div>
                     <div className={cx('content-item')}>
-                        <div className={cx('content-title')}>1 & 1 Returns</div>
-                        <div className={cx('content-des')}>Cancellation after 1 day</div>
+                        <div className={cx('content-title')}>Trả về 1 & 1</div>
+                        <div className={cx('content-des')}>Hủy sau 1 ngày</div>
                     </div>
                 </div>
                 <div className={cx('footer-top-item')}>
@@ -47,8 +47,8 @@ function Footer() {
                         </span>
                     </div>
                     <div className={cx('content-item')}>
-                        <div className={cx('content-title')}>100% Secure Payment</div>
-                        <div className={cx('content-des')}>Gurantee secure payments</div>
+                        <div className={cx('content-title')}>Thanh toán an toàn 100%</div>
+                        <div className={cx('content-des')}>Thanh toán an toàn được đảm bảo</div>
                     </div>
                 </div>
                 <div className={cx('footer-top-item')}>
@@ -58,8 +58,8 @@ function Footer() {
                         </span>
                     </div>
                     <div className={cx('content-item')}>
-                        <div className={cx('content-title')}>24/7 Dedicated Support</div>
-                        <div className={cx('content-des')}>Anywhere & anytime</div>
+                        <div className={cx('content-title')}>Hỗ trợ tận tâm 24/7</div>
+                        <div className={cx('content-des')}>Mọi lúc & mọi nơi</div>
                     </div>
                 </div>
                 <div className={cx('footer-top-item')}>
@@ -69,15 +69,15 @@ function Footer() {
                         </span>
                     </div>
                     <div className={cx('content-item')}>
-                        <div className={cx('content-title')}>Daily Offers</div>
-                        <div className={cx('content-des')}>Discount up to 70% OFF</div>
+                        <div className={cx('content-title')}>Ưu đãi hàng ngày</div>
+                        <div className={cx('content-des')}>GIẢM GIÁ lên tới 70%</div>
                     </div>
                 </div>
             </div>
             <div className={cx('footer-center')}>
                 <div className={cx('footer-center-item')}>
                     <div className={cx('info-title')}>
-                        <h2 className={cx('title')}>SmartStore – Your Online Every Product</h2>
+                        <h2 className={cx('title')}>SmartStore – Cửa Hàng Trực Tuyến Dành Cho Bạn</h2>
                         <p className={cx('des')}>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed finibus viverra iaculis. Etiam
                             vulputate et justo eget scelerisque.
@@ -90,7 +90,7 @@ function Footer() {
                                     <PhoneIcon />
                                 </span>
                                 <span className={cx('text')}>
-                                    Hotline 24/7:
+                                    Đường dây nóng 24/7:
                                     <h3>(+84) 867 125 575</h3>
                                 </span>
                             </li>
@@ -98,7 +98,7 @@ function Footer() {
                                 <span className={cx('icon')}>
                                     <HomeIcon />
                                 </span>
-                                <span className={cx('text')}>Dai Minh, Dai Loc, Quang Nam</span>
+                                <span className={cx('text')}>Đại Minh, Đại Lộc, Quảng Nam</span>
                             </li>
                             <li>
                                 <span className={cx('icon')}>
@@ -111,85 +111,87 @@ function Footer() {
                 </div>
                 <div className={cx('footer-center-item')}>
                     <div className={cx('footer-menu')}>
-                        <h2>Useful Links</h2>
+                        <h2>Liên Kết Hữu Ích</h2>
                         <ul>
                             <li>
-                                <NavLink>About Us</NavLink>
+                                <NavLink>Về chúng tôi</NavLink>
                             </li>
                             <li>
-                                <NavLink>Contact</NavLink>
+                                <NavLink>Liên hệ</NavLink>
                             </li>
                             <li>
-                                <NavLink>Help Center</NavLink>
+                                <NavLink>Trung tâm trợ giúp</NavLink>
                             </li>
                             <li>
-                                <NavLink>Career</NavLink>
+                                <NavLink>Sự nghiệp</NavLink>
                             </li>
                             <li>
-                                <NavLink>Policy</NavLink>
+                                <NavLink>Chính sách</NavLink>
                             </li>
                             <li>
-                                <NavLink>Flash Sale</NavLink>
+                                <NavLink>Giảm giá thần tốc</NavLink>
                             </li>
                             <li>
-                                <NavLink>Official</NavLink>
+                                <NavLink>Chính thức</NavLink>
                             </li>
                             <li>
-                                <NavLink>Sitemap</NavLink>
+                                <NavLink>Sơ đồ trang web</NavLink>
                             </li>
                         </ul>
                     </div>
                     <div className={cx('footer-menu')}>
-                        <h2>Help Center</h2>
+                        <h2>Trung tâm trợ giúp</h2>
                         <ul>
                             <li>
-                                <NavLink>Payments</NavLink>
+                                <NavLink>Thanh toán</NavLink>
                             </li>
                             <li>
-                                <NavLink>Shipping</NavLink>
+                                <NavLink>Vận chuyển</NavLink>
                             </li>
                             <li>
-                                <NavLink>Product Returns</NavLink>
+                                <NavLink>Trả lại sản phẩm</NavLink>
                             </li>
                             <li>
-                                <NavLink>FAQ</NavLink>
+                                <NavLink>Câu hỏi thường gặp</NavLink>
                             </li>
                             <li>
-                                <NavLink>Checkout</NavLink>
+                                <NavLink>Thanh toán</NavLink>
                             </li>
                             <li>
-                                <NavLink>Other Issues</NavLink>
+                                <NavLink>Các vấn đề khác</NavLink>
                             </li>
                         </ul>
                     </div>
                     <div className={cx('footer-menu')}>
-                        <h2>SmartStore Busines</h2>
+                        <h2>Doanh nghiệp SmartStore</h2>
                         <ul>
                             <li>
-                                <NavLink>Sell On SmartStore</NavLink>
+                                <NavLink>Bán trên SmartStore</NavLink>
                             </li>
                             <li>
-                                <NavLink>Affiliate Program</NavLink>
+                                <NavLink>Chương trình liên kết</NavLink>
                             </li>
                             <li>
-                                <NavLink>Our Suppliers</NavLink>
+                                <NavLink>Nhà cung cấp của chúng tôi</NavLink>
                             </li>
                             <li>
-                                <NavLink>Accessibility</NavLink>
+                                <NavLink>Khả năng tiếp cận</NavLink>
                             </li>
                             <li>
-                                <NavLink>Advertise With Us</NavLink>
+                                <NavLink>Quảng cáo với chúng tôi</NavLink>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div className={cx('footer-center-item')}>
-                    <h2>SmartStore Newsletter</h2>
-                    <p>Register now to get updates on promotions and coupns. Don’t worry! We not spam</p>
+                    <h2>Bản Tin SmartStore</h2>
+                    <p>Đăng ký ngay để nhận thông tin cập nhật về khuyến mãi và phiếu giảm giá. Đừng lo lắng! Chúng tôi không thư rác</p>
                 </div>
             </div>
             <div className={cx('footer-bottom')}>
-                <div className={cx('copyright')}>©2024 <b>SmartStore</b> All rights reserved</div>
+                <div className={cx('copyright')}>
+                    ©2024 <b>SmartStore</b> Mọi quyền được bảo lưu
+                </div>
             </div>
         </footer>
     );

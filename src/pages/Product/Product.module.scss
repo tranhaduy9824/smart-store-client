@@ -1,0 +1,103 @@
+.wrapper {
+    width: 100%;
+    padding: 40px var(--horizontal-spacing);
+}
+
+.top-product {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .title h1 {
+        font-size: 3rem;
+        line-height: 35px;
+        margin: 0 35px 0 0;
+        font-weight: 500;
+    }
+
+    .control-content {
+        display: flex;
+        align-items: center;
+
+        .label-control {
+            font-size: 16px;
+            font-weight: 500;
+            margin-right: 30px;
+        }
+
+        .box-sort {
+            width: 400px;
+            display: flex;
+            align-items: center;
+
+            .sort {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 240px;
+                height: 44px;
+                border: 1px solid var(--border-color);
+                border-radius: var(--border-radius);
+                padding: 0px 15px;
+                color: var(--second-text);
+                cursor: pointer;
+            }
+
+            .wrapper-list-sort {
+                border-top: 0;
+            }
+
+            .list-sort {
+                width: 240px;
+                padding: 10px 0;
+                border-radius: var(--border-radius);
+
+                li {
+                    padding: 0px 15px;
+
+                    &:hover a {
+                        color: var(--black);
+                    }
+
+                    a {
+                        color: var(--second-text);
+                        padding: 5px 0;
+                        border-bottom: 0;
+                    }
+                }
+            }
+
+            svg {
+                width: 1.3rem;
+            }
+        }
+
+        .box-view {
+            display: flex;
+            align-items: center;
+
+            .view{
+                display: flex;
+                align-items: center;
+
+                .grid-icon {
+                    width: 2.1rem;
+                    height: 2.1rem;
+                    margin-right: 15px;
+                    cursor: pointer;
+                }
+
+                .bars-icon {
+                    width: 2.8rem;
+                    height: 3.1rem;
+                    cursor: pointer;
+                }
+
+                svg {
+                    fill: currentColor;
+                    color: var(--second-text);
+                }
+            }
+        }
+    }
+}

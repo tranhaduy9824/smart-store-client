@@ -37,22 +37,22 @@ function Signup() {
 
     const handleValidation = () => {
         if (!fullname.trim()) {
-            dispatch(showAlert("Please enter fullname."))
+            dispatch(showAlert("Vui lòng nhập họ và tên."))
             return false;
         }
 
         if (!email.trim() || !isValidEmail(email)) {
-            dispatch(showAlert('Please enter email valid.'))
+            dispatch(showAlert('Vui lòng nhập email hợp lệ.'))
             return false;
         }
 
         if (password.length < 8) {
-            dispatch(showAlert('Please enter a password with at least 8 characters.'))
+            dispatch(showAlert('Vui lòng nhập mật khẩu có ít nhất 8 ký tự.'))
             return false;
         }
 
         if (password !== confirmPassword) {
-            dispatch(showAlert('Password do not match!'));
+            dispatch(showAlert('Mật khẩu không khớp!'));
             return false;
         }
 
@@ -72,7 +72,7 @@ function Signup() {
                 dispatch(showLoading())
                 await axios.post('/users/signup', userData);
                 dispatch(hideLoading())
-                dispatch(showAlert('Signup successful!'));
+                dispatch(showAlert('Đăng ký thành công!'));
                 setTimeout(() => {
                     dispatch(hideAlert());
                     setShow(false);
@@ -86,7 +86,7 @@ function Signup() {
             if (error.response && error.response.status === 409) {
                 dispatch(showAlert('Mail exists!'));
             } else {
-                dispatch(showAlert('Fill full the information!'));
+                dispatch(showAlert('Điền đầy đủ thông tin!'));
             }
         }
     };
@@ -103,12 +103,12 @@ function Signup() {
                 <div className={cx('box-content')}>
                     <div className={cx('content')}>
                         <div className={cx('box-signup')}>
-                            <p className={cx('title')}>Sign Up</p>
+                            <p className={cx('title')}>Đăng ký</p>
                             <BoxInput
                                 value={fullname}
                                 onChange={(e) => setFullname(e.target.value)}
                                 onKeyPress={(e) => handleKeyPress(e)}
-                                label="Fullname"
+                                label="Họ và tên"
                                 className={cx('input')}
                             />
                             <BoxInput
@@ -123,7 +123,7 @@ function Signup() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 onKeyPress={(e) => handleKeyPress(e)}
-                                label="Password"
+                                label="Mật khẩu"
                                 className={cx('input')}
                                 isPassword
                             />
@@ -131,16 +131,16 @@ function Signup() {
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 onKeyPress={(e) => handleKeyPress(e)}
-                                label="Confirm Password"
+                                label="Xác nhận mật khẩu"
                                 className={cx('input')}
                                 isPassword
                             />
-                            <Button onClick={handleSignUp}>Sign Up</Button>
+                            <Button onClick={handleSignUp}>Đăng ký</Button>
                             <div className={cx('to-login')}>
                                 <p>
-                                    Already have an account?{' '}
+                                    Bạn đã có tài khoản?{' '}
                                     <NavLink onClick={handleNavLinkClick} to="/login" className={cx('login')}>
-                                        Login
+                                        Đăng nhập
                                     </NavLink>
                                 </p>
                             </div>

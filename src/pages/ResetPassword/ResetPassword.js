@@ -22,12 +22,12 @@ function ResetPassword() {
 
     const handleValidation = () => {
         if (password.length < 8) {
-            dispatch(showAlert('Please enter a password with at least 8 characters.'))
+            dispatch(showAlert('Vui lòng nhập mật khẩu có ít nhất 8 ký tự.'))
             return false;
         }
 
         if (password !== confirmPassword) {
-            dispatch(showAlert('Password do not match!'));
+            dispatch(showAlert('Mật khẩu không khớp!'));
             return false;
         }
 
@@ -40,7 +40,7 @@ function ResetPassword() {
                 dispatch(showLoading())
                 await axios.post(`/users/reset-password/${id}/${token}`, { password });
                 dispatch(hideLoading())
-                dispatch(showAlert('Reset password successfully!'));
+                dispatch(showAlert('Đặt lại mật khẩu thành công!'));
                 setTimeout(() => {
                     dispatch(hideAlert());
                     setShow(false);
@@ -51,7 +51,7 @@ function ResetPassword() {
             }
         } catch (error) {
             dispatch(hideLoading())
-            dispatch(showAlert('Token expired!'));
+            dispatch(showAlert('Mã thông báo đã hết hạn!'));
         }
     };
 
@@ -64,23 +64,23 @@ function ResetPassword() {
     return (
         <WrapperAnimation show={show} showItem hiddenItem>
             <div className={cx('wrapper')}>
-                <p className={cx('title')}>Reset password</p>
-                <p className={cx('des')}>Enter a new password below to change your password</p>
+                <p className={cx('title')}>Đặt lại mật khẩu</p>
+                <p className={cx('des')}>Nhập mật khẩu mới bên dưới để thay đổi mật khẩu của bạn</p>
                 <BoxInput
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     isPassword
-                    label="New password"
+                    label="Mật khẩu mới"
                     onKeyPress={(e) => handleKeyPress(e)}
                 />
                 <BoxInput
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     isPassword
-                    label="Confirm new password"
+                    label="Xác nhận mật khẩu mới"
                     onKeyPress={(e) => handleKeyPress(e)}
                 />
-                <Button onClick={handleReset}>Reset password</Button>
+                <Button onClick={handleReset}>Đặt lại mật khẩu</Button>
             </div>
         </WrapperAnimation>
     );
