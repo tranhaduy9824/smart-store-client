@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import WrapperSlide from '~/components/WrapperSlide';
 import { NavLink } from 'react-router-dom';
-import { ElectronicIcon, FashionIcon, FoodIcon, HousewareIcon } from '~/components/Icons';
+import { CarIcon, ElectronicIcon, FashionIcon, FoodIcon, HousewareIcon } from '~/components/Icons';
 import SlideHome from './SlideHome';
 import ProductItem from '~/components/ProductItem';
 import snippet from '~/handle/snippet';
@@ -49,6 +49,7 @@ function Home() {
     const categoriesMain = [
         'Thời trang',
         'Thiết bị điện tử',
+        'Xe',
         'Đồ ăn',
         'Đồ gia dụng'
     ];
@@ -56,6 +57,7 @@ function Home() {
     const IconComponents = {
         'Thời trang': FashionIcon,
         'Thiết bị điện tử': ElectronicIcon,
+        'Xe': CarIcon,
         'Đồ ăn': FoodIcon,
         'Đồ gia dụng': HousewareIcon,
     };

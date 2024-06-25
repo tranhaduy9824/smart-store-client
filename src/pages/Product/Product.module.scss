@@ -101,3 +101,83 @@
         }
     }
 }
+
+.sidebar {
+    width: 270px;
+    margin-top: 48px;
+
+    h2 {
+        font-size: 2.4rem;
+        line-height: 1.75;
+        margin: 0;
+        padding: 0 0 25px;
+        font-weight: 500;
+    }
+
+    li {
+        padding: 0;
+        margin-bottom: 8px;
+    }
+
+    a {
+        font-size: 1.5rem;
+        padding: 5px 13px;
+        border: none;
+        width: max-content;
+        background-color: #f3f3f3;
+        border-radius: var(--border-radius);
+        transition: background-color 0.3s ease-in-out;
+
+        &:hover {
+            background-color: var(--primary);
+            color: var(--white) !important;
+        }
+    }
+
+    .category-main {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &:hover a {
+            color: var(--black);
+        }
+
+        .number-category-sub {
+            margin-left: 20px;
+            color: var(--second-text);
+        }
+
+        svg {
+            width: 1.3rem;
+            height: 100%;
+            color: var(--second-text);
+        }
+    }
+
+    .category-sub { 
+        display: none;
+        margin-top: 10px;
+        margin-left: 15px;
+
+        &:hover a {
+            color: var(--second-text);
+        }
+
+        &.show {
+            display: block;
+        }
+
+        a {
+            color: var(--second-text);
+        }
+    }
+
+    .box-price {
+        margin-top: 40px;
+
+        li:hover a {
+            color: var(--black);
+        }
+    }
+}

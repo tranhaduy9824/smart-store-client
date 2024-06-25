@@ -346,3 +346,8 @@ export const BarsIcon = () => (
         ></path>
     </svg>
 );
+
+export const CarIcon = () => (
+    <img width="50" height="50" src="https://img.icons8.com/ios/50/car--v1.png" alt="car--v1" />
+);
+
