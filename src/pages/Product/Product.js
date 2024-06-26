@@ -7,19 +7,24 @@ import { formatPrice } from '~/handle/formatPrice';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import images from '~/assets/images';
+import ProductItem from '~/components/ProductItem';
 
 const cx = classNames.bind(styles);
 
 function Product() {
     const [showCategorySub, setShowCategorySub] = useState([]);
+    const [typeSort, setTypeSort] = useState(0);
+    const [typeViewList, setTypeViewList] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const listSort = [
         'Sắp xếp mặc định',
         'Sắp xếp theo độ phổ biến',
-        'Sắp xếp theo đánh gía',
+        'Sắp xếp theo đánh giá',
         'Sắp xếp theo mới nhất',
-        'Sắp xếp theo giá: thấp đến cao',
-        'Sắp xếp theo giá: cao đến thấp',
+        'Sắp xếp theo giá: thấp -> cao',
+        'Sắp xếp theo giá: cao -> thấp',
     ];
 
     const categories = [
@@ -67,6 +72,103 @@ function Product() {
         },
     ];
 
+    const listProduct = [
+        {
+            images: [images.test, images.background_slide, images.check_email_image],
+            name: 'Famart Farmhouse Soft White',
+            price: 20000,
+            sale: 20,
+            rating: 3.5,
+            numberRating: 2,
+        },
+        {
+            images: [images.test],
+            name: 'Famart Farmhouse Soft White',
+            price: 13000,
+            rating: 3,
+            numberRating: 1,
+        },
+        {
+            images: [images.test, images.background_slide, images.check_email_image],
+            name: 'Famart Farmhouse Soft White',
+            price: 10000,
+            rating: 5,
+            numberRating: 0,
+        },
+        {
+            images: [images.test, images.background_slide, images.check_email_image],
+            name: 'Famart Farmhouse Soft White',
+            price: 54000,
+            sale: 35,
+            rating: 2.4,
+            numberRating: 10,
+        },
+        {
+            images: [images.test],
+            name: 'Famart Farmhouse Soft White',
+            price: 150000,
+            sale: 10,
+            rating: 4.5,
+            numberRating: 3,
+        },
+        {
+            images: [images.test],
+            name: 'Famart Farmhouse Soft White',
+            price: 15000,
+            sale: 10,
+            rating: 5,
+            numberRating: 5,
+        },
+        {
+            images: [images.test],
+            name: 'Famart Farmhouse Soft White',
+            price: 15000,
+            sale: 10,
+            rating: 4.2,
+            numberRating: 4,
+        },
+        {
+            images: [images.test],
+            name: 'Famart Farmhouse Soft White',
+            price: 15000,
+            sale: 10,
+            rating: 5,
+            numberRating: 0,
+        },
+        {
+            images: [images.test],
+            name: 'Famart Farmhouse Soft White',
+            price: 15000,
+            sale: 10,
+            rating: 4.2,
+            numberRating: 16,
+        },
+        {
+            images: [images.test],
+            name: 'Famart Farmhouse Soft White',
+            price: 15000,
+            sale: 10,
+            rating: 4.2,
+            numberRating: 4,
+        },
+        {
+            images: [images.test],
+            name: 'Famart Farmhouse Soft White',
+            price: 15000,
+            sale: 10,
+            rating: 4.2,
+            numberRating: 16,
+        },
+        {
+            images: [images.test],
+            name: 'Famart Farmhouse Soft White',
+            price: 15000,
+            sale: 10,
+            rating: 4.2,
+            numberRating: 16,
+        },
+    ];
+
     const handleSpanClick = (index) => {
         setShowCategorySub((prevState) => {
             const newState = [...prevState];
@@ -74,6 +176,10 @@ function Product() {
             return newState;
         });
     };
+
+    const limit = 10;
+    const startNumber = (currentPage - 1) * limit;
+    const toNumber = startNumber + limit;
 
     return (
         <div className={cx('wrapper')}>
@@ -87,11 +193,12 @@ function Product() {
                         <WrapperHover
                             noIcon
                             content={listSort}
+                            onClick={(index) => setTypeSort(index)}
                             classNameContent={cx('wrapper-list-sort')}
                             className={cx('list-sort')}
                         >
                             <div className={cx('sort')}>
-                                <span className={cx('sort-current')}>Sắp xếp mặc định</span>
+                                <span className={cx('sort-current')}>{listSort[typeSort]}</span>
                                 <DownIcon />
                             </div>
                         </WrapperHover>
@@ -99,10 +206,16 @@ function Product() {
                     <div className={cx('box-view')}>
                         <span className={cx('label-control')}>Xem</span>
                         <div className={cx('view')}>
-                            <span className={cx('grid-icon')}>
+                            <span
+                                className={cx('grid-icon', { selected: !typeViewList })}
+                                onClick={() => setTypeViewList(false)}
+                            >
                                 <GridIcon />
                             </span>
-                            <span className={cx('bars-icon')}>
+                            <span
+                                className={cx('bars-icon', { selected: typeViewList })}
+                                onClick={() => setTypeViewList(true)}
+                            >
                                 <BarsIcon />
                             </span>
                         </div>
@@ -121,10 +234,14 @@ function Product() {
                                             {category.categoryMain} <span className={cx('number-category-sub')}>6</span>
                                         </NavLink>
                                         <span onClick={() => handleSpanClick(index)}>
-                                            {!showCategorySub[index] ? <FontAwesomeIcon icon={faChevronDown} /> : <FontAwesomeIcon icon={faChevronUp} />}
+                                            {!showCategorySub[index] ? (
+                                                <FontAwesomeIcon icon={faChevronDown} />
+                                            ) : (
+                                                <FontAwesomeIcon icon={faChevronUp} />
+                                            )}
                                         </span>
                                     </li>
-                                    <ul key={index} className={cx('category-sub', { 'show': showCategorySub[index] })}>
+                                    <ul key={index} className={cx('category-sub', { show: showCategorySub[index] })}>
                                         {category.categorySub.map((item, index) => (
                                             <li key={index}>
                                                 <NavLink>{item}</NavLink>
@@ -152,7 +269,24 @@ function Product() {
                         </ul>
                     </div>
                 </div>
-                <div className={cx('content')}></div>
+                <div className={cx('content')}>
+                    <div className={cx({ 'list-product': typeViewList, 'grid-product': !typeViewList })}>
+                        {listProduct.slice(startNumber, toNumber).map((item, index) => (
+                            <ProductItem numberSnippet={50} item={item} index={index} className={cx('product-item')} />
+                        ))}
+                    </div>
+                    <div className={cx('list-page')}>
+                        {[...Array(Math.ceil((listProduct.length + 1) / limit))].map((_, index) => (
+                            <div
+                                className={cx('btn-page-change', { 'current-page': index + 1 === currentPage })}
+                                key={index}
+                                onClick={() => setCurrentPage(index + 1)}
+                            >
+                                {index + 1}
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
     );

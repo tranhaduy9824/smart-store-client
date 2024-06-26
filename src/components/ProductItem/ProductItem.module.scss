@@ -219,6 +219,11 @@
                 height: 80px;
                 margin-right: 10px;
                 border-radius: var(--border-radius);
+                border: 1px solid transparent;
+                
+                &.current-image {
+                    border: 1px solid black;
+                }
             }
         }
 

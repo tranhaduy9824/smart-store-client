@@ -15,7 +15,7 @@ import snippet from '~/handle/snippet';
 
 const cx = classNames.bind(styles);
 
-function ProductItem({ data, index, item, currentIndex, className }) {
+function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10, className }) {
     const [quantityValue, setQuantityValue] = useState(1);
     const [isFavourite, setIsFavourite] = useState(false);
     const [showQuickView, setShowQuickView] = useState(false);
@@ -77,7 +77,7 @@ function ProductItem({ data, index, item, currentIndex, className }) {
                                 <span className={cx('sale-price')}>{priceSale}</span>
                                 <del>
                                     <i>
-                                        <span className={cx('price-old')}>{snippet(price.concat(priceSale), 10 - priceSale.length)}</span>
+                                        <span className={cx('price-old')}>{snippet(price.concat(priceSale), numberSnippet - priceSale.length, price)}</span>
                                     </i>
                                 </del>
                             </>
@@ -125,7 +125,7 @@ function ProductItem({ data, index, item, currentIndex, className }) {
                     <img src={item.images[imageCurrent]} alt="Image" className={cx('image-selected')} />
                     <div className={cx('list-image')}>
                         {item.images.map((image, index) => (
-                            <img src={image} alt="Image" onClick={() => setImageCurrent(index)} />
+                            <img src={image} alt="Image" onClick={() => setImageCurrent(index)} className={cx({ 'current-image': imageCurrent === index })} />
                         ))}
                     </div>
                 </div>
