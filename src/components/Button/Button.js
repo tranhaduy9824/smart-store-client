@@ -1,14 +1,17 @@
 import classNames from "classnames/bind";
 import styles from './Button.module.scss'
+import { NavLink } from "react-router-dom";
 
 const cx = classNames.bind(styles)
 
-function Button({ iconLeft, iconRight, onClick, className, classNameIcon, classNameSub, children }) {
+function Button({ iconLeft, iconRight, to, onClick, className, classNameIcon, classNameSub, children }) {
     let Component = 'div';
 
     if (onClick) {
         Component = 'button'
-    } else  {
+    } else if (to) {
+        Component = NavLink
+    } else {
         Component = 'div'
     }
 

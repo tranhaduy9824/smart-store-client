@@ -2,7 +2,6 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ProductItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { NavLink } from 'react-router-dom';
 import RatingStar from '../RatingStar';
 import Button from '../Button';
@@ -12,6 +11,7 @@ import { faHeart as faHeartFull } from '@fortawesome/free-solid-svg-icons';
 import WrapperModel from '../WrapperModel';
 import { formatPrice } from '~/handle/formatPrice';
 import snippet from '~/handle/snippet';
+import Quantity from '../Quantity';
 
 const cx = classNames.bind(styles);
 
@@ -26,22 +26,6 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
             return `translateX(-${currentIndex * 100}%`;
         }
         return 'none';
-    };
-
-    const minusQuantity = () => {
-        if (!quantityValue.trim && quantityValue > 1) {
-            setQuantityValue(quantityValue - 1);
-        } else {
-            setQuantityValue(1);
-        }
-    };
-
-    const plusQuantity = () => {
-        if (!quantityValue.trim) {
-            setQuantityValue(quantityValue + 1);
-        } else {
-            setQuantityValue(1);
-        }
     };
 
     const price = formatPrice(item.price);
@@ -77,7 +61,9 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
                                 <span className={cx('sale-price')}>{priceSale}</span>
                                 <del>
                                     <i>
-                                        <span className={cx('price-old')}>{snippet(price.concat(priceSale), numberSnippet - priceSale.length, price)}</span>
+                                        <span className={cx('price-old')}>
+                                            {snippet(price.concat(priceSale), numberSnippet - priceSale.length, price)}
+                                        </span>
                                     </i>
                                 </del>
                             </>
@@ -87,15 +73,7 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
                     </div>
                 </div>
                 <div className={cx('box-add-cart')}>
-                    <div className={cx('box-quantity')}>
-                        <span onClick={minusQuantity}>
-                            <FontAwesomeIcon icon={faMinus} />
-                        </span>
-                        <input type="number" value={quantityValue} onChange={(e) => setQuantityValue(e.target.value)} />
-                        <span onClick={plusQuantity}>
-                            <FontAwesomeIcon icon={faPlus} />
-                        </span>
-                    </div>
+                    <Quantity quantityValue={quantityValue} setQuantityValue={setQuantityValue} />
                     <div className={cx('total')}>
                         Total: <span>{!item.sale ? priceQuantity : priceSaleQuantity}</span>
                     </div>
@@ -125,7 +103,12 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
                     <img src={item.images[imageCurrent]} alt="Image" className={cx('image-selected')} />
                     <div className={cx('list-image')}>
                         {item.images.map((image, index) => (
-                            <img src={image} alt="Image" onClick={() => setImageCurrent(index)} className={cx({ 'current-image': imageCurrent === index })} />
+                            <img
+                                src={image}
+                                alt="Image"
+                                onClick={() => setImageCurrent(index)}
+                                className={cx({ 'current-image': imageCurrent === index })}
+                            />
                         ))}
                     </div>
                 </div>
@@ -155,15 +138,7 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
                         convallis at tellus.
                     </div>
                     <h3>Quantity</h3>
-                    <div className={cx('box-quantity')}>
-                        <span onClick={minusQuantity}>
-                            <FontAwesomeIcon icon={faMinus} />
-                        </span>
-                        <input type="number" value={quantityValue} onChange={(e) => setQuantityValue(e.target.value)} />
-                        <span onClick={plusQuantity}>
-                            <FontAwesomeIcon icon={faPlus} />
-                        </span>
-                    </div>
+                    <Quantity className={cx('box-quantity')} quantityValue={quantityValue} setQuantityValue={setQuantityValue} />
                     <div className={cx('total')}>
                         Total: <span>{!item.sale ? priceQuantity : priceSaleQuantity}</span>
                     </div>
