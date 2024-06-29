@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { publicRoutes } from '~/routes';
 import DefaultLayout from '~/layouts/DefaultLayout';
 import { Fragment } from 'react';
@@ -24,21 +24,24 @@ function App() {
                         }
 
                         return (
-                            <Route
-                                key={index}
-                                path={route.path}
-                                element={
-                                    <Provider store={store}>
-                                        <Layout>
-                                            <Page />
-                                            <Loading />
-                                            <Alert />
-                                        </Layout>
-                                    </Provider>
-                                }
-                            />
+                            <>
+                                <Route
+                                    key={index}
+                                    path={route.path}
+                                    element={
+                                        <Provider store={store}>
+                                            <Layout>
+                                                <Page />
+                                                <Loading />
+                                                <Alert />
+                                            </Layout>
+                                        </Provider>
+                                    }
+                                />
+                            </>
                         );
                     })}
+                    <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </div>
         </Router>

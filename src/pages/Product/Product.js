@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import images from '~/assets/images';
 import ProductItem from '~/components/ProductItem';
+import Pagination from '~/components/Pagination';
 
 const cx = classNames.bind(styles);
 
@@ -16,7 +17,6 @@ function Product() {
     const [showCategorySub, setShowCategorySub] = useState([]);
     const [typeSort, setTypeSort] = useState(0);
     const [typeViewList, setTypeViewList] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
 
     const listSort = [
         'Sắp xếp mặc định',
@@ -177,10 +177,6 @@ function Product() {
         });
     };
 
-    const limit = 10;
-    const startNumber = (currentPage - 1) * limit;
-    const toNumber = startNumber + limit;
-
     return (
         <div className={cx('wrapper')}>
             <div className={cx('top-product')}>
@@ -271,20 +267,16 @@ function Product() {
                 </div>
                 <div className={cx('content')}>
                     <div className={cx({ 'list-product': typeViewList, 'grid-product': !typeViewList })}>
-                        {listProduct.slice(startNumber, toNumber).map((item, index) => (
-                            <ProductItem numberSnippet={50} item={item} index={index} className={cx('product-item')} />
-                        ))}
-                    </div>
-                    <div className={cx('list-page')}>
-                        {[...Array(Math.ceil((listProduct.length + 1) / limit))].map((_, index) => (
-                            <div
-                                className={cx('btn-page-change', { 'current-page': index + 1 === currentPage })}
-                                key={index}
-                                onClick={() => setCurrentPage(index + 1)}
-                            >
-                                {index + 1}
-                            </div>
-                        ))}
+                        <Pagination data={listProduct} limit={10}>
+                            {({ item, index }) => (
+                                <ProductItem
+                                    numberSnippet={50}
+                                    item={item}
+                                    index={index}
+                                    className={cx('product-item')}
+                                />
+                            )}
+                        </Pagination>
                     </div>
                 </div>
             </div>

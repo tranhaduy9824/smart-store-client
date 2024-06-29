@@ -8,6 +8,7 @@ import Login from '~/pages/Login';
 import Signup from '~/pages/Signup'; 
 import ResetPassword from '~/pages/ResetPassword';
 import NullLayout from '~/layouts/NullLayout';
+import ProductDetail from '~/pages/ProductDetail';
 
 const publicRoutes = [ 
     { 
@@ -17,6 +18,10 @@ const publicRoutes = [
     {
         path: '/product',
         component: Product
+    },
+    {
+        path: '/product/:id',
+        component: ProductDetail,
     },
     { 
         path: '/news', 
@@ -44,7 +49,7 @@ const publicRoutes = [
         path: '/reset-password/:id/:token',
         component: ResetPassword,
         layout: NullLayout
-    }
+    },
 ] 
 
 const privateRoutes = [] 
