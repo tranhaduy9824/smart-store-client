@@ -1,0 +1,106 @@
+.wrapper {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--primary);
+
+    .content {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    img {
+        width: 80px;
+        height: 80px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        margin-right: 20px;
+    }
+
+    h4 {
+        font-weight: 400;
+        margin-bottom: 5px;
+
+        a {
+            transition: color 0.3s linear;
+        }
+
+        &:hover a {
+            color: var(--primary);
+        }
+    }
+
+    p {
+        color: var(--second-text);
+    }
+
+    .price {
+        margin-left: 20px;
+
+        .sale-price {
+            font-size: 1.4rem;
+            color: var(--color-times);
+            font-weight: 700;
+            padding-right: 7px;
+        }
+
+        .price-old {
+            color: var(--second-text);
+            font-size: 1.4rem;
+        }
+
+        .price {
+            font-size: 1.4rem;
+            color: #2f8a33;
+            font-weight: 700;
+        }
+    }
+
+    .total {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        text-align: right;
+
+        svg {
+            font-size: 2.2rem;
+            margin-right: 5px;
+        }
+
+        span {
+            margin-left: 5px;
+            font-size: 2.2rem;
+            color: var(--primary);
+        }
+    }
+
+    .action {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+        padding-top: 10px;
+
+        > div {
+            padding: 7px 15px;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            color: var(--white);
+        }
+
+        .buy-again {
+            background-color: var(--background-sub);
+        }
+
+        .cancel-btn {
+            background-color: var(--color-times);
+        }
+
+        .pay-btn {
+            background-color: var(--primary);
+        }
+
+        .contact {
+            border: 1px solid var(--primary);
+            color: var(--black);
+        }
+    }
+}

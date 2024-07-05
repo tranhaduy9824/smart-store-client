@@ -9,6 +9,7 @@ import Signup from '~/pages/Signup';
 import ResetPassword from '~/pages/ResetPassword';
 import NullLayout from '~/layouts/NullLayout';
 import ProductDetail from '~/pages/ProductDetail';
+import Favourite from '~/pages/Favourite';
 
 const publicRoutes = [ 
     { 
@@ -34,6 +35,10 @@ const publicRoutes = [
     { 
         path: '/profile', 
         component: Profile, 
+    },
+    {
+        path: '/favourite',
+        component: Favourite,
     },
     { 
         path: '/login', 
