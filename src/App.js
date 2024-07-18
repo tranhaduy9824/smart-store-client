@@ -7,6 +7,7 @@ import Alert from './components/Alert';
 import Loading from './components/Loading';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
+import ContextProvider from './context';
 
 function App() {
     return (
@@ -24,21 +25,21 @@ function App() {
                         }
 
                         return (
-                            <>
-                                <Route
-                                    key={index}
-                                    path={route.path}
-                                    element={
-                                        <Provider store={store}>
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <Provider store={store}>
+                                        <ContextProvider>
                                             <Layout>
                                                 <Page />
                                                 <Loading />
                                                 <Alert />
                                             </Layout>
-                                        </Provider>
-                                    }
-                                />
-                            </>
+                                        </ContextProvider>
+                                    </Provider>
+                                }
+                            />
                         );
                     })}
                     <Route path="*" element={<Navigate to="/" />} />

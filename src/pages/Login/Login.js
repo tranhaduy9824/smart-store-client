@@ -1,8 +1,4 @@
-import { useDispatch } from 'react-redux';
-import { hideAlert, showAlert } from '~/redux/actions/alert';
-import { hideLoading, showLoading } from '~/redux/actions/loading';
-import { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
+import { Fragment, useCallback, useContext, useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
@@ -16,6 +12,9 @@ import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { LoginSocialFacebook, LoginSocialGoogle } from 'reactjs-social-login';
 import WrapperAnimation from '~/components/WrapperAnimation';
 import ForgotPassword from '~/components/ForgotPassword';
+import { AuthContext } from '~/context/AuthContext';
+import { hideAlert } from '~/redux/actions/alert';
+import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
@@ -30,20 +29,8 @@ function Login() {
     const [inputFocused, setInputFocused] = useState(false);
     const navigate = useNavigate(null);
     const { state } = useLocation(null);
-    const secretKey = process.env.REACT_APP_SECRET_KEY;
-    const facebookId = process.env.REACT_APP_FACEBOOK_APP_ID;
-    const googleId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
-    const navigateHome = () => {
-        setTimeout(() => {
-            dispatch(hideAlert());
-            setTypeOut('hiddenItem');
-            setShow(false);
-            setTimeout(() => {
-                navigate('/');
-            }, 500);
-        }, 1000);
-    };
+    const { handleLogin, handleLoginFacebook, handleLoginGoogle } = useContext(AuthContext);
 
     const handleNavLinkClick = (e) => {
         setTypeOut('outToRight');
@@ -54,100 +41,31 @@ function Login() {
         }, 500);
     };
 
-    const handleLogin = async () => {
-        if (!email || !password) {
-            dispatch(showAlert('Email và mật khẩu là bắt buộc!'));
-            return;
-        }
-
-        const authData = {
-            email,
-            password,
-        };
-
-        try {
-            dispatch(showLoading());
-            const response = await axios.post('/users/login', authData);
-            sessionStorage.setItem('token', response.data.token);
-
-            if (rememberMe) {
-                const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
-                localStorage.setItem('rememberedEmail', email);
-                localStorage.setItem('rememberedPassword', encryptedPassword);
-            } else {
-                localStorage.removeItem('rememberedEmail');
-                localStorage.removeItem('rememberedPassword');
-            }
-
-            dispatch(hideLoading());
-            dispatch(showAlert('Đăng nhập thành công!'));
-            navigateHome();
-        } catch (error) {
-            dispatch(hideLoading());
-            dispatch(showAlert('Email hoặc mật khẩu không đúng!'));
-        }
-    };
-
-    const handleLoginFacebook = async (data) => {
-        const { name, email } = data;
-        const avatar = data.picture.data.url;
-
-        const fbUserData = {
-            email,
-            name,
-            avatar,
-        };
-
-        try {
-            dispatch(showLoading());
-            const response = await axios.post('/users/facebook-login', fbUserData);
-            sessionStorage.setItem('token', response.data.token);
-
-            dispatch(hideLoading());
-            dispatch(showAlert('Đăng nhập thành công!'));
-            navigateHome();
-        } catch (error) {
-            dispatch(hideLoading());
-            dispatch(showAlert(error.toString()));
-        }
-    };
-
-    const handleLoginGoogle = async (data) => {
-        const { name, email } = data;
-
-        const ggUserData = {
-            email,
-            name,
-        };
-
-        console.log(ggUserData);
-
-        try {
-            dispatch(showLoading());
-            const response = await axios.post('/users/google-login', ggUserData);
-            sessionStorage.setItem('token', response.data.token);
-
-            dispatch(hideLoading());
-            dispatch(showAlert('Đăng nhập thành công!'));
-            navigateHome();
-        } catch (error) {
-            dispatch(hideLoading());
-            dispatch(showAlert(error.toString()));
-        }
-    };
-
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            handleLogin();
+            handleLogin(email, password, rememberMe, navigateHome);
         }
     };
+
+    const navigateHome = useCallback(() => {
+        setTimeout(() => {
+            dispatch(hideAlert());
+            setTypeOut('hiddenItem');
+            setShow(false);
+            setTimeout(() => {
+                navigate('/');
+            }, 500);
+        }, 1000);
+    }, [dispatch, navigate]);
 
     useEffect(() => {
         const savedEmail = localStorage.getItem('rememberedEmail');
         const encryptedPassword = localStorage.getItem('rememberedPassword');
 
         if (savedEmail && encryptedPassword) {
-            const savedPassword = CryptoJS.AES.decrypt(encryptedPassword, secretKey).toString(CryptoJS.enc.Utf8);
+            const savedPassword = CryptoJS.AES.decrypt(encryptedPassword, process.env.REACT_APP_SECRET_KEY).toString(
+                CryptoJS.enc.Utf8,
+            );
             setEmail(savedEmail);
             setPassword(savedPassword);
             setRememberMe(true);
@@ -203,7 +121,13 @@ function Login() {
                                 <div className={cx('forgot-password')}>
                                     <p onClick={() => setShowForgotPassword(true)}>Quên mật khẩu?</p>
                                 </div>
-                                <Button onClick={handleLogin}>Đăng nhập</Button>
+                                <Button
+                                    onClick={() => {
+                                        handleLogin(email, password, rememberMe, navigateHome);
+                                    }}
+                                >
+                                    Đăng nhập
+                                </Button>
                                 <div className={cx('line-or')}>
                                     <hr />
                                     <span>Or</span>
@@ -211,9 +135,9 @@ function Login() {
                                 </div>
                                 <div className={cx('login-social')}>
                                     <LoginSocialFacebook
-                                        appId={facebookId}
+                                        appId={process.env.REACT_APP_FACEBOOK_APP_ID}
                                         onResolve={(response) => {
-                                            handleLoginFacebook(response.data);
+                                            handleLoginFacebook(response.data, navigateHome);
                                         }}
                                         onReject={(error) => {
                                             console.log(error);
@@ -224,10 +148,10 @@ function Login() {
                                         </div>
                                     </LoginSocialFacebook>
                                     <LoginSocialGoogle
-                                        client_id={googleId}
+                                        client_id={process.env.REACT_APP_GOOGLE_CLIENT_ID}
                                         scope="openid profile email"
                                         onResolve={(response) => {
-                                            handleLoginGoogle(response.data);
+                                            handleLoginGoogle(response.data, navigateHome);
                                         }}
                                         onReject={(error) => {
                                             console.log(error);

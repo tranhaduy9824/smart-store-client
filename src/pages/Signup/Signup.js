@@ -1,8 +1,5 @@
-import { hideAlert, showAlert } from '~/redux/actions/alert';
-import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import classNames from 'classnames/bind';
 import styles from './Signup.module.scss';
 
@@ -10,18 +7,19 @@ import images from '~/assets/images';
 import BoxInput from '~/components/BoxInput';
 import Button from '~/components/Button';
 import WrapperAnimation from '~/components/WrapperAnimation';
-import { hideLoading, showLoading } from '~/redux/actions/loading';
+import { AuthContext } from '~/context/AuthContext';
 
 const cx = classNames.bind(styles);
 
 function Signup() {
-    const dispatch = useDispatch();
     const [show, setShow] = useState(true);
     const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate(null);
+
+    const { handleSignUp } = useContext(AuthContext);
 
     const handleNavLinkClick = (e) => {
         setShow(false);
@@ -31,69 +29,9 @@ function Signup() {
         }, 500);
     };
 
-    function isValidEmail(email) {
-        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-    }
-
-    const handleValidation = () => {
-        if (!fullname.trim()) {
-            dispatch(showAlert("Vui lòng nhập họ và tên."))
-            return false;
-        }
-
-        if (!email.trim() || !isValidEmail(email)) {
-            dispatch(showAlert('Vui lòng nhập email hợp lệ.'))
-            return false;
-        }
-
-        if (password.length < 8) {
-            dispatch(showAlert('Vui lòng nhập mật khẩu có ít nhất 8 ký tự.'))
-            return false;
-        }
-
-        if (password !== confirmPassword) {
-            dispatch(showAlert('Mật khẩu không khớp!'));
-            return false;
-        }
-
-        return true;
-    }
-
-    const handleSignUp = async () => {
-
-        const userData = {
-            fullname,
-            email,
-            password,
-        };
-
-        try {
-            if (handleValidation()) {
-                dispatch(showLoading())
-                await axios.post('/users/signup', userData);
-                dispatch(hideLoading())
-                dispatch(showAlert('Đăng ký thành công!'));
-                setTimeout(() => {
-                    dispatch(hideAlert());
-                    setShow(false);
-                    setTimeout(() => {
-                        navigate('/login', { state: { animation: 'inFromRight' } });
-                    }, 500);
-                }, 1000);
-            }
-        } catch (error) {
-            dispatch(hideLoading())
-            if (error.response && error.response.status === 409) {
-                dispatch(showAlert('Mail exists!'));
-            } else {
-                dispatch(showAlert('Điền đầy đủ thông tin!'));
-            }
-        }
-    };
-
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            handleSignUp();
+            handleSignUp(fullname, email, password, confirmPassword, setShow);
         }
     };
 
@@ -135,7 +73,9 @@ function Signup() {
                                 className={cx('input')}
                                 isPassword
                             />
-                            <Button onClick={handleSignUp}>Đăng ký</Button>
+                            <Button onClick={() => handleSignUp(fullname, email, password, confirmPassword, setShow)}>
+                                Đăng ký
+                            </Button>
                             <div className={cx('to-login')}>
                                 <p>
                                     Bạn đã có tài khoản?{' '}

@@ -1,35 +1,21 @@
-import { useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ForgotPassword.module.scss';
-import axios from 'axios';
 
 import WrapperModel from '../WrapperModel';
 import images from '~/assets/images';
 import BoxInput from '../BoxInput';
 import Button from '../Button';
-import { showAlert } from '~/redux/actions/alert';
-import { hideLoading, showLoading } from '~/redux/actions/loading';
+import { AuthContext } from '~/context/AuthContext';
 
 const cx = classNames.bind(styles);
 
 function ForgotPassword({ show, onClose, email }) {
-    const dispatch = useDispatch();
     const [inputEmail, setInputEmail] = useState(email);
     const [focused, setFocused] = useState(false);
     const [statusEmail, setStatusEmail] = useState(false);
 
-    const handleSendEmail = async () => {
-        try {
-            dispatch(showLoading());
-            await axios.post('/users/forgot-password', { email: inputEmail });
-            dispatch(hideLoading());
-            setStatusEmail(true);
-        } catch (error) {
-            dispatch(hideLoading());
-            dispatch(showAlert('Người dùng không tồn tại!'));
-        }
-    };
+    const { handleSendEmail } = useContext(AuthContext);
 
     useEffect(() => {
         if (inputEmail) {
@@ -39,7 +25,7 @@ function ForgotPassword({ show, onClose, email }) {
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            handleSendEmail();
+            handleSendEmail(inputEmail, setStatusEmail);
         }
     };
 
@@ -62,14 +48,16 @@ function ForgotPassword({ show, onClose, email }) {
                             onFocus={focused}
                             onKeyPress={(e) => handleKeyPress(e)}
                         />
-                        <Button onClick={handleSendEmail}>Gửi email</Button>
+                        <Button onClick={() => handleSendEmail(inputEmail, setStatusEmail)}>Gửi email</Button>
                     </div>
                 ) : (
                     <div className={cx('send-success')}>
                         <img src={images.check_email_image} alt="Check email" className={cx('image')} />
                         <p className={cx('title')}>Kiểm tra email của bạn!</p>
                         <p className={cx('des')}>Chúng tôi vừa gửi cho bạn email hướng dẫn đặt lại mật khẩu</p>
-                        <p className={cx('help-contact')}>Đối với bất kỳ câu hỏi về vấn đề xin vui lòng gửi email cho chúng tôi tại</p>
+                        <p className={cx('help-contact')}>
+                            Đối với bất kỳ câu hỏi về vấn đề xin vui lòng gửi email cho chúng tôi tại
+                        </p>
                         <p className={cx('email-contact')}>duyth.22it@vku.udn.vn</p>
                     </div>
                 )}
