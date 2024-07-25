@@ -53,6 +53,14 @@
         align-items: center;
         justify-content: center;
         color: var(--second-text);
+
+        &.is-user {
+            height: max-content;
+        }
+    }
+
+    .avatar {
+        padding: 0 15px;
     }
 
     .icon-header-user {

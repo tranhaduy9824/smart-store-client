@@ -1,4 +1,4 @@
-import { createContext, useCallback } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { useDispatch } from 'react-redux';
 
@@ -10,10 +10,21 @@ import { handleValidation } from '~/handle/handleValidation';
 
 export const AuthContext = createContext();
 
+const vietnamesePhoneRegex = /^(0|[\+84|84])(3[2-9]|5[689]|7[06-9]|8[1-6]|9[0-4,6-9])[0-9]{7}$/;
+const emailRegex =
+    /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+
 export const AuthContextProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate(null);
     const secretKey = process.env.REACT_APP_SECRET_KEY;
+
+    useEffect(() => {
+        const user = sessionStorage.getItem('User');
+
+        setUser(JSON.parse(user));
+    }, []);
 
     // Login
     const handleLogin = useCallback(
@@ -31,7 +42,7 @@ export const AuthContextProvider = ({ children }) => {
             try {
                 dispatch(showLoading());
                 const data = await postRequest('/users/login', authData);
-                sessionStorage.setItem('token', data.token);
+                sessionStorage.setItem('User', JSON.stringify(data));
 
                 if (rememberMe) {
                     const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
@@ -42,6 +53,7 @@ export const AuthContextProvider = ({ children }) => {
                     localStorage.removeItem('rememberedPassword');
                 }
 
+                setUser(data);
                 dispatch(hideLoading());
                 dispatch(showAlert('Đăng nhập thành công!'));
                 navigateHome();
@@ -67,8 +79,9 @@ export const AuthContextProvider = ({ children }) => {
             try {
                 dispatch(showLoading());
                 const data = await postRequest('/users/facebook-login', fbUserData);
-                sessionStorage.setItem('token', data.token);
+                sessionStorage.setItem('User', JSON.stringify(data));
 
+                setUser(data);
                 dispatch(hideLoading());
                 dispatch(showAlert('Đăng nhập thành công!'));
                 navigateHome();
@@ -89,13 +102,12 @@ export const AuthContextProvider = ({ children }) => {
                 name,
             };
 
-            console.log(ggUserData);
-
             try {
                 dispatch(showLoading());
                 const data = await postRequest('/users/google-login', ggUserData);
-                sessionStorage.setItem('token', data.token);
+                sessionStorage.setItem('User', JSON.stringify(data));
 
+                setUser(data);
                 dispatch(hideLoading());
                 dispatch(showAlert('Đăng nhập thành công!'));
                 navigateHome();
@@ -180,15 +192,57 @@ export const AuthContextProvider = ({ children }) => {
         }
     };
 
+    // Log out
+    const handleLogout = () => {
+        sessionStorage.removeItem('User');
+        setUser(null);
+        navigate('/');
+    };
+
+    // Update info
+    const handleUpdate = useCallback(
+        async (data) => {
+            try {
+                if (data.avatar || data.password) dispatch(showLoading());
+                const response = await postRequest('/users/update-user', data, user.token, data.avatar !== undefined);
+                if (data.avatar || data.password) dispatch(hideLoading());
+                if (data.password) dispatch(showAlert('Đổi mật khẩu thành công'));
+
+                const updatedUser = {
+                    ...user,
+                    message: response.message,
+                    user: response.user,
+                };
+
+                setUser(updatedUser);
+                sessionStorage.setItem('User', JSON.stringify(updatedUser));
+            } catch (error) {
+                if (data.email && !emailRegex.test(data.email)) {
+                    dispatch(showAlert('Email không đúng định dạng!'));
+                } else if (data.phone && !vietnamesePhoneRegex.test(data.phone)) {
+                    dispatch(showAlert('Số điện thoại không đúng định dạng!'));
+                } else if (data.avatar) {
+                    dispatch(hideLoading());
+                } else {
+                    dispatch(showAlert('Hết thời gian, vui lòng đăng nhập lại!'));
+                }
+            }
+        },
+        [dispatch, user],
+    );
+
     return (
         <AuthContext.Provider
             value={{
+                user,
                 handleLogin,
                 handleLoginFacebook,
                 handleLoginGoogle,
                 handleSignUp,
                 handleSendEmail,
                 handleReset,
+                handleLogout,
+                handleUpdate,
             }}
         >
             {children}

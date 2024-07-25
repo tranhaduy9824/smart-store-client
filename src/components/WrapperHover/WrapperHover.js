@@ -33,8 +33,8 @@ function WrapperHover({
                     {Array.isArray(content) ? (
                         <ul>
                             {content.map((item, index) => (
-                                <li key={index} onClick={() => onClick(index)}>
-                                    <NavLink to={to}>{item}</NavLink>
+                                <li key={index} onClick={() => onClick(index) || (item.onClick && item.onClick())}>
+                                    <NavLink to={item.to || to}>{item.title || item}</NavLink>
                                 </li>
                             ))}
                         </ul>

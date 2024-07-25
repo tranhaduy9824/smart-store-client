@@ -1,7 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './Profile.module.scss';
-import images from '~/assets/images';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-regular-svg-icons';
 import WrapperHover from '~/components/WrapperHover';
@@ -10,16 +9,21 @@ import BoxInput from '~/components/BoxInput';
 import OrderItem from '~/components/OrderItem';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddressItem from './AddressItem';
+import { AuthContext } from '~/context/AuthContext';
+import Avatar from '~/components/Avatar';
+import { handleValidation } from '~/handle/handleValidation';
+import { useDispatch } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function Profile() {
+    const dispatch = useDispatch();
     const [isEditFullname, setIsEditFullname] = useState(false);
     const [isEditEmail, setIsEditEmail] = useState(false);
     const [isEditPhone, setIsEditPhone] = useState(false);
-    const [fullname, setFullname] = useState('Hà Duy Nè');
-    const [email, setEmail] = useState('tranhaduy204@gmail.com');
-    const [phone, setPhone] = useState('0867125575');
+    const [fullname, setFullname] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const refFullname = useRef(null);
     const refEmail = useRef(null);
     const refPhone = useRef(null);
@@ -27,6 +31,16 @@ function Profile() {
     const [confirmNewPasswrod, setConfirmNewPassword] = useState('');
     const [showChangePassword, setShowChangePassword] = useState(false);
     const [contentSelected, setContentSelected] = useState(0);
+
+    const { user, handleUpdate } = useContext(AuthContext);
+
+    useEffect(() => {
+        if (user) {
+            setFullname(user.user.fullname);
+            setEmail(user.user.email);
+            setPhone(user.user.phone || '');
+        }
+    }, [user]);
 
     useEffect(() => {
         if (isEditFullname) {
@@ -46,7 +60,12 @@ function Profile() {
         }
     }, [isEditPhone]);
 
-    const handleChangePassword = () => {};
+    const handleChangePassword = () => {
+        if (handleValidation('Default Name', 'default@example.com', newPassword, confirmNewPasswrod, dispatch)) {
+            handleUpdate({ password: newPassword });
+            setShowChangePassword(false);
+        }
+    };
 
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
@@ -63,14 +82,18 @@ function Profile() {
                             noIcon
                             content={
                                 <div>
-                                    <label for="avatar">Chọn ảnh</label>
-                                    <input type="file" id="avatar" />
+                                    <label htmlFor="avatar">Chọn ảnh</label>
+                                    <input
+                                        type="file"
+                                        id="avatar"
+                                        onChange={(e) => handleUpdate({ avatar: e.target.files[0] })}
+                                    />
                                 </div>
                             }
                             classNameContent={cx('update-avatar')}
                             classNameWrapper={cx('update-avatar-wrapper')}
                         >
-                            <img src={images.background_slide} alt="Avatar" />
+                            <Avatar url={user && user.user.avatar} />
                         </WrapperHover>
                     </div>
                     <div className={cx('box-fullname')}>
@@ -83,10 +106,14 @@ function Profile() {
                                     setFullname(e.target.value);
                                 }}
                                 onBlur={() => {
+                                    handleUpdate({ fullname: fullname });
                                     setIsEditFullname(false);
                                 }}
                                 style={{
-                                    width: `${fullname.length}ch`,
+                                    width: `${
+                                        fullname.split('').filter((char) => /[A-Z]/.test(char)).length * 0.2 +
+                                        fullname.length
+                                    }ch`,
                                 }}
                             />
                             <span
@@ -112,6 +139,7 @@ function Profile() {
                                         setEmail(e.target.value);
                                     }}
                                     onBlur={() => {
+                                        handleUpdate({ email: email });
                                         setIsEditEmail(false);
                                     }}
                                     style={{
@@ -140,6 +168,7 @@ function Profile() {
                                         setPhone(e.target.value);
                                     }}
                                     onBlur={() => {
+                                        handleUpdate({ phone: phone });
                                         setIsEditPhone(false);
                                     }}
                                     style={{
@@ -243,7 +272,9 @@ function Profile() {
                     className={cx('input')}
                     isPassword
                 />
-                <div className={cx('btn-change-pw')}>Đổi mật khẩu</div>
+                <div className={cx('btn-change-pw')} onClick={handleChangePassword}>
+                    Đổi mật khẩu
+                </div>
             </WrapperModel>
         </>
     );

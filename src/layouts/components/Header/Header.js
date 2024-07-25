@@ -18,10 +18,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button';
 import ItemHover from './ItemHover/ItemHover';
+import { useContext } from 'react';
+import { AuthContext } from '~/context/AuthContext';
+import Avatar from '~/components/Avatar';
 
 const cx = classNames.bind(style);
 
 function Header() {
+    const { user, handleLogout } = useContext(AuthContext);
+
     return (
         <header className={cx('wrapper')}>
             <div className={cx('header-main')}>
@@ -36,10 +41,27 @@ function Header() {
                         <span>0867 125 575</span>
                         <p>Hỗ trợ 24/7</p>
                     </div>
-                    <WrapperHover content="Đăng nhập" end className={cx('box-hover')}>
-                        <ButtonIcon to="/login" className={cx('icon-header-user', 'account-icon')}>
-                            <AccountIcon />
-                        </ButtonIcon>
+                    <WrapperHover
+                        content={
+                            user
+                                ? [
+                                      { title: 'Thông tin', to: '/profile' },
+                                      { title: 'Đăng xuất', onClick: handleLogout },
+                                  ]
+                                : 'Đăng nhập'
+                        }
+                        end
+                        className={cx('box-hover', { 'is-user': user })}
+                    >
+                        {user ? (
+                            <div className={cx('avatar')}>
+                                <Avatar url={user.user.avatar} />
+                            </div>
+                        ) : (
+                            <ButtonIcon to="/login" className={cx('icon-header-user', 'account-icon')}>
+                                <AccountIcon />
+                            </ButtonIcon>
+                        )}
                     </WrapperHover>
                     <WrapperHover content="Yêu thích" end className={cx('box-hover')}>
                         <ButtonIcon count="0" to="/favourite" className={cx('icon-header-user', 'favourite-icon')}>
@@ -82,10 +104,7 @@ function Header() {
                                 <ItemHover index={3} contentHover={['Đồ ăn', 'Thức uống', 'Nguyên liệu']}>
                                     Đồ ăn và thức uống
                                 </ItemHover>
-                                <ItemHover
-                                    index={4}
-                                    contentHover={['Nội địa', 'Thiết bị gia dụng', 'Đồ gia dụng nhỏ']}
-                                >
+                                <ItemHover index={4} contentHover={['Nội địa', 'Thiết bị gia dụng', 'Đồ gia dụng nhỏ']}>
                                     Đồ gia dụng
                                 </ItemHover>
                             </ul>
@@ -122,7 +141,10 @@ function Header() {
                     <Button className={cx('wrapper-item-navigate')} classNameSub={cx('item-navigate')}>
                         Trang chủ
                     </Button>
-                    <WrapperHover content={['Sản phẩm', 'Giỏ hàng', 'Thanh toán']} classNameWrapper={cx('wrapper-hover-navigate')}>
+                    <WrapperHover
+                        content={['Sản phẩm', 'Giỏ hàng', 'Thanh toán']}
+                        classNameWrapper={cx('wrapper-hover-navigate')}
+                    >
                         <Button
                             iconRight={<DownIcon />}
                             className={cx('wrapper-item-navigate')}
@@ -132,7 +154,10 @@ function Header() {
                             Sản phẩm
                         </Button>
                     </WrapperHover>
-                    <WrapperHover content={['Blog mặc định', 'Bài đăng đơn']} classNameWrapper={cx('wrapper-hover-navigate')}>
+                    <WrapperHover
+                        content={['Blog mặc định', 'Bài đăng đơn']}
+                        classNameWrapper={cx('wrapper-hover-navigate')}
+                    >
                         <Button
                             iconRight={<DownIcon />}
                             className={cx('wrapper-item-navigate')}
@@ -142,7 +167,10 @@ function Header() {
                             Blog
                         </Button>
                     </WrapperHover>
-                    <WrapperHover content={['Về chúng tôi', 'Liên hệ chúng tôi', 'Câu hỏi thường gặp', 'Trang 404', 'Sắp ra mắt']} classNameWrapper={cx('wrapper-hover-navigate')}>
+                    <WrapperHover
+                        content={['Về chúng tôi', 'Liên hệ chúng tôi', 'Câu hỏi thường gặp', 'Trang 404', 'Sắp ra mắt']}
+                        classNameWrapper={cx('wrapper-hover-navigate')}
+                    >
                         <Button
                             iconRight={<DownIcon />}
                             className={cx('wrapper-item-navigate')}
