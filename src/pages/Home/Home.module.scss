@@ -8,7 +8,7 @@
     width: 100%;
     height: 500px;
     padding: 40px var(--horizontal-spacing-content);
-    
+
     .background-slide {
         position: absolute;
         top: 0;
@@ -68,28 +68,41 @@
             font-size: 3rem;
             line-height: 1.33333;
             margin-bottom: 11px;
-            font-weight: 700;
+            font-weight: 500;
         }
 
         .name {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             margin-bottom: 5px;
+            font-weight: 500;
         }
 
         .price {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             margin-bottom: 20px;
-            font-weight: 700;
-            
+            font-weight: 500;
+
             span {
                 color: var(--primary);
-                margin-right: 5px;
+                margin-right: 10px;
             }
         }
 
         .btn-buy {
             width: 150px;
             cursor: pointer;
+
+            &:hover > div {
+                background-color: var(--primary);
+                color: var(--white);
+            }
+
+            > div {
+                background-color: transparent;
+                color: var(--primary);
+                border: 1px solid var(--primary);
+                transition: background-color 0.5s, color 0.5s;
+            }
         }
 
         .image {
@@ -125,7 +138,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-        }        
+        }
     }
 }
 

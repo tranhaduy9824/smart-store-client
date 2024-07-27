@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { publicRoutes } from '~/routes';
+import { routes } from '~/routes';
 import DefaultLayout from '~/layouts/DefaultLayout';
 import { Fragment } from 'react';
 
@@ -8,13 +8,14 @@ import Loading from './components/Loading';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import ContextProvider from './context';
+import AuthGuard from './utils/AuthGuard';
 
 function App() {
     return (
         <Router>
             <div className="App">
                 <Routes>
-                    {publicRoutes.map((route, index) => {
+                    {routes.map((route, index) => {
                         const Page = route.component;
                         let Layout = DefaultLayout;
 
@@ -32,9 +33,19 @@ function App() {
                                     <Provider store={store}>
                                         <ContextProvider>
                                             <Layout>
-                                                <Page />
-                                                <Loading />
-                                                <Alert />
+                                                {route.private ? (
+                                                    <AuthGuard>
+                                                        <Page />
+                                                        <Loading />
+                                                        <Alert />
+                                                    </AuthGuard>
+                                                ) : (
+                                                    <>
+                                                        <Page />
+                                                        <Loading />
+                                                        <Alert />
+                                                    </>
+                                                )}
                                             </Layout>
                                         </ContextProvider>
                                     </Provider>

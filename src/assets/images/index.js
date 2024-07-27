@@ -6,6 +6,8 @@ const images = {
     logo_and_text: require('~/assets/images/logo_and_text.png'),
     test: require('~/assets/images/test.png'),
     background_slide: require('~/assets/images/background_slide.jpg'),
+    logo_no_background: require('~/assets/images/logo_no_background.png'),
+    play_btn: require('~/assets/images/play_btn.webp'),
 };
 
 export default images;

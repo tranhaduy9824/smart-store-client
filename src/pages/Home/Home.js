@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
 import images from '~/assets/images';
@@ -11,6 +11,8 @@ import { CarIcon, ElectronicIcon, FashionIcon, FoodIcon, HousewareIcon } from '~
 import SlideHome from './SlideHome';
 import ProductItem from '~/components/ProductItem';
 import snippet from '~/handle/snippet';
+import { ProductContext } from '~/context/ProductContext';
+import { formatPrice } from '~/handle/formatPrice';
 
 const cx = classNames.bind(styles);
 
@@ -19,45 +21,15 @@ function Home() {
     const [currentIndexCategory, setCurrentIndexCategory] = useState(0);
     const [currentIndexRecommend, setCurrentIndexRecommend] = useState(0);
     const [currentIndexNews, setCurrentIndexNews] = useState(0);
-    const slides = [
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 20000,
-            sale: 20,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 20000,
-            sale: 20,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 20000,
-            sale: 20,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 20000,
-            sale: 20,
-        },
-    ];
 
-    const categoriesMain = [
-        'Thời trang',
-        'Thiết bị điện tử',
-        'Xe',
-        'Đồ ăn',
-        'Đồ gia dụng'
-    ];
+    const { saleProducts, newProducts } = useContext(ProductContext);
+
+    const categoriesMain = ['Thời trang', 'Thiết bị điện tử', 'Xe', 'Đồ ăn', 'Đồ gia dụng'];
 
     const IconComponents = {
         'Thời trang': FashionIcon,
         'Thiết bị điện tử': ElectronicIcon,
-        'Xe': CarIcon,
+        Xe: CarIcon,
         'Đồ ăn': FoodIcon,
         'Đồ gia dụng': HousewareIcon,
     };
@@ -144,11 +116,11 @@ function Home() {
     ];
 
     const handlePrevSlide = () => {
-        setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+        setCurrentIndex((prev) => (prev - 1 + saleProducts.length) % saleProducts.length);
     };
 
     const handleNextSlide = () => {
-        setCurrentIndex((prev) => (prev + 1) % slides.length);
+        setCurrentIndex((prev) => (prev + 1) % saleProducts.length);
     };
 
     const getCategoryTransform = (index, currentIndexCategory) => {
@@ -162,7 +134,7 @@ function Home() {
         <div className={cx('wrapper')}>
             <div className={cx('box-slide')}>
                 <WrapperSlide
-                    data={slides}
+                    data={saleProducts}
                     currentIndex={currentIndex}
                     setCurrentIndex={setCurrentIndex}
                     timeDelay={4000}
@@ -170,28 +142,31 @@ function Home() {
                     handlePrev={handlePrevSlide}
                     handleNext={handleNextSlide}
                 >
-                    {slides.map((item, index) => (
-                        <div
-                            key={index}
-                            className={cx('slide-item')}
-                            style={{ transform: `translateX(calc(-${currentIndex * 100}% - ${currentIndex * 20}px))` }}
-                        >
-                            <div className={cx('content')}>
-                                <h2 className={cx('heading')}>Giảm giá {item.sale}%</h2>
-                                <h3 className={cx('name')}>{item.name}</h3>
-                                <p className={cx('price')}>
-                                    <span>${((item.price * (100 - item.sale)) / 100).toFixed(2)}</span>
-                                    <i>
-                                        <del>${item.price.toFixed(2)}</del>
-                                    </i>
-                                </p>
-                                <Button className={cx('btn-buy')}>Mua ngay</Button>
+                    {saleProducts &&
+                        saleProducts.map((item, index) => (
+                            <div
+                                key={index}
+                                className={cx('slide-item')}
+                                style={{
+                                    transform: `translateX(calc(-${currentIndex * 100}% - ${currentIndex * 20}px))`,
+                                }}
+                            >
+                                <div className={cx('content')}>
+                                    <h2 className={cx('heading')}>Giảm giá {item.sale}%</h2>
+                                    <h3 className={cx('name')}>{item.name}</h3>
+                                    <p className={cx('price')}>
+                                        <span>{formatPrice((item.price * (100 - item.sale)) / 100)}</span>
+                                        <i>
+                                            <del>{formatPrice(item.price)}</del>
+                                        </i>
+                                    </p>
+                                    <Button className={cx('btn-buy')}>Mua ngay</Button>
+                                </div>
+                                <div className={cx('image')}>
+                                    <img src={item.files.photos[0]} alt="Image" />
+                                </div>
                             </div>
-                            <div className={cx('image')}>
-                                <img src={item.images[0]} alt="Image" />
-                            </div>
-                        </div>
-                    ))}
+                        ))}
                 </WrapperSlide>
                 <div className={cx('controls')}>
                     <button className={cx('prev')} onClick={handlePrevSlide}>
@@ -231,7 +206,7 @@ function Home() {
             <div className={cx('box-recommend')}>
                 <div className={cx('recommend')}>
                     <SlideHome
-                        data={listRecommend}
+                        data={newProducts}
                         setCurrentIndex={setCurrentIndexRecommend}
                         showNumber={5}
                         title="Gợi ý"
@@ -239,9 +214,9 @@ function Home() {
                         link="/product"
                         classNameSlide={cx('list-recommend')}
                     >
-                        {listRecommend.map((item, index) => (
+                        {newProducts && newProducts.map((item, index) => (
                             <ProductItem
-                                data={listRecommend}
+                                data={newProducts}
                                 item={item}
                                 index={index}
                                 currentIndex={currentIndexRecommend}
@@ -253,7 +228,7 @@ function Home() {
             <div className={cx('box-news')}>
                 <div className={cx('news')}>
                     <SlideHome
-                        data={listRecommend}
+                        data={newProducts}
                         setCurrentIndex={setCurrentIndexNews}
                         showNumber={5}
                         title="Mới nhất"
@@ -261,9 +236,9 @@ function Home() {
                         link="/product"
                         classNameSlide={cx('list-news')}
                     >
-                        {listRecommend.map((item, index) => (
+                        {newProducts && newProducts.map((item, index) => (
                             <ProductItem
-                                data={listRecommend}
+                                data={newProducts}
                                 item={item}
                                 index={index}
                                 currentIndex={currentIndexNews}

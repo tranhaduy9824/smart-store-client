@@ -15,16 +15,17 @@ export const postRequest = async (url, body, token = null, formData = false) => 
     return data;
 };
 
-export const getRequest = async (url, token = null) => {
-    const config = token
-        ? {
-              headers: {
-                  Authorization: `Bearer ${token}`,
-              },
-          }
-        : {};
+export const getRequest = async (url, params = {}, token = null) => {
+    const config = {
+        headers: {},
+        params, 
+    };
 
-    const response = await axios.post(url, config);
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    const response = await axios.get(url, config);
 
     const data = await response.data;
 

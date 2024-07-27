@@ -6,17 +6,17 @@ function formatPrice(num) {
             num.toString().slice(-6, -3).padStart(3, '0') +
             '.' +
             num.toString().slice(-3).padStart(3, '0') +
-            ' VND'
+            '₫'
         );
     } else if (num >= 1000) {
-        return Math.floor(num / 1000) + '.' + num.toString().slice(-3).padStart(3, '0') + ' VND';
+        return Math.floor(num / 1000) + '.' + num.toString().slice(-3).padStart(3, '0') + '₫';
     } else {
-        return num.toString() + ' VND';
+        return num.toString() + '₫';
     }
 }
 
 function convertPriceToNumber(priceStr) {
-    priceStr = priceStr.replace(' VND', '');
+    priceStr = priceStr.replace('₫', '');
     const parts = priceStr.split('.');
 
     if (parts.length === 1) {

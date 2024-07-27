@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar as faStarDone, faStarHalfAlt, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { faStar as faStarYet } from '@fortawesome/free-regular-svg-icons';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 import classNames from 'classnames/bind';
 import styles from './Search.module.scss';
 import { LoadingIcon, SearchIcon } from '../Icons';
 import useDebounce from '~/hooks/useDebounce';
-import images from '~/assets/images';
 import { NavLink } from 'react-router-dom';
 import RatingStar from '../RatingStar';
 import { formatPrice } from '~/handle/formatPrice';
+import { CategoryContext } from '~/context/CategoryContext';
+import { ProductContext } from '~/context/ProductContext';
 
 const cx = classNames.bind(styles);
 
@@ -18,94 +18,67 @@ function Search() {
     const [inputValue, setInputValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('0');
     const [inputing, setInputing] = useState(true);
-    const [results, setResults] = useState([]);
     const [showLoading, setShowLoading] = useState(false);
     const inputRef = useRef(null);
 
     const debouceValue = useDebounce(inputValue, 500);
+
+    const { categories } = useContext(CategoryContext);
+    const { searchResult, setSearchResult, searchProduct, notFound, setNotFound } = useContext(ProductContext);
 
     const handleInputing = () => {
         setInputing(true);
         inputRef.current.focus();
     };
 
-    const searchResult = [
-        {
-            image: images.test,
-            name: 'Farmat Farmhouse Soft White',
-            rating: 4,
-            price: 40000,
-            sale: 10,
-        },
-        {
-            image: images.test,
-            name: 'Miko The Panda Water Bottle',
-            rating: 3.5,
-            price: 10000,
-        },
-        {
-            image: images.test,
-            name: 'Wayfair Basics Dinner Plate Storage',
-            rating: 2.4,
-            price: 32000,
-            sale: 50,
-        },
-        {
-            image: images.test,
-            name: 'Wayfair Basics Dinner Plate Storage',
-            rating: 3,
-            price: 32000,
-            sale: 50,
-        },
-    ];
-
     const handleSearch = () => {
-        setShowLoading(true);
-        fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${debouceValue}&type=less`)
-            .then((res) => res.json())
-            .then((data) => {
-                setResults(searchResult);
-                setShowLoading(false);
-            })
-            .catch(() => {
-                setShowLoading(false);
-            });
+        const searchParams = { name: debouceValue.trim() };
+
+        if (selectedValue !== '0') {
+            const selectedCategory = categories.find(
+                (category) => category.name === selectedValue || category.categorySub.includes(selectedValue),
+            );
+            if (selectedCategory) {
+                if (selectedCategory.name === selectedValue) {
+                    searchParams.category = selectedValue;
+                } else {
+                    searchParams.categorySub = selectedValue;
+                }
+            }
+        }
+
+        searchProduct(searchParams, setShowLoading);
     };
 
     useEffect(() => {
-        if (debouceValue.trim('')) {
-            setShowLoading(true);
-            fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${debouceValue}&type=less`)
-                .then((res) => res.json())
-                .then((data) => {
-                    setResults(searchResult);
-                    setShowLoading(false);
-                })
-                .catch(() => {
-                    setShowLoading(false);
-                });
+        if (debouceValue.trim() !== '') {
+            handleSearch();
+        } else {
+            setSearchResult([]);
+            setNotFound(false);
         }
-    }, [debouceValue]);
+    }, [debouceValue, selectedValue]);
 
     return (
         <div className={cx('wrapper')}>
             <div className={cx('box-search')}>
-                <select className={cx('select-category')} value={selectedValue} onChange={e => setSelectedValue(e.target.value)}>
-                    <option value="0">
-                        Tất cả danh mục
-                    </option>
-                    <option value="1" >
-                        Tất cả danh mục
-                    </option>
-                    <option value="2" >
-                        Tất cả danh mục
-                    </option>
-                    <option value="3" >
-                        Tất cả danh mục
-                    </option>
-                    <option value="4" >
-                        Tất cả danh mục
-                    </option>
+                <select
+                    className={cx('select-category')}
+                    value={selectedValue}
+                    onChange={(e) => setSelectedValue(e.target.value)}
+                >
+                    <option value="0">Tất cả danh mục</option>
+                    {categories &&
+                        categories.map((category, index) => (
+                            <React.Fragment key={index}>
+                                <option>{category.name}</option>
+                                {category.categorySub.map((item, index2) => (
+                                    <option value={item} key={index2}>
+                                        &nbsp;&nbsp;&nbsp;{item}
+                                    </option>
+                                ))}
+                            </React.Fragment>
+                        ))}
                 </select>
                 <div className={cx('space-dash')}>
                     <div className={cx('dash')}></div>
@@ -122,7 +95,7 @@ function Search() {
                         <span
                             onClick={() => {
                                 setInputValue('');
-                                setResults([]);
+                                setSearchResult([]);
                             }}
                             className={cx('icon-delete')}
                         >
@@ -139,17 +112,17 @@ function Search() {
                     <SearchIcon />
                 </div>
             </div>
-            {results.length > 0 && inputValue.length > 0 && (
+            {inputValue.trim() !== '' && !notFound && searchResult.length > 0 && (
                 <div className={cx('search-result')}>
-                    {results.map((result, index) => (
+                    {searchResult.map((result, index) => (
                         <div key={index} className={cx('item-result')}>
                             <div className={cx('image')}>
-                                <NavLink to="/product/:id">
-                                    <img src={result.image} alt="Image" />
+                                <NavLink to={`/product/${result._id}`}>
+                                    <img src={result.files.photos[0]} alt="Image" />
                                 </NavLink>
                             </div>
                             <div className={cx('content-item')}>
-                                <NavLink to="/product/:id" className={cx('title-item')}>
+                                <NavLink to={`/product/${result._id}`} className={cx('title-item')}>
                                     {result.name}
                                 </NavLink>
                                 <div className={cx('rating-item')}>
@@ -174,6 +147,11 @@ function Search() {
                             </div>
                         </div>
                     ))}
+                </div>
+            )}
+            {inputValue.trim() !== '' && notFound && (
+                <div className={cx('search-result')}>
+                    <p className={cx('not-found-product')}>Không tìm thấy sản phẩm</p>
                 </div>
             )}
         </div>

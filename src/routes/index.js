@@ -1,62 +1,61 @@
-// Layouts 
-import Home from '~/pages/Home'; 
+// Layouts
+import Home from '~/pages/Home';
 import Product from '~/pages/Product';
-import News from '~/pages/News'; 
-import Cart from '~/pages/Cart'; 
-import Profile from '~/pages/Profile'; 
-import Login from '~/pages/Login'; 
-import Signup from '~/pages/Signup'; 
+import News from '~/pages/News';
+import Cart from '~/pages/Cart';
+import Profile from '~/pages/Profile';
+import Login from '~/pages/Login';
+import Signup from '~/pages/Signup';
 import ResetPassword from '~/pages/ResetPassword';
 import NullLayout from '~/layouts/NullLayout';
 import ProductDetail from '~/pages/ProductDetail';
 import Favourite from '~/pages/Favourite';
 
-const publicRoutes = [ 
-    { 
-        path: '/', 
-        component: Home, 
+export const routes = [
+    {
+        path: '/',
+        component: Home,
     },
     {
         path: '/product',
-        component: Product
+        component: Product,
     },
     {
         path: '/product/:id',
         component: ProductDetail,
     },
-    { 
-        path: '/news', 
-        component: News 
-    }, 
-    { 
-        path: '/cart', 
-        component: Cart, 
-    }, 
-    { 
-        path: '/profile', 
-        component: Profile, 
+    {
+        path: '/news',
+        component: News,
     },
     {
-        path: '/favourite',
-        component: Favourite,
-    },
-    { 
-        path: '/login', 
+        path: '/login',
         component: Login,
-        layout: NullLayout
-    }, 
-    { 
-        path: '/signup', 
+        layout: NullLayout,
+    },
+    {
+        path: '/signup',
         component: Signup,
-        layout: NullLayout
+        layout: NullLayout,
     },
     {
         path: '/reset-password/:id/:token',
         component: ResetPassword,
-        layout: NullLayout
+        layout: NullLayout,
     },
-] 
-
-const privateRoutes = [] 
-
-export { publicRoutes, privateRoutes }
+    {
+        path: '/cart',
+        component: Cart,
+        private: true,
+    },
+    {
+        path: '/profile',
+        component: Profile,
+        private: true,
+    },
+    {
+        path: '/favourite',
+        component: Favourite,
+        private: true,
+    },
+];

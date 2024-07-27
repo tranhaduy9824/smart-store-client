@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable jsx-a11y/img-redundant-alt */
+import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ProductItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,6 +13,7 @@ import WrapperModel from '../WrapperModel';
 import { formatPrice } from '~/handle/formatPrice';
 import snippet from '~/handle/snippet';
 import Quantity from '../Quantity';
+import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
@@ -19,7 +21,8 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
     const [quantityValue, setQuantityValue] = useState(1);
     const [isFavourite, setIsFavourite] = useState(false);
     const [showQuickView, setShowQuickView] = useState(false);
-    const [imageCurrent, setImageCurrent] = useState(0);
+    const [imageCurrent, setImageCurrent] = useState(item.files.video ? 0 : 1);
+    const videoRef = useRef(null);
 
     const getTransform = (index, currentIndex) => {
         if (data.length > 6) {
@@ -33,6 +36,12 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
     const priceQuantity = formatPrice(item.price * quantityValue);
     const priceSaleQuantity = formatPrice(((item.price * (100 - item.sale)) / 100) * quantityValue);
 
+    useEffect(() => {
+        if (!showQuickView && videoRef.current) {
+            videoRef.current.pause();
+        }
+    }, [showQuickView]);
+
     return (
         <>
             <div
@@ -44,12 +53,12 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
             >
                 <div className={cx('image')}>
                     <NavLink>
-                        <img src={item.images[0]} alt="Image" />
+                        <img src={item.files.photos[0]} alt="Image" />
                     </NavLink>
                 </div>
                 <div className={cx('content')}>
                     <h2 className={cx('name')}>
-                        <NavLink>{item.name}</NavLink>
+                        <NavLink>{snippet(item.name, 29)}</NavLink>
                     </h2>
                     <div className={cx('rating')}>
                         <RatingStar rating={item.rating} />
@@ -100,16 +109,56 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
                 classIcon={cx('icon-close')}
             >
                 <div className={cx('box-image')}>
-                    <img src={item.images[imageCurrent]} alt="Image" className={cx('image-selected')} />
+                    {item.files.video && imageCurrent === 0 ? (
+                        <video
+                            ref={videoRef}
+                            width="400"
+                            height="400"
+                            muted
+                            controls
+                            preload="metadata"
+                            className={cx('video-selected')}
+                        >
+                            <source src={item.files.video} type="video/mp4" />
+                            Trình duyệt của bạn không hỗ trợ thẻ video.
+                        </video>
+                    ) : (
+                        <img src={item.files.photos[imageCurrent - 1]} alt="Image" className={cx('image-selected')} />
+                    )}
                     <div className={cx('list-image')}>
-                        {item.images.map((image, index) => (
-                            <img
-                                src={image}
-                                alt="Image"
-                                onClick={() => setImageCurrent(index)}
-                                className={cx({ 'current-image': imageCurrent === index })}
-                            />
-                        ))}
+                        {[item.files.video && { type: 'video', src: item.files.video }, ...item.files.photos].map(
+                            (file, index) => (
+                                <>
+                                    {file ? (
+                                        file.type === 'video' ? (
+                                            <div
+                                                key={index}
+                                                className={cx('image-container', {
+                                                    'current-image': imageCurrent === index,
+                                                })}
+                                                onClick={() => setImageCurrent(index)}
+                                            >
+                                                <video width="80" height="80" onClick={() => setImageCurrent(index)}>
+                                                    <source src={file.src} type="video/mp4" />
+                                                    Trình duyệt của bạn không hỗ trợ thẻ video.
+                                                </video>
+                                                <img src={images.play_btn} alt="Video" className={cx('btn-video')} />
+                                            </div>
+                                        ) : (
+                                            <img
+                                                src={file}
+                                                alt="Image"
+                                                key={index}
+                                                className={cx('image-container', {
+                                                    'current-image': imageCurrent === index,
+                                                })}
+                                                onClick={() => setImageCurrent(index)}
+                                            />
+                                        )
+                                    ) : null}
+                                </>
+                            ),
+                        )}
                     </div>
                 </div>
                 <div className={cx('box-info')}>
@@ -132,13 +181,17 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
                             <span className={cx('price')}>{price}</span>
                         )}
                     </div>
-                    <div className={cx('des')}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna justo, lacinia eget
-                        consectetur sed, convallis at tellus. Vivamus magna justo, lacinia eget consectetur sed,
-                        convallis at tellus.
-                    </div>
-                    <h3>Quantity</h3>
-                    <Quantity className={cx('box-quantity')} quantityValue={quantityValue} setQuantityValue={setQuantityValue} />
+                    <h3>Mô tả</h3>
+                    <div
+                        className={cx('des')}
+                        dangerouslySetInnerHTML={{ __html: item.des.replace(/\n/g, '<br>') }}
+                    ></div>
+                    <h3>Số lượng</h3>
+                    <Quantity
+                        className={cx('box-quantity')}
+                        quantityValue={quantityValue}
+                        setQuantityValue={setQuantityValue}
+                    />
                     <div className={cx('total')}>
                         Total: <span>{!item.sale ? priceQuantity : priceSaleQuantity}</span>
                     </div>
