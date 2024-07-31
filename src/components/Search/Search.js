@@ -24,7 +24,8 @@ function Search() {
     const debouceValue = useDebounce(inputValue, 500);
 
     const { categories } = useContext(CategoryContext);
-    const { searchResult, setSearchResult, searchProduct, notFound, setNotFound } = useContext(ProductContext);
+    const { searchResult, setSearchResult, searchProduct, notFound, setNotFound, addProductToRecent } =
+        useContext(ProductContext);
 
     const handleInputing = () => {
         setInputing(true);
@@ -117,12 +118,16 @@ function Search() {
                     {searchResult.map((result, index) => (
                         <div key={index} className={cx('item-result')}>
                             <div className={cx('image')}>
-                                <NavLink to={`/product/${result._id}`}>
+                                <NavLink to={`/product/${result._id}`} onClick={() => addProductToRecent(result)}>
                                     <img src={result.files.photos[0]} alt="Image" />
                                 </NavLink>
                             </div>
                             <div className={cx('content-item')}>
-                                <NavLink to={`/product/${result._id}`} className={cx('title-item')}>
+                                <NavLink
+                                    to={`/product/${result._id}`}
+                                    onClick={() => addProductToRecent(result)}
+                                    className={cx('title-item')}
+                                >
                                     {result.name}
                                 </NavLink>
                                 <div className={cx('rating-item')}>

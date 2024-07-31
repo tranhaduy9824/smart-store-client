@@ -18,10 +18,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button';
 import ItemHover from './ItemHover/ItemHover';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AuthContext } from '~/context/AuthContext';
 import Avatar from '~/components/Avatar';
 import { CategoryContext } from '~/context/CategoryContext';
+import { ProductContext } from '~/context/ProductContext';
 
 const cx = classNames.bind(style);
 
@@ -29,6 +30,11 @@ function Header() {
     const navigate = useNavigate();
     const { user, handleLogout } = useContext(AuthContext);
     const { categories } = useContext(CategoryContext);
+    const { recentProducts, getRecentProducts } = useContext(ProductContext);
+
+    useEffect(() => {
+        getRecentProducts();
+    }, [recentProducts, getRecentProducts]);
 
     return (
         <header className={cx('wrapper')}>
@@ -199,15 +205,13 @@ function Header() {
                     <WrapperHover
                         content={
                             <ul>
-                                <li>
-                                    <img src={images.test} alt="Ảnh được xem gần đây" />
-                                </li>
-                                <li>
-                                    <img src={images.test} alt="Ảnh được xem gần đây" />
-                                </li>
-                                <li>
-                                    <img src={images.test} alt="Ảnh được xem gần đây" />
-                                </li>
+                                {recentProducts?.map((product, index) => (
+                                    <li key={index}>
+                                        <NavLink to={`/product/${product.id}`}>
+                                            <img src={product.imageUrl} alt="Ảnh được xem gần đây" />
+                                        </NavLink>
+                                    </li>
+                                ))}
                             </ul>
                         }
                         end

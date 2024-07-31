@@ -15,6 +15,7 @@ export const ProductContextProvider = ({ children }) => {
     const [saleProducts, setSaleProducts] = useState([]);
     const [newProducts, setNewProducts] = useState([]);
     const [recommendProducts, setRecommendProducts] = useState([]);
+    const [recentProducts, setRecentProducts] = useState([]);
     const [notFound, setNotFound] = useState(false);
 
     const { user } = useContext(AuthContext);
@@ -121,6 +122,31 @@ export const ProductContextProvider = ({ children }) => {
         }
     }, []);
 
+    const addProductToRecent = useCallback((product) => {
+        const recentProducts = JSON.parse(localStorage.getItem('recentProducts')) || [];
+
+        const index = recentProducts.findIndex((p) => p.id === product._id);
+
+        if (index > -1) {
+            recentProducts.splice(index, 1);
+        }
+
+        recentProducts.unshift({
+            id: product._id,
+            imageUrl: product.files.photos[0],
+        });
+
+        if (recentProducts.length > 10) {
+            recentProducts.pop();
+        }
+
+        localStorage.setItem('recentProducts', JSON.stringify(recentProducts));
+    }, []);
+
+    const getRecentProducts = useCallback(() => {
+        setRecentProducts(JSON.parse(localStorage.getItem('recentProducts')) || []);
+    }, []);
+
     useEffect(() => {
         getNewProducts();
         getSaleProducts();
@@ -148,6 +174,9 @@ export const ProductContextProvider = ({ children }) => {
                 recommendProducts,
                 getRecommendProducts,
                 getProductsByShop,
+                recentProducts,
+                addProductToRecent,
+                getRecentProducts,
             }}
         >
             {children}

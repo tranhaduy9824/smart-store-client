@@ -26,7 +26,7 @@ function Home() {
     const location = useLocation();
 
     const { categories } = useContext(CategoryContext);
-    const { saleProducts, newProducts, recommendProducts } = useContext(ProductContext);
+    const { saleProducts, newProducts, recommendProducts, addProductToRecent } = useContext(ProductContext);
 
     const IconComponents = {
         'Thời trang': FashionIcon,
@@ -92,7 +92,13 @@ function Home() {
                                     </p>
                                     <Button className={cx('btn-buy')}>Mua ngay</Button>
                                 </div>
-                                <div className={cx('image')} onClick={() => navigate(`/product/${item._id}`)}>
+                                <div
+                                    className={cx('image')}
+                                    onClick={() => {
+                                        navigate(`/product/${item._id}`);
+                                        addProductToRecent(item);
+                                    }}
+                                >
                                     <img src={item.files.photos[0]} alt="Image" />
                                 </div>
                             </div>

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ProductItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,6 +14,7 @@ import { formatPrice } from '~/handle/formatPrice';
 import snippet from '~/handle/snippet';
 import Quantity from '../Quantity';
 import images from '~/assets/images';
+import { ProductContext } from '~/context/ProductContext';
 
 const cx = classNames.bind(styles);
 
@@ -24,6 +25,8 @@ function ProductItem({ data = [], index, item, currentIndex = 0, numberSnippet =
     const [showQuickView, setShowQuickView] = useState(false);
     const [imageCurrent, setImageCurrent] = useState(item.files && item.files.video ? 0 : 1);
     const videoRef = useRef(null);
+
+    const { addProductToRecent } = useContext(ProductContext);
 
     const getTransform = (index, currentIndex) => {
         if (data.length > 6) {
@@ -52,13 +55,21 @@ function ProductItem({ data = [], index, item, currentIndex = 0, numberSnippet =
                     transform: getTransform(index, currentIndex),
                 }}
             >
-                <div className={cx('image')} onClick={() => navigate(`/product/${item._id}`)}>
+                <div
+                    className={cx('image')}
+                    onClick={() => {
+                        navigate(`/product/${item._id}`);
+                        addProductToRecent(item);
+                    }}
+                >
                     <img src={item.files && item.files.photos[0]} alt="Image" />
                     {item?.sale > 0 && <div className={cx('sale')}>- {item?.sale}%</div>}
                 </div>
                 <div className={cx('content')}>
                     <h2 className={cx('name')}>
-                        <NavLink to={`/product/${item._id}`}>{snippet(item.name, 29)}</NavLink>
+                        <NavLink to={`/product/${item._id}`} onClick={() => addProductToRecent(item)}>
+                            {snippet(item.name, 29)}
+                        </NavLink>
                     </h2>
                     <div className={cx('rating')}>
                         <RatingStar rating={item.rating} />
@@ -175,7 +186,7 @@ function ProductItem({ data = [], index, item, currentIndex = 0, numberSnippet =
                     </div>
                 </div>
                 <div className={cx('box-info')}>
-                    <NavLink to={`/product/${item._id}`}>
+                    <NavLink to={`/product/${item._id}`} onClick={() => addProductToRecent(item)}>
                         <h2>{item.name}</h2>
                     </NavLink>
                     <div className={cx('rating')}>
