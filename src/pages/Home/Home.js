@@ -6,114 +6,35 @@ import Button from '~/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import WrapperSlide from '~/components/WrapperSlide';
-import { NavLink } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CarIcon, ElectronicIcon, FashionIcon, FoodIcon, HousewareIcon } from '~/components/Icons';
 import SlideHome from './SlideHome';
 import ProductItem from '~/components/ProductItem';
 import snippet from '~/handle/snippet';
 import { ProductContext } from '~/context/ProductContext';
 import { formatPrice } from '~/handle/formatPrice';
+import { CategoryContext } from '~/context/CategoryContext';
 
 const cx = classNames.bind(styles);
 
 function Home() {
+    const navigate = useNavigate();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentIndexCategory, setCurrentIndexCategory] = useState(0);
     const [currentIndexRecommend, setCurrentIndexRecommend] = useState(0);
     const [currentIndexNews, setCurrentIndexNews] = useState(0);
+    const location = useLocation();
 
-    const { saleProducts, newProducts } = useContext(ProductContext);
-
-    const categoriesMain = ['Thời trang', 'Thiết bị điện tử', 'Xe', 'Đồ ăn', 'Đồ gia dụng'];
+    const { categories } = useContext(CategoryContext);
+    const { saleProducts, newProducts, recommendProducts } = useContext(ProductContext);
 
     const IconComponents = {
         'Thời trang': FashionIcon,
         'Thiết bị điện tử': ElectronicIcon,
         Xe: CarIcon,
-        'Đồ ăn': FoodIcon,
+        'Đồ ăn và thức uống': FoodIcon,
         'Đồ gia dụng': HousewareIcon,
     };
-
-    const listRecommend = [
-        {
-            images: [images.test, images.background_slide, images.check_email_image],
-            name: 'Famart Farmhouse Soft White',
-            price: 20000,
-            sale: 20,
-            rating: 3.5,
-            numberRating: 2,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 13000,
-            rating: 3,
-            numberRating: 1,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 10000,
-            rating: 5,
-            numberRating: 0,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 54000,
-            sale: 35,
-            rating: 2.4,
-            numberRating: 10,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 150000,
-            sale: 10,
-            rating: 4.5,
-            numberRating: 3,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 5,
-            numberRating: 5,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 4.2,
-            numberRating: 4,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 5,
-            numberRating: 0,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 4.2,
-            numberRating: 16,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 4.2,
-            numberRating: 4,
-        },
-    ];
 
     const handlePrevSlide = () => {
         setCurrentIndex((prev) => (prev - 1 + saleProducts.length) % saleProducts.length);
@@ -124,15 +45,24 @@ function Home() {
     };
 
     const getCategoryTransform = (index, currentIndexCategory) => {
-        if (categoriesMain.length > 8) {
+        if (categories.length > 8) {
             return `translateX(calc(-${currentIndexCategory * 100}% - ${currentIndexCategory * 30}px))`;
         }
         return 'none';
     };
 
+    useEffect(() => {
+        if (location.hash) {
+            const element = document.getElementById(location.hash.substring(1));
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }, [location]);
+
     return (
         <div className={cx('wrapper')}>
-            <div className={cx('box-slide')}>
+            <div className={cx('box-slide')} id="sale">
                 <WrapperSlide
                     data={saleProducts}
                     currentIndex={currentIndex}
@@ -162,7 +92,7 @@ function Home() {
                                     </p>
                                     <Button className={cx('btn-buy')}>Mua ngay</Button>
                                 </div>
-                                <div className={cx('image')}>
+                                <div className={cx('image')} onClick={() => navigate(`/product/${item._id}`)}>
                                     <img src={item.files.photos[0]} alt="Image" />
                                 </div>
                             </div>
@@ -180,33 +110,33 @@ function Home() {
             </div>
             <div className={cx('box-categories')}>
                 <SlideHome
-                    data={categoriesMain}
+                    data={categories}
                     setCurrentIndex={setCurrentIndexCategory}
                     showNumber={8}
                     title="Tìm kiếm bằng danh mục"
                     subTitle="Xem tất cả"
                     link="/product"
                 >
-                    {categoriesMain.map((item, index) => (
-                        <div
-                            className={cx('item-category')}
-                            key={index}
-                            style={{
-                                transform: getCategoryTransform(index, currentIndexCategory),
-                            }}
-                        >
-                            <NavLink>
-                                {React.createElement(IconComponents[item] || 'div')}
-                                <p>{snippet(item, 6)}</p>
-                            </NavLink>
-                        </div>
-                    ))}
+                    {categories &&
+                        categories.map((item, index) => (
+                            <div
+                                className={cx('item-category')}
+                                key={index}
+                                style={{
+                                    transform: getCategoryTransform(index, currentIndexCategory),
+                                }}
+                                onClick={() => navigate('/product', { state: { category: item.name } })}
+                            >
+                                {React.createElement(IconComponents[item.name] || 'div')}
+                                <p>{snippet(item.name, 6)}</p>
+                            </div>
+                        ))}
                 </SlideHome>
             </div>
-            <div className={cx('box-recommend')}>
+            <div className={cx('box-recommend')} id="recommend">
                 <div className={cx('recommend')}>
                     <SlideHome
-                        data={newProducts}
+                        data={recommendProducts}
                         setCurrentIndex={setCurrentIndexRecommend}
                         showNumber={5}
                         title="Gợi ý"
@@ -214,18 +144,19 @@ function Home() {
                         link="/product"
                         classNameSlide={cx('list-recommend')}
                     >
-                        {newProducts && newProducts.map((item, index) => (
-                            <ProductItem
-                                data={newProducts}
-                                item={item}
-                                index={index}
-                                currentIndex={currentIndexRecommend}
-                            />
-                        ))}
+                        {recommendProducts &&
+                            recommendProducts.map((item, index) => (
+                                <ProductItem
+                                    data={recommendProducts}
+                                    item={item}
+                                    index={index}
+                                    currentIndex={currentIndexRecommend}
+                                />
+                            ))}
                     </SlideHome>
                 </div>
             </div>
-            <div className={cx('box-news')}>
+            <div className={cx('box-news')} id="news">
                 <div className={cx('news')}>
                     <SlideHome
                         data={newProducts}
@@ -236,14 +167,15 @@ function Home() {
                         link="/product"
                         classNameSlide={cx('list-news')}
                     >
-                        {newProducts && newProducts.map((item, index) => (
-                            <ProductItem
-                                data={newProducts}
-                                item={item}
-                                index={index}
-                                currentIndex={currentIndexNews}
-                            />
-                        ))}
+                        {newProducts &&
+                            newProducts.map((item, index) => (
+                                <ProductItem
+                                    data={newProducts}
+                                    item={item}
+                                    index={index}
+                                    currentIndex={currentIndexNews}
+                                />
+                            ))}
                     </SlideHome>
                 </div>
             </div>

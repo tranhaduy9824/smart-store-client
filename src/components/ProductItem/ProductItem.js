@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ProductItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import RatingStar from '../RatingStar';
 import Button from '../Button';
 import { QuickViewIcon } from '../Icons';
@@ -17,11 +17,12 @@ import images from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
-function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10, className }) {
+function ProductItem({ data = [], index, item, currentIndex = 0, numberSnippet = 10, className }) {
+    const navigate = useNavigate(null);
     const [quantityValue, setQuantityValue] = useState(1);
     const [isFavourite, setIsFavourite] = useState(false);
     const [showQuickView, setShowQuickView] = useState(false);
-    const [imageCurrent, setImageCurrent] = useState(item.files.video ? 0 : 1);
+    const [imageCurrent, setImageCurrent] = useState(item.files && item.files.video ? 0 : 1);
     const videoRef = useRef(null);
 
     const getTransform = (index, currentIndex) => {
@@ -32,9 +33,9 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
     };
 
     const price = formatPrice(item.price);
-    const priceSale = formatPrice((item.price * (100 - item.sale)) / 100);
-    const priceQuantity = formatPrice(item.price * quantityValue);
-    const priceSaleQuantity = formatPrice(((item.price * (100 - item.sale)) / 100) * quantityValue);
+    const priceSale = formatPrice(Math.round((item.price * (100 - item.sale)) / 100));
+    const priceQuantity = formatPrice(Math.round(item.price * quantityValue));
+    const priceSaleQuantity = formatPrice(Math.round(((item.price * (100 - item.sale)) / 100) * quantityValue));
 
     useEffect(() => {
         if (!showQuickView && videoRef.current) {
@@ -51,14 +52,13 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
                     transform: getTransform(index, currentIndex),
                 }}
             >
-                <div className={cx('image')}>
-                    <NavLink>
-                        <img src={item.files.photos[0]} alt="Image" />
-                    </NavLink>
+                <div className={cx('image')} onClick={() => navigate(`/product/${item._id}`)}>
+                    <img src={item.files && item.files.photos[0]} alt="Image" />
+                    {item?.sale > 0 && <div className={cx('sale')}>- {item?.sale}%</div>}
                 </div>
                 <div className={cx('content')}>
                     <h2 className={cx('name')}>
-                        <NavLink>{snippet(item.name, 29)}</NavLink>
+                        <NavLink to={`/product/${item._id}`}>{snippet(item.name, 29)}</NavLink>
                     </h2>
                     <div className={cx('rating')}>
                         <RatingStar rating={item.rating} />
@@ -109,7 +109,7 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
                 classIcon={cx('icon-close')}
             >
                 <div className={cx('box-image')}>
-                    {item.files.video && imageCurrent === 0 ? (
+                    {item.files && item.files.video && imageCurrent === 0 ? (
                         <video
                             ref={videoRef}
                             width="400"
@@ -123,46 +123,61 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
                             Trình duyệt của bạn không hỗ trợ thẻ video.
                         </video>
                     ) : (
-                        <img src={item.files.photos[imageCurrent - 1]} alt="Image" className={cx('image-selected')} />
+                        <img
+                            src={item.files && item.files.photos[imageCurrent - 1]}
+                            alt="Image"
+                            className={cx('image-selected')}
+                        />
                     )}
                     <div className={cx('list-image')}>
-                        {[item.files.video && { type: 'video', src: item.files.video }, ...item.files.photos].map(
-                            (file, index) => (
-                                <>
-                                    {file ? (
-                                        file.type === 'video' ? (
-                                            <div
-                                                key={index}
-                                                className={cx('image-container', {
-                                                    'current-image': imageCurrent === index,
-                                                })}
-                                                onClick={() => setImageCurrent(index)}
-                                            >
-                                                <video width="80" height="80" onClick={() => setImageCurrent(index)}>
-                                                    <source src={file.src} type="video/mp4" />
-                                                    Trình duyệt của bạn không hỗ trợ thẻ video.
-                                                </video>
-                                                <img src={images.play_btn} alt="Video" className={cx('btn-video')} />
-                                            </div>
-                                        ) : (
-                                            <img
-                                                src={file}
-                                                alt="Image"
-                                                key={index}
-                                                className={cx('image-container', {
-                                                    'current-image': imageCurrent === index,
-                                                })}
-                                                onClick={() => setImageCurrent(index)}
-                                            />
-                                        )
-                                    ) : null}
-                                </>
-                            ),
-                        )}
+                        {item.files &&
+                            [item.files.video && { type: 'video', src: item.files.video }, ...item.files.photos].map(
+                                (file, index) => (
+                                    <>
+                                        {file ? (
+                                            file.type === 'video' ? (
+                                                <div
+                                                    key={index}
+                                                    className={cx('image-container', {
+                                                        'current-image': imageCurrent === index,
+                                                    })}
+                                                    onClick={() => setImageCurrent(index)}
+                                                >
+                                                    <video
+                                                        width="80"
+                                                        height="80"
+                                                        onClick={() => setImageCurrent(index)}
+                                                    >
+                                                        <source src={file.src} type="video/mp4" />
+                                                        Trình duyệt của bạn không hỗ trợ thẻ video.
+                                                    </video>
+                                                    <img
+                                                        src={images.play_btn}
+                                                        alt="Video"
+                                                        className={cx('btn-video')}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <img
+                                                    src={file}
+                                                    alt="Image"
+                                                    key={index}
+                                                    className={cx('image-container', {
+                                                        'current-image': imageCurrent === index,
+                                                    })}
+                                                    onClick={() => setImageCurrent(index)}
+                                                />
+                                            )
+                                        ) : null}
+                                    </>
+                                ),
+                            )}
                     </div>
                 </div>
                 <div className={cx('box-info')}>
-                    <h2>{item.name}</h2>
+                    <NavLink to={`/product/${item._id}`}>
+                        <h2>{item.name}</h2>
+                    </NavLink>
                     <div className={cx('rating')}>
                         <RatingStar rating={item.rating} />
                         <span className={cx('number-rating')}>({item.numberRating})</span>
@@ -170,6 +185,7 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
                     <div className={cx('price')}>
                         {item.sale ? (
                             <>
+                                <span className={cx('sale')}>Sale {item.sale}%: </span>
                                 <span className={cx('sale-price')}>{priceSale}</span>
                                 <del>
                                     <i>
@@ -184,7 +200,7 @@ function ProductItem({ data = [], index, item, currentIndex, numberSnippet = 10,
                     <h3>Mô tả</h3>
                     <div
                         className={cx('des')}
-                        dangerouslySetInnerHTML={{ __html: item.des.replace(/\n/g, '<br>') }}
+                        dangerouslySetInnerHTML={{ __html: item.des && item.des.replace(/\n/g, '<br>') }}
                     ></div>
                     <h3>Số lượng</h3>
                     <Quantity

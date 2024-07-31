@@ -5,6 +5,7 @@
         transform: rotate(180deg);
     }
 
+    > li > div,
     > li .right-icon,
     > li a {
         color: var(--primary);
@@ -26,10 +27,12 @@ li {
     padding: 0 28px;
     cursor: pointer;
 
+    &:last-child > div,
     &:last-child a {
         border: none;
     }
 
+    &:hover > div,
     &:hover .right-icon,
     &:hover a {
         color: var(--primary);
@@ -44,12 +47,17 @@ li {
         animation: var(--show-item) 0.2s linear;
     }
 
+    > div,
     a {
         display: block;
         width: 100%;
         border-bottom: 1px solid #eee;
         padding: 9px 0;
         transition: color 0.3s ease-in-out;
+        
+        &.active {
+            color: var(--black) !important;
+        }
     }
 }
 

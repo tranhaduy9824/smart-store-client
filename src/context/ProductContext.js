@@ -1,16 +1,55 @@
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { showAlert } from '~/redux/actions/alert';
+import { hideLoading, showLoading } from '~/redux/actions/loading';
 import { getRequest } from '~/utils/services';
+import { AuthContext } from './AuthContext';
 
 export const ProductContext = createContext();
 
 export const ProductContextProvider = ({ children }) => {
     const dispatch = useDispatch();
+    const [product, setProduct] = useState(null);
+    const [products, setProducts] = useState([]);
     const [searchResult, setSearchResult] = useState([]);
     const [saleProducts, setSaleProducts] = useState([]);
     const [newProducts, setNewProducts] = useState([]);
+    const [recommendProducts, setRecommendProducts] = useState([]);
     const [notFound, setNotFound] = useState(false);
+
+    const { user } = useContext(AuthContext);
+
+    const getProduct = useCallback(
+        async (id) => {
+            try {
+                dispatch(showLoading());
+                const response = await getRequest(`/products/${id}`);
+                dispatch(hideLoading());
+                setProduct(response.data);
+            } catch (error) {
+                console.log(error);
+                dispatch(hideLoading());
+                dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
+            }
+        },
+        [dispatch],
+    );
+
+    const getProducts = useCallback(
+        async (data) => {
+            try {
+                dispatch(showLoading());
+                const response = await getRequest('/products/', data);
+                dispatch(hideLoading());
+                setProducts(response.data.products);
+            } catch (error) {
+                console.log(error);
+                dispatch(hideLoading());
+                dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
+            }
+        },
+        [dispatch],
+    );
 
     const searchProduct = useCallback(
         async (data, setShowLoading) => {
@@ -27,6 +66,7 @@ export const ProductContextProvider = ({ children }) => {
                 }
             } catch (error) {
                 console.log(error);
+                dispatch(hideLoading());
                 dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
             }
         },
@@ -35,34 +75,80 @@ export const ProductContextProvider = ({ children }) => {
 
     const getNewProducts = useCallback(async () => {
         try {
+            dispatch(showLoading());
             const response = await getRequest('/products/new');
-            console.log(response.products);
+            dispatch(hideLoading());
             setNewProducts(response.products);
         } catch (error) {
             console.log(error);
+            dispatch(hideLoading());
             dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
         }
-    });
+    }, [dispatch]);
 
     const getSaleProducts = useCallback(async () => {
         try {
+            dispatch(showLoading());
             const response = await getRequest('/products/sale');
-            console.log(response.products);
+            dispatch(hideLoading());
             setSaleProducts(response.products);
         } catch (error) {
             console.log(error);
+            dispatch(hideLoading());
             dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
         }
-    });
+    }, [dispatch]);
+
+    const getRecommendProducts = useCallback(async () => {
+        try {
+            dispatch(showLoading());
+            const response = await getRequest('/products/recommend', {}, user ? user.token : null);
+            dispatch(hideLoading());
+            setRecommendProducts(response.products);
+        } catch (error) {
+            console.log(error);
+            dispatch(hideLoading());
+            dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
+        }
+    }, [dispatch, user]);
+
+    const getProductsByShop = useCallback(async (id) => {
+        try {
+            const response = await getRequest(`/products/shop/${id}`);
+            return response.products;
+        } catch (error) {
+            console.log(error);
+        }
+    }, []);
 
     useEffect(() => {
         getNewProducts();
         getSaleProducts();
+        getRecommendProducts();
     }, []);
 
     return (
         <ProductContext.Provider
-            value={{ searchResult, setSearchResult, searchProduct, notFound, setNotFound, newProducts, saleProducts }}
+            value={{
+                searchResult,
+                setSearchResult,
+                searchProduct,
+                notFound,
+                setNotFound,
+                product,
+                setProduct,
+                getProduct,
+                products,
+                setProducts,
+                getProducts,
+                newProducts,
+                getNewProducts,
+                saleProducts,
+                getSaleProducts,
+                recommendProducts,
+                getRecommendProducts,
+                getProductsByShop,
+            }}
         >
             {children}
         </ProductContext.Provider>

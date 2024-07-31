@@ -12,8 +12,8 @@ function Pagination({ limit, data, children }) {
 
     return (
         <>
-            {data.slice(startNumber, toNumber).map((item, index) => children({ item, index }))}
-            {data.length > limit && (
+            {data?.slice(startNumber, toNumber).map((item, index) => children({ item, index }))}
+            {data?.length > limit && (
                 <div className={cx('list-page')}>
                     {[...Array(Math.ceil(data.length / limit))].map((_, index) => (
                         <div

@@ -1,4 +1,4 @@
-function formatPrice(num) {
+function formatPrice(num = '') {
     if (num >= 1000000) {
         return (
             Math.floor(num / 1000000) +

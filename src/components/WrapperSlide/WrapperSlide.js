@@ -2,7 +2,7 @@ import classNames from 'classnames/bind';
 import { useEffect } from 'react';
 import { useGesture } from 'react-use-gesture';
 
-function WrapperSlide({ data, currentIndex, setCurrentIndex, handleNext, handlePrev, timeDelay, children, className }) {
+function WrapperSlide({ data = [], currentIndex, setCurrentIndex, handleNext, handlePrev, timeDelay, children, className }) {
     useEffect(() => {
         if (timeDelay) {
             const interval = setInterval(() => {

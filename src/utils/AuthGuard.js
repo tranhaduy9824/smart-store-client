@@ -1,9 +1,7 @@
-import { useContext } from "react";
-import { Navigate } from "react-router-dom";
-import { AuthContext } from "~/context/AuthContext";
+import { Navigate } from 'react-router-dom';
 
 function AuthGuard({ children }) {
-    const { user } = useContext(AuthContext);
+    const user = sessionStorage.getItem('User');
 
     if (!user) {
         return <Navigate to="/login" />;

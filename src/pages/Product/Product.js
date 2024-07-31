@@ -2,21 +2,74 @@ import classNames from 'classnames/bind';
 import styles from './Product.module.scss';
 import { BarsIcon, DownIcon, GridIcon } from '~/components/Icons';
 import WrapperHover from '~/components/WrapperHover';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { formatPrice } from '~/handle/formatPrice';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import images from '~/assets/images';
 import ProductItem from '~/components/ProductItem';
 import Pagination from '~/components/Pagination';
+import { ProductContext } from '~/context/ProductContext';
+import { CategoryContext } from '~/context/CategoryContext';
 
 const cx = classNames.bind(styles);
 
 function Product() {
+    const { state } = useLocation();
     const [showCategorySub, setShowCategorySub] = useState([]);
-    const [typeSort, setTypeSort] = useState(0);
     const [typeViewList, setTypeViewList] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(state?.category || '');
+    const [selectedCategorySub, setSelectedCategorySub] = useState(state?.categorySub || '');
+    const [selectedPriceRange, setSelectedPriceRange] = useState({});
+    const [selectedSort, setSelectedSort] = useState(state?.selectedSort || 0);
+    const [sale, setSale] = useState(state?.sale || false);
+
+    const { products, setProducts, getProducts } = useContext(ProductContext);
+    const { categories } = useContext(CategoryContext);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+
+        return () => {
+            window.scrollTo(0, 0);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (state?.category) {
+            setSelectedCategory(state?.category);
+        }
+
+        if (state?.categorySub) {
+            setSelectedCategorySub(state?.categorySub);
+        }
+
+        if (state?.selectedSort) {
+            setSelectedSort(state?.selectedSort);
+        }
+
+        if (state?.sale) {
+            setSale(state?.sale);
+        }
+    }, [state]);
+
+    useEffect(() => {
+        if (selectedCategory || selectedCategorySub || selectedPriceRange) {
+            getProducts({
+                category: selectedCategory,
+                categorySub: selectedCategorySub,
+                priceRange: selectedPriceRange,
+                sort: selectedSort,
+                sale: sale ? true : undefined,
+            });
+        } else {
+            getProducts();
+        }
+
+        return () => {
+            setProducts([]);
+        };
+    }, [selectedCategory, selectedCategorySub, selectedPriceRange, selectedSort, sale, getProducts]);
 
     const listSort = [
         'Sắp xếp mặc định',
@@ -25,29 +78,6 @@ function Product() {
         'Sắp xếp theo mới nhất',
         'Sắp xếp theo giá: thấp -> cao',
         'Sắp xếp theo giá: cao -> thấp',
-    ];
-
-    const categories = [
-        {
-            categoryMain: 'Thời trang',
-            categorySub: ['Nam', 'Nữ', 'Khác'],
-        },
-        {
-            categoryMain: 'Thiết bị điện tử',
-            categorySub: ['Máy tính', 'Điện thoại', 'Phụ kiện'],
-        },
-        {
-            categoryMain: 'Xe',
-            categorySub: ['Xe máy', 'Xe hơi', 'Phụ kiện xe'],
-        },
-        {
-            categoryMain: 'Đồ ăn và thức uống',
-            categorySub: ['Đồ ăn', 'Thức uống', 'Nguyên liệu'],
-        },
-        {
-            categoryMain: 'Đồ gia dụng',
-            categorySub: ['Nội địa', 'Thiết bị gia dụng', 'Đồ gia dụng nhỏ'],
-        },
     ];
 
     const priceRange = [
@@ -72,109 +102,20 @@ function Product() {
         },
     ];
 
-    const listProduct = [
-        {
-            images: [images.test, images.background_slide, images.check_email_image],
-            name: 'Famart Farmhouse Soft White',
-            price: 20000,
-            sale: 20,
-            rating: 3.5,
-            numberRating: 2,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 13000,
-            rating: 3,
-            numberRating: 1,
-        },
-        {
-            images: [images.test, images.background_slide, images.check_email_image],
-            name: 'Famart Farmhouse Soft White',
-            price: 10000,
-            rating: 5,
-            numberRating: 0,
-        },
-        {
-            images: [images.test, images.background_slide, images.check_email_image],
-            name: 'Famart Farmhouse Soft White',
-            price: 54000,
-            sale: 35,
-            rating: 2.4,
-            numberRating: 10,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 150000,
-            sale: 10,
-            rating: 4.5,
-            numberRating: 3,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 5,
-            numberRating: 5,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 4.2,
-            numberRating: 4,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 5,
-            numberRating: 0,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 4.2,
-            numberRating: 16,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 4.2,
-            numberRating: 4,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 4.2,
-            numberRating: 16,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 15000,
-            sale: 10,
-            rating: 4.2,
-            numberRating: 16,
-        },
-    ];
-
     const handleSpanClick = (index) => {
         setShowCategorySub((prevState) => {
             const newState = [...prevState];
             newState[index] = !newState[index];
             return newState;
         });
+    };
+
+    const handleClickPriceRange = (item) => {
+        if (selectedPriceRange.from === item.from) {
+            setSelectedPriceRange('');
+        } else {
+            setSelectedPriceRange(item);
+        }
     };
 
     return (
@@ -189,12 +130,12 @@ function Product() {
                         <WrapperHover
                             noIcon
                             content={listSort}
-                            onClick={(index) => setTypeSort(index)}
+                            onClick={(index) => setSelectedSort(index)}
                             classNameContent={cx('wrapper-list-sort')}
                             className={cx('list-sort')}
                         >
                             <div className={cx('sort')}>
-                                <span className={cx('sort-current')}>{listSort[typeSort]}</span>
+                                <span className={cx('sort-current')}>{listSort[selectedSort]}</span>
                                 <DownIcon />
                             </div>
                         </WrapperHover>
@@ -223,42 +164,86 @@ function Product() {
                     <div className={cx('box-categories')}>
                         <h2>Tất cả danh mục</h2>
                         <ul className={cx('list-category')}>
-                            {categories.map((category, index) => (
-                                <>
-                                    <li key={index} className={cx('category-main')}>
-                                        <NavLink>
-                                            {category.categoryMain} <span className={cx('number-category-sub')}>6</span>
-                                        </NavLink>
-                                        <span onClick={() => handleSpanClick(index)}>
-                                            {!showCategorySub[index] ? (
-                                                <FontAwesomeIcon icon={faChevronDown} />
-                                            ) : (
-                                                <FontAwesomeIcon icon={faChevronUp} />
-                                            )}
-                                        </span>
-                                    </li>
-                                    <ul key={index} className={cx('category-sub', { show: showCategorySub[index] })}>
-                                        {category.categorySub.map((item, index) => (
-                                            <li key={index}>
-                                                <NavLink>{item}</NavLink>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </>
-                            ))}
+                            {categories &&
+                                categories.map((category, index) => (
+                                    <>
+                                        <li key={index} className={cx('category-main')}>
+                                            <NavLink
+                                                onClick={() => {
+                                                    if (
+                                                        selectedCategory === category.name &&
+                                                        selectedCategorySub === ''
+                                                    ) {
+                                                        setSelectedCategory('');
+                                                    } else {
+                                                        setSelectedCategory(category.name);
+                                                    }
+                                                    setSelectedCategorySub('');
+                                                }}
+                                                className={cx({ selected: category.name === selectedCategory })}
+                                            >
+                                                {category.name}{' '}
+                                                <span className={cx('number-category-sub')}>
+                                                    {category.categorySub.length}
+                                                </span>
+                                            </NavLink>
+                                            <span onClick={() => handleSpanClick(index)}>
+                                                {!showCategorySub[index] ? (
+                                                    <FontAwesomeIcon icon={faChevronDown} />
+                                                ) : (
+                                                    <FontAwesomeIcon icon={faChevronUp} />
+                                                )}
+                                            </span>
+                                        </li>
+                                        <ul
+                                            key={index}
+                                            className={cx('category-sub', { show: showCategorySub[index] })}
+                                        >
+                                            {category.categorySub.map((item, index) => (
+                                                <li key={index}>
+                                                    <NavLink
+                                                        onClick={() => {
+                                                            if (selectedCategorySub === item) {
+                                                                setSelectedCategorySub('');
+                                                            } else {
+                                                                setSelectedCategorySub(item);
+                                                                setSelectedCategory(category.name);
+                                                            }
+                                                        }}
+                                                        className={cx({ selected: item === selectedCategorySub })}
+                                                    >
+                                                        {item}
+                                                    </NavLink>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </>
+                                ))}
                         </ul>
                     </div>
                     <div className={cx('box-price')}>
                         <h2>Phạm vi giá</h2>
                         <ul className={cx('list-price')}>
+                            <li className={cx('selected-sale')}>
+                                <input checked={sale} type="checkbox" id="sale-price" onChange={() => setSale(!sale)} />
+                                <label for="sale-price">Giá đặc biệt</label>
+                            </li>
                             {priceRange.map((item, index) => (
                                 <li key={index}>
                                     {item.to ? (
-                                        <NavLink>
+                                        <NavLink
+                                            onClick={() => handleClickPriceRange(item)}
+                                            className={cx({ selected: selectedPriceRange.from === item.from })}
+                                        >
                                             {formatPrice(item.from)} - {formatPrice(item.to)}
                                         </NavLink>
                                     ) : (
-                                        <NavLink>{formatPrice(item.from)} +</NavLink>
+                                        <NavLink
+                                            onClick={() => handleClickPriceRange(item)}
+                                            className={cx({ selected: selectedPriceRange.from === item.from })}
+                                        >
+                                            {formatPrice(item.from)} +
+                                        </NavLink>
                                     )}
                                 </li>
                             ))}
@@ -267,7 +252,7 @@ function Product() {
                 </div>
                 <div className={cx('content')}>
                     <div className={cx({ 'list-product': typeViewList, 'grid-product': !typeViewList })}>
-                        <Pagination data={listProduct} limit={10}>
+                        <Pagination data={products} limit={10}>
                             {({ item, index }) => (
                                 <ProductItem
                                     numberSnippet={50}

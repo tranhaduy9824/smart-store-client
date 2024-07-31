@@ -13,7 +13,7 @@ import {
 } from '~/components/Icons';
 import ButtonIcon from '~/components/ButtonIcon';
 import WrapperHover from '~/components/WrapperHover';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button';
@@ -21,11 +21,14 @@ import ItemHover from './ItemHover/ItemHover';
 import { useContext } from 'react';
 import { AuthContext } from '~/context/AuthContext';
 import Avatar from '~/components/Avatar';
+import { CategoryContext } from '~/context/CategoryContext';
 
 const cx = classNames.bind(style);
 
 function Header() {
+    const navigate = useNavigate();
     const { user, handleLogout } = useContext(AuthContext);
+    const { categories } = useContext(CategoryContext);
 
     return (
         <header className={cx('wrapper')}>
@@ -90,23 +93,24 @@ function Header() {
                         noIcon
                         content={
                             <ul>
-                                <ItemHover>Ưu đãi hôm nay</ItemHover>
-                                <ItemHover>Gợi ý</ItemHover>
-                                <ItemHover index={0} contentHover={['Nam', 'Nữ', 'Khác']}>
-                                    Thời trang
-                                </ItemHover>
-                                <ItemHover index={1} contentHover={['Máy tính', 'Điện thoại', 'Phụ kiện']}>
-                                    Thiết bị điện tử
-                                </ItemHover>
-                                <ItemHover index={2} contentHover={['Xe máy', 'Xe hơi', 'Phụ kiện xe']}>
-                                    Xe
-                                </ItemHover>
-                                <ItemHover index={3} contentHover={['Đồ ăn', 'Thức uống', 'Nguyên liệu']}>
-                                    Đồ ăn và thức uống
-                                </ItemHover>
-                                <ItemHover index={4} contentHover={['Nội địa', 'Thiết bị gia dụng', 'Đồ gia dụng nhỏ']}>
-                                    Đồ gia dụng
-                                </ItemHover>
+                                <ItemHover to="/#sale">Ưu đãi hôm nay</ItemHover>
+                                <ItemHover to="/#recommend">Gợi ý</ItemHover>
+                                <ItemHover to="/#news">Mới nhất</ItemHover>
+                                {categories &&
+                                    categories.map((category, index) => (
+                                        <ItemHover
+                                            index={index}
+                                            contentHover={category.categorySub.map((item, index2) => ({
+                                                category: category.name,
+                                                categorySub: item,
+                                                to: '/product',
+                                            }))}
+                                            to="/product"
+                                            category
+                                        >
+                                            {category.name}
+                                        </ItemHover>
+                                    ))}
                             </ul>
                         }
                         className={cx('hover-box-categories')}
@@ -127,22 +131,28 @@ function Header() {
                         className={cx('wrapper-item-navigate')}
                         classNameSub={cx('item-navigate')}
                         classNameIcon={cx('icon-left-item')}
+                        onClick={() => navigate('/product', { state: { selectedSort: 1 } })}
                     >
-                        Ưu đãi hôm nay
+                        Phổ biến
                     </Button>
                     <Button
                         iconLeft={<SaleIcon />}
                         className={cx('wrapper-item-navigate')}
                         classNameSub={cx('item-navigate')}
                         classNameIcon={cx('icon-left-item')}
+                        onClick={() => navigate('/product', { state: { sale: true } })}
                     >
                         Giá đặc biệt
                     </Button>
-                    <Button className={cx('wrapper-item-navigate')} classNameSub={cx('item-navigate')}>
+                    <Button to="/" className={cx('wrapper-item-navigate')} classNameSub={cx('item-navigate')}>
                         Trang chủ
                     </Button>
                     <WrapperHover
-                        content={['Sản phẩm', 'Giỏ hàng', 'Thanh toán']}
+                        content={[
+                            { title: 'Sản phẩm', to: '/product' },
+                            { title: 'Giỏ hàng', to: '/cart' },
+                            { title: 'Thanh toán', to: '/payment' },
+                        ]}
                         classNameWrapper={cx('wrapper-hover-navigate')}
                     >
                         <Button
@@ -150,6 +160,7 @@ function Header() {
                             className={cx('wrapper-item-navigate')}
                             classNameSub={cx('item-navigate')}
                             classNameIcon={cx('icon-right-item')}
+                            to="/product"
                         >
                             Sản phẩm
                         </Button>

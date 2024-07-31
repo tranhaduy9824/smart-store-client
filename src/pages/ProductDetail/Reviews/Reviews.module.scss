@@ -10,6 +10,10 @@
         padding: 0;
         margin-bottom: 10px;
 
+        &:hover div {
+            color: var(--black);
+        }
+
         img {
             width: 70px;
             height: 70px;

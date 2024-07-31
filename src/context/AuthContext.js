@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { hideAlert, showAlert } from '~/redux/actions/alert';
 import { hideLoading, showLoading } from '~/redux/actions/loading';
-import { postRequest } from '~/utils/services';
+import { getRequest, postRequest } from '~/utils/services';
 import { useNavigate } from 'react-router-dom';
 import { handleValidation } from '~/handle/handleValidation';
 
@@ -171,33 +171,36 @@ export const AuthContextProvider = ({ children }) => {
     );
 
     // Reset password
-    const handleReset = async (id, token, password, confirmPassword, setShow) => {
-        try {
-            if (handleValidation('Default Name', 'default@example.com', password, confirmPassword, dispatch)) {
-                dispatch(showLoading());
-                await postRequest(`/users/reset-password/${id}/${token}`, { password });
-                dispatch(hideLoading());
-                dispatch(showAlert('Đặt lại mật khẩu thành công!'));
-                setTimeout(() => {
-                    dispatch(hideAlert());
-                    setShow(false);
+    const handleReset = useCallback(
+        async (id, token, password, confirmPassword, setShow) => {
+            try {
+                if (handleValidation('Default Name', 'default@example.com', password, confirmPassword, dispatch)) {
+                    dispatch(showLoading());
+                    await postRequest(`/users/reset-password/${id}/${token}`, { password });
+                    dispatch(hideLoading());
+                    dispatch(showAlert('Đặt lại mật khẩu thành công!'));
                     setTimeout(() => {
-                        navigate('/login', { state: { animation: 'showItem' } });
-                    }, 500);
-                }, 1000);
+                        dispatch(hideAlert());
+                        setShow(false);
+                        setTimeout(() => {
+                            navigate('/login', { state: { animation: 'showItem' } });
+                        }, 500);
+                    }, 1000);
+                }
+            } catch (error) {
+                dispatch(hideLoading());
+                dispatch(showAlert('Mã thông báo đã hết hạn!'));
             }
-        } catch (error) {
-            dispatch(hideLoading());
-            dispatch(showAlert('Mã thông báo đã hết hạn!'));
-        }
-    };
+        },
+        [dispatch, navigate],
+    );
 
     // Log out
-    const handleLogout = () => {
+    const handleLogout = useCallback(() => {
         sessionStorage.removeItem('User');
         setUser(null);
         navigate('/');
-    };
+    }, []);
 
     // Update info
     const handleUpdate = useCallback(
@@ -231,6 +234,18 @@ export const AuthContextProvider = ({ children }) => {
         [dispatch, user],
     );
 
+    const getUserById = useCallback(
+        async (id) => {
+            try {
+                const response = await getRequest(`/users/${id}`);
+                return response.user;
+            } catch (error) {
+                dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
+            }
+        },
+        [dispatch],
+    );
+
     return (
         <AuthContext.Provider
             value={{
@@ -243,6 +258,7 @@ export const AuthContextProvider = ({ children }) => {
                 handleReset,
                 handleLogout,
                 handleUpdate,
+                getUserById,
             }}
         >
             {children}

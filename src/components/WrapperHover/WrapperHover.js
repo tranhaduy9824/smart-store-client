@@ -32,11 +32,13 @@ function WrapperHover({
                 <div className={cx('content', { [className]: className })}>
                     {Array.isArray(content) ? (
                         <ul>
-                            {content.map((item, index) => (
-                                <li key={index} onClick={() => onClick(index) || (item.onClick && item.onClick())}>
-                                    <NavLink to={item.to || to}>{item.title || item}</NavLink>
+                            {content.map((item, index) => {
+                                let Component = NavLink;
+                                if (item?.onClick) Component = 'div';
+                                return<li key={index} onClick={() => onClick(index) || (item.onClick && item.onClick())}>
+                                    <Component to={item.to || to}>{item.title || item}</Component>
                                 </li>
-                            ))}
+                            })}
                         </ul>
                     ) : (
                         content

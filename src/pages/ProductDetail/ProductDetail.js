@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import classNames from 'classnames/bind';
 import styles from './ProductDetail.module.scss';
 import images from '~/assets/images';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Button from '~/components/Button';
 import { faChevronRight, faHeart as faHeartFull, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { formatPrice } from '~/handle/formatPrice';
@@ -10,25 +12,71 @@ import RatingStar from '~/components/RatingStar';
 import { CartIcon } from '~/components/Icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faRocketchat } from '@fortawesome/free-brands-svg-icons';
-import Comments from './Comments';
+import Reviews from './Reviews';
 import ProductItem from '~/components/ProductItem';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
+import { ProductContext } from '~/context/ProductContext';
+import { AuthContext } from '~/context/AuthContext';
 
 const cx = classNames.bind(styles);
 
 function ProductDetail() {
-    const [imageCurrent, setImageCurrent] = useState(0);
     const [quantityValue, setQuantityValue] = useState(1);
     const [isFavourite, setIsFavourite] = useState(false);
+    const [owner, setOwner] = useState(null);
+    const [productShop, setProductShop] = useState([]);
+    const { id } = useParams(null);
 
-    const data = {
-        images: [images.test, images.background_slide, images.check_email_image],
-        name: 'Famart Farmhouse Soft White',
-        price: 20000,
-        sale: 20,
-        rating: 3.5,
-        numberRating: 2,
-    };
+    const { product, setProduct, getProduct, getProductsByShop } = useContext(ProductContext);
+    const { getUserById } = useContext(AuthContext);
+
+    const [imageCurrent, setImageCurrent] = useState(product?.files && product.files.video ? 0 : 1);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+
+        return () => {
+            window.scrollTo(0, 0);
+        };
+    }, [id]);
+
+    useEffect(() => {
+        setImageCurrent(product?.files && product.files.video ? 0 : 1);
+    }, [product]);
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                await getProduct(id);
+            } catch (error) {
+                console.error('Lỗi:', error);
+            }
+        };
+
+        fetchProduct();
+
+        return () => {
+            setOwner(null);
+            setProduct(null);
+        };
+    }, [id, getProduct]);
+
+    useEffect(() => {
+        if (product?.shop?.owner) {
+            const fetchOwner = async () => {
+                try {
+                    const ownerData = await getUserById(product.shop.owner);
+                    const productShop = await getProductsByShop(product.shop._id);
+                    setOwner(ownerData);
+                    setProductShop(productShop);
+                } catch (error) {
+                    console.error('Lỗi:', error);
+                }
+            };
+
+            fetchOwner();
+        }
+    }, [product, getUserById]);
 
     const minusQuantity = () => {
         if (!quantityValue.trim && quantityValue > 1) {
@@ -46,66 +94,70 @@ function ProductDetail() {
         }
     };
 
-    const price = formatPrice(data.price);
-    const priceSale = formatPrice((data.price * (100 - data.sale)) / 100);
-    const priceQuantity = formatPrice(data.price * quantityValue);
-    const priceSaleQuantity = formatPrice(((data.price * (100 - data.sale)) / 100) * quantityValue);
-
-    const productOfShop = [
-        {
-            images: [images.test, images.background_slide, images.check_email_image],
-            name: 'Famart Farmhouse Soft White',
-            price: 20000,
-            sale: 20,
-            rating: 3.5,
-            numberRating: 2,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 13000,
-            rating: 3,
-            numberRating: 1,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 10000,
-            rating: 5,
-            numberRating: 0,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 54000,
-            sale: 35,
-            rating: 2.4,
-            numberRating: 10,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 150000,
-            sale: 10,
-            rating: 4.5,
-            numberRating: 3,
-        },
-    ];
+    const price = formatPrice(product?.price);
+    const priceSale = formatPrice(Math.round((product?.price * (100 - product?.sale)) / 100));
+    const priceQuantity = formatPrice(Math.round(product?.price * quantityValue));
+    const priceSaleQuantity = formatPrice(Math.round(((product?.price * (100 - product?.sale)) / 100) * quantityValue));
 
     return (
         <div className={cx('wrapper')}>
             <div className={cx('content')}>
                 <div className={cx('box-image')}>
-                    <img src={data.images[imageCurrent]} alt="Image" className={cx('image-selected')} />
+                    {product?.files && product.files.video && imageCurrent === 0 ? (
+                        <video
+                            width="400"
+                            height="400"
+                            muted
+                            controls
+                            preload="metadata"
+                            className={cx('video-selected')}
+                        >
+                            <source src={product.files.video} type="video/mp4" />
+                            Trình duyệt của bạn không hỗ trợ thẻ video.
+                        </video>
+                    ) : (
+                        <img
+                            src={product?.files && product.files.photos[imageCurrent - 1]}
+                            alt="Image"
+                            className={cx('image-selected')}
+                        />
+                    )}
                     <div className={cx('list-image')}>
-                        {data.images.map((image, index) => (
-                            <img
-                                src={image}
-                                alt="Image"
-                                onClick={() => setImageCurrent(index)}
-                                className={cx({ 'current-image': imageCurrent === index })}
-                            />
-                        ))}
+                        {product?.files &&
+                            [
+                                product.files.video && { type: 'video', src: product.files.video },
+                                ...product.files.photos,
+                            ].map((file, index) => (
+                                <>
+                                    {file ? (
+                                        file.type === 'video' ? (
+                                            <div
+                                                key={index}
+                                                className={cx('image-container', {
+                                                    'current-image': imageCurrent === index,
+                                                })}
+                                                onClick={() => setImageCurrent(index)}
+                                            >
+                                                <video width="80" height="80" onClick={() => setImageCurrent(index)}>
+                                                    <source src={file.src} type="video/mp4" />
+                                                    Trình duyệt của bạn không hỗ trợ thẻ video.
+                                                </video>
+                                                <img src={images.play_btn} alt="Video" className={cx('btn-video')} />
+                                            </div>
+                                        ) : (
+                                            <img
+                                                src={file}
+                                                alt="Image"
+                                                key={index}
+                                                className={cx('image-container', {
+                                                    'current-image': imageCurrent === index,
+                                                })}
+                                                onClick={() => setImageCurrent(index)}
+                                            />
+                                        )
+                                    ) : null}
+                                </>
+                            ))}
                     </div>
                     <div className={cx('btn-action')}>
                         <span onClick={() => setIsFavourite(!isFavourite)}>
@@ -118,14 +170,15 @@ function ProductDetail() {
                     </div>
                 </div>
                 <div className={cx('info-product')}>
-                    <h2>{data.name}</h2>
+                    <h2>{product && product.name}</h2>
                     <div className={cx('rating')}>
-                        <RatingStar rating={data.rating} />
-                        <span className={cx('number-rating')}>({data.numberRating})</span>
+                        <RatingStar rating={product?.rating} />
+                        <span className={cx('number-rating')}>({product?.numberRating})</span>
                     </div>
                     <div className={cx('price')}>
-                        {data.sale ? (
+                        {product?.sale ? (
                             <>
+                                <span className={cx('sale')}>Sale {product?.sale}%: </span>
                                 <span className={cx('sale-price')}>{priceSale}</span>
                                 <del>
                                     <i>
@@ -137,12 +190,7 @@ function ProductDetail() {
                             <span className={cx('price')}>{price}</span>
                         )}
                     </div>
-                    <div className={cx('des')}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna justo, lacinia eget
-                        consectetur sed, convallis at tellus. Vivamus magna justo, lacinia eget consectetur sed,
-                        convallis at tellus.
-                    </div>
-                    <h3>Quantity</h3>
+                    <h3>Số lượng</h3>
                     <div className={cx('box-quantity')}>
                         <span onClick={minusQuantity}>
                             <FontAwesomeIcon icon={faMinus} />
@@ -153,7 +201,7 @@ function ProductDetail() {
                         </span>
                     </div>
                     <div className={cx('total')}>
-                        Total: <span>{!data.sale ? priceQuantity : priceSaleQuantity}</span>
+                        Total: <span>{!product?.sale ? priceQuantity : priceSaleQuantity}</span>
                     </div>
                     <div className={cx('box-btn')}>
                         <Button className={cx('btn-add-cart')} iconLeft={<CartIcon />} onClick={() => {}}>
@@ -161,12 +209,12 @@ function ProductDetail() {
                         </Button>
                         <Button className={cx('btn-buy')}>Mua ngay</Button>
                     </div>
-                    <h3>Shop</h3>
+                    <h3>Cửa hàng</h3>
                     <div className={cx('info-shop')}>
-                        <img src={images.test} alt="Image shop" />
+                        <img src={owner?.avatar} alt="Image shop" />
                         <div className={cx('content-shop')}>
-                            <h3>HaduyNe</h3>
-                            <p>Số sản phẩm: 10</p>
+                            <h3>{product?.shop.name}</h3>
+                            <p>Số sản phẩm: {productShop.length}</p>
                         </div>
                         <div className={cx('btn-shop')}>
                             <Button
@@ -179,18 +227,23 @@ function ProductDetail() {
                             <Button className={cx('view-shop')}>Xem shop</Button>
                         </div>
                     </div>
+                    <h3>Mô tả</h3>
+                    <div
+                        className={cx('des')}
+                        dangerouslySetInnerHTML={{ __html: product?.des.replace(/\n/g, '<br>') }}
+                    ></div>
                 </div>
             </div>
-            <Comments />
+            <Reviews productId={product?._id} />
             <div className={cx('box-product-shop')}>
                 <div className={cx('title')}>
                     <h2>Các sản phẩm khác của shop</h2>
-                    <NavLink>
+                    <NavLink to={`/shop/${product?.shop._id}`}>
                         Xem tất cả <FontAwesomeIcon icon={faChevronRight} />
                     </NavLink>
                 </div>
                 <div className={cx('list-product')}>
-                    {productOfShop.map((item, index) => (
+                    {productShop.slice(0, 10).map((item, index) => (
                         <ProductItem numberSnippet={50} item={item} index={index} className={cx('product-item')} />
                     ))}
                 </div>
