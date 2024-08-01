@@ -17,6 +17,9 @@ import ProductItem from '~/components/ProductItem';
 import { NavLink, useParams } from 'react-router-dom';
 import { ProductContext } from '~/context/ProductContext';
 import { AuthContext } from '~/context/AuthContext';
+import { CartContext } from '~/context/CartContext';
+import { WishlistContext } from '~/context/WishlistContext';
+import { isWishlist } from '~/handle/isWishlist';
 
 const cx = classNames.bind(styles);
 
@@ -28,9 +31,21 @@ function ProductDetail() {
     const { id } = useParams(null);
 
     const { product, setProduct, getProduct, getProductsByShop } = useContext(ProductContext);
-    const { getUserById } = useContext(AuthContext);
+    const { user, getUserById } = useContext(AuthContext);
+    const { addCart } = useContext(CartContext);
+    const { wishlist, addWishlist, removeWishlist } = useContext(WishlistContext);
 
     const [imageCurrent, setImageCurrent] = useState(product?.files && product.files.video ? 0 : 1);
+
+    useEffect(() => {
+        if (wishlist) {
+            if (isWishlist(wishlist, product?._id)) {
+                setIsFavourite(true);
+            } else {
+                setIsFavourite(false);
+            }
+        }
+    }, [wishlist, product]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -160,7 +175,18 @@ function ProductDetail() {
                             ))}
                     </div>
                     <div className={cx('btn-action')}>
-                        <span onClick={() => setIsFavourite(!isFavourite)}>
+                        <span
+                            onClick={() => {
+                                if (user) {
+                                    if (!isFavourite) {
+                                        addWishlist(product?._id, user?.token);
+                                    } else {
+                                        removeWishlist(product?._id, user?.token);
+                                    }
+                                }
+                                setIsFavourite(!isFavourite);
+                            }}
+                        >
                             {!isFavourite ? (
                                 <FontAwesomeIcon icon={faHeart} />
                             ) : (
@@ -204,7 +230,11 @@ function ProductDetail() {
                         Total: <span>{!product?.sale ? priceQuantity : priceSaleQuantity}</span>
                     </div>
                     <div className={cx('box-btn')}>
-                        <Button className={cx('btn-add-cart')} iconLeft={<CartIcon />} onClick={() => {}}>
+                        <Button
+                            className={cx('btn-add-cart')}
+                            iconLeft={<CartIcon />}
+                            onClick={() => addCart({ productId: product?._id, quantity: quantityValue })}
+                        >
                             Thêm giỏ hàng
                         </Button>
                         <Button className={cx('btn-buy')}>Mua ngay</Button>

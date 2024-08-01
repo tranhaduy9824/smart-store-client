@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import classNames from 'classnames/bind';
 import style from './Header.module.scss';
 import images from '~/assets/images';
@@ -13,7 +14,7 @@ import {
 } from '~/components/Icons';
 import ButtonIcon from '~/components/ButtonIcon';
 import WrapperHover from '~/components/WrapperHover';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import Button from '~/components/Button';
@@ -23,6 +24,8 @@ import { AuthContext } from '~/context/AuthContext';
 import Avatar from '~/components/Avatar';
 import { CategoryContext } from '~/context/CategoryContext';
 import { ProductContext } from '~/context/ProductContext';
+import { CartContext } from '~/context/CartContext';
+import ViewQuickCart from './ViewQuickCart';
 
 const cx = classNames.bind(style);
 
@@ -30,11 +33,12 @@ function Header() {
     const navigate = useNavigate();
     const { user, handleLogout } = useContext(AuthContext);
     const { categories } = useContext(CategoryContext);
-    const { recentProducts, getRecentProducts } = useContext(ProductContext);
+    const { recentProducts, getRecentProducts, addProductToRecent } = useContext(ProductContext);
+    const { cart } = useContext(CartContext);
 
     useEffect(() => {
         getRecentProducts();
-    }, [recentProducts, getRecentProducts]);
+    }, []);
 
     return (
         <header className={cx('wrapper')}>
@@ -73,11 +77,15 @@ function Header() {
                         )}
                     </WrapperHover>
                     <WrapperHover content="Yêu thích" end className={cx('box-hover')}>
-                        <ButtonIcon count="0" to="/favourite" className={cx('icon-header-user', 'favourite-icon')}>
+                        <ButtonIcon count="0" to="/wishlist" className={cx('icon-header-user', 'favourite-icon')}>
                             <FavouriteIcon />
                         </ButtonIcon>
                     </WrapperHover>
-                    <WrapperHover content="Giỏ hàng của tôi" end className={cx('box-hover')}>
+                    <WrapperHover
+                        content={user && cart?.items?.length > 0 ? <ViewQuickCart cart={cart} /> : 'Giỏ hàng của tôi'}
+                        end
+                        className={cx('box-hover', { cart: user && cart?.items?.length > 0 })}
+                    >
                         <div className={cx('box-cart')}>
                             <ButtonIcon count="0" to="/cart" className={cx('icon-header-user', 'cart-icon')}>
                                 <CartIcon />
@@ -207,11 +215,12 @@ function Header() {
                             <ul>
                                 {recentProducts?.map((product, index) => (
                                     <li key={index}>
-                                        <NavLink to={`/product/${product.id}`}>
+                                        <Link to={`/product/${product.id}`} onClick={() => addProductToRecent(product)}>
                                             <img src={product.imageUrl} alt="Ảnh được xem gần đây" />
-                                        </NavLink>
+                                        </Link>
                                     </li>
                                 ))}
+                                {recentProducts.length === 0 && <span>Chưa có sản phẩm nào được xem gần đây</span>}
                             </ul>
                         }
                         end

@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ProductItem.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import RatingStar from '../RatingStar';
 import Button from '../Button';
 import { QuickViewIcon } from '../Icons';
@@ -15,6 +15,10 @@ import snippet from '~/handle/snippet';
 import Quantity from '../Quantity';
 import images from '~/assets/images';
 import { ProductContext } from '~/context/ProductContext';
+import { CartContext } from '~/context/CartContext';
+import { WishlistContext } from '~/context/WishlistContext';
+import { isWishlist } from '~/handle/isWishlist';
+import { AuthContext } from '~/context/AuthContext';
 
 const cx = classNames.bind(styles);
 
@@ -27,6 +31,19 @@ function ProductItem({ data = [], index, item, currentIndex = 0, numberSnippet =
     const videoRef = useRef(null);
 
     const { addProductToRecent } = useContext(ProductContext);
+    const { addCart } = useContext(CartContext);
+    const { user } = useContext(AuthContext);
+    const { wishlist, addWishlist, removeWishlist } = useContext(WishlistContext);
+
+    useEffect(() => {
+        if (wishlist) {
+            if (isWishlist(wishlist, item?._id)) {
+                setIsFavourite(true);
+            } else {
+                setIsFavourite(false);
+            }
+        }
+    }, [wishlist, item]);
 
     const getTransform = (index, currentIndex) => {
         if (data.length > 6) {
@@ -67,9 +84,9 @@ function ProductItem({ data = [], index, item, currentIndex = 0, numberSnippet =
                 </div>
                 <div className={cx('content')}>
                     <h2 className={cx('name')}>
-                        <NavLink to={`/product/${item._id}`} onClick={() => addProductToRecent(item)}>
+                        <Link to={`/product/${item._id}`} onClick={() => addProductToRecent(item)}>
                             {snippet(item.name, 29)}
-                        </NavLink>
+                        </Link>
                     </h2>
                     <div className={cx('rating')}>
                         <RatingStar rating={item.rating} />
@@ -97,13 +114,30 @@ function ProductItem({ data = [], index, item, currentIndex = 0, numberSnippet =
                     <div className={cx('total')}>
                         Total: <span>{!item.sale ? priceQuantity : priceSaleQuantity}</span>
                     </div>
-                    <Button className={cx('btn-add-cart')}>Thêm giỏ hàng</Button>
+                    <Button
+                        div
+                        className={cx('btn-add-cart')}
+                        onClick={() => addCart({ productId: item?._id, quantity: quantityValue })}
+                    >
+                        Thêm giỏ hàng
+                    </Button>
                 </div>
                 <div className={cx('btn-action')}>
                     <span onClick={() => setShowQuickView(true)}>
                         <QuickViewIcon />
                     </span>
-                    <span onClick={() => setIsFavourite(!isFavourite)}>
+                    <span
+                        onClick={() => {
+                            if (user) {
+                                if (!isFavourite) {
+                                    addWishlist(item?._id, user?.token);
+                                } else {
+                                    removeWishlist(item?._id, user?.token);
+                                }
+                            }
+                            setIsFavourite(!isFavourite);
+                        }}
+                    >
                         {!isFavourite ? (
                             <FontAwesomeIcon icon={faHeart} />
                         ) : (
@@ -186,9 +220,9 @@ function ProductItem({ data = [], index, item, currentIndex = 0, numberSnippet =
                     </div>
                 </div>
                 <div className={cx('box-info')}>
-                    <NavLink to={`/product/${item._id}`} onClick={() => addProductToRecent(item)}>
+                    <Link to={`/product/${item._id}`} onClick={() => addProductToRecent(item)}>
                         <h2>{item.name}</h2>
-                    </NavLink>
+                    </Link>
                     <div className={cx('rating')}>
                         <RatingStar rating={item.rating} />
                         <span className={cx('number-rating')}>({item.numberRating})</span>
@@ -222,7 +256,13 @@ function ProductItem({ data = [], index, item, currentIndex = 0, numberSnippet =
                     <div className={cx('total')}>
                         Total: <span>{!item.sale ? priceQuantity : priceSaleQuantity}</span>
                     </div>
-                    <Button className={cx('btn-add-cart')}>Thêm giỏ hàng</Button>
+                    <Button
+                        div
+                        className={cx('btn-add-cart')}
+                        onClick={() => addCart({ productId: item?._id, quantity: quantityValue })}
+                    >
+                        Thêm giỏ hàng
+                    </Button>
                 </div>
             </WrapperModel>
         </>

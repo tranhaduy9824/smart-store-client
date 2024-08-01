@@ -1,66 +1,60 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import classNames from 'classnames/bind';
 import styles from './Cart.module.scss';
-import { NavLink } from 'react-router-dom';
-import images from '~/assets/images';
+import { Link } from 'react-router-dom';
 import Quantity from '~/components/Quantity';
 import { HomeIcon, TrashIcon } from '~/components/Icons';
 import { formatPrice } from '~/handle/formatPrice';
 import Button from '~/components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { useCallback, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { CartContext } from '~/context/CartContext';
+import { AuthContext } from '~/context/AuthContext';
+import useDebounce from '~/hooks/useDebounce';
+import { ProductContext } from '~/context/ProductContext';
 
 const cx = classNames.bind(styles);
 
 function Cart() {
-    const [listProduct, setListProduct] = useState([
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 20000,
-            quantity: 2,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 13000,
-            quantity: 2,
-        },
-        {
-            images: [images.test],
-            name: 'Famart Farmhouse Soft White',
-            price: 10000,
-            quantity: 2,
-        },
-    ]);
+    const [quantity, setQuantity] = useState(null);
+    const [productId, setProductId] = useState(null);
+
+    const { user } = useContext(AuthContext);
+    const { cart, deleteItemToCart, updateCartItemQuantity, deletingItemId } = useContext(CartContext);
+    const { addProductToRecent } = useContext(ProductContext);
 
     const handleQuantityChange = (index, newQuantity) => {
-        setListProduct((prevList) => {
-            const updatedList = [...prevList];
-            updatedList[index].quantity = newQuantity;
-            return updatedList;
-        });
+        const id = cart.items[index].productId._id;
+        setProductId(id);
+        setQuantity(newQuantity);
     };
 
-    const totalPrice = useCallback(() => {
-        return listProduct.reduce((total, item) => total + item.price * item.quantity, 0);
-    }, [listProduct]);
+    const debouncedQuantity = useDebounce(quantity, 500);
 
-    const feeTransport = 30000
+    useEffect(() => {
+        if (debouncedQuantity !== null && productId && user) {
+            updateCartItemQuantity(productId, debouncedQuantity, user.token);
+        }
+    }, [debouncedQuantity, productId, user, updateCartItemQuantity]);
+
+    const highestShippingCost = () => {
+        return cart?.items.length > 0 ? Math.max(...cart.items.map((item) => item.productId.shippingCost || 0)) : 0;
+    };
 
     return (
         <div className={cx('wrapper')}>
             <h1>Giỏ hàng</h1>
             <div className={cx('site')}>
-                <NavLink to="/" className={cx('navigate')}>
+                <Link to="/" className={cx('navigate')}>
                     Trang chủ
-                </NavLink>{' '}
+                </Link>{' '}
                 <span> / </span>
-                <NavLink to="/product" className={cx('navigate')}>
+                <Link to="/product" className={cx('navigate')}>
                     Sản phẩm
-                </NavLink>{' '}
+                </Link>{' '}
                 <span> / </span>
-                <NavLink>Giỏ hàng</NavLink>
+                <Link>Giỏ hàng</Link>
             </div>
             <div className={cx('content')}>
                 <table>
@@ -68,30 +62,50 @@ function Cart() {
                         <th></th>
                         <th>Sản phẩm</th>
                         <th>Giá</th>
+                        <th>Phí vận chuyển</th>
                         <th>Số lượng</th>
                         <th>Tổng tiền</th>
                         <th></th>
                     </tr>
-                    {listProduct.map((item, index) => (
-                        <tr>
-                            <td>
-                                <img src={item.images} alt="Image" />
-                            </td>
-                            <td>{item.name}</td>
-                            <td>{formatPrice(item.price)}</td>
-                            <td>
-                                <Quantity
-                                    quantityValue={item.quantity}
-                                    setQuantityValue={(newQuantity) => handleQuantityChange(index, newQuantity)}
-                                    className={cx('box-quantity')}
-                                />
-                            </td>
-                            <td>{formatPrice(item.price * item.quantity)}</td>
-                            <td>
-                                <TrashIcon />
-                            </td>
-                        </tr>
-                    ))}
+                    {cart &&
+                        cart?.items.map((item, index) => (
+                            <tr className={cx({ deleting: deletingItemId === item.productId._id })}>
+                                <td>
+                                    <Link
+                                        to={`/product/${item.productId._id}`}
+                                        className={cx('navigate')}
+                                        onClick={() => addProductToRecent(item.productId)}
+                                    >
+                                        <img src={item?.productId.files.photos[0]} alt="Image" />
+                                    </Link>
+                                </td>
+                                <td>
+                                    <Link
+                                        to={`/product/${item.productId._id}`}
+                                        className={cx('navigate')}
+                                        onClick={() => addProductToRecent(item.productId)}
+                                    >
+                                        {item?.productId.name}
+                                    </Link>
+                                </td>
+                                <td>{formatPrice(item?.productId.price)}</td>
+                                <td>{formatPrice(item?.productId.shippingCost)}</td>
+                                <td>
+                                    <Quantity
+                                        productId={item?.productId._id}
+                                        quantityValue={item?.quantity}
+                                        setQuantityValue={(newQuantity) => handleQuantityChange(index, newQuantity)}
+                                        className={cx('box-quantity')}
+                                    />
+                                </td>
+                                <td>{formatPrice(item?.productId.price * item?.quantity)}</td>
+                                <td>
+                                    <span onClick={() => deleteItemToCart(item?.productId._id)}>
+                                        <TrashIcon />
+                                    </span>
+                                </td>
+                            </tr>
+                        ))}
                 </table>
             </div>
             <div className={cx('action')}>
@@ -110,18 +124,20 @@ function Cart() {
                 <div className={cx('action-right')}>
                     <div className={cx('text')}>
                         <span>Tổng cộng</span>
-                        <span>{formatPrice(totalPrice())}</span>
+                        <span>{formatPrice(cart?.totalPrice)}</span>
                     </div>
                     <div className={cx('text')}>
                         <span>Phí vận chuyển</span>
-                        <span>{formatPrice(feeTransport)}</span>
+                        <span>{formatPrice(highestShippingCost())}</span>
                     </div>
                     <hr />
                     <div className={cx('text', 'total-cart')}>
                         <span>Tổng cộng</span>
-                        <span className={cx('text-total-cart')}>{formatPrice(totalPrice() + feeTransport)}</span>
+                        <span className={cx('text-total-cart')}>
+                            {formatPrice(highestShippingCost() + cart?.totalPrice)}
+                        </span>
                     </div>
-                    <Button className={cx('btn-check')}>Tiến hành kiểm tra</Button>
+                    <Button className={cx('btn-check')}>Tiến hành thanh toán</Button>
                 </div>
             </div>
         </div>

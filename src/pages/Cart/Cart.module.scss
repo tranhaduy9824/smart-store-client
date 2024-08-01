@@ -33,10 +33,18 @@
                 text-align: left;
             }
 
+            .deleting {
+                opacity: 0.5;
+            }
+
             tr td:nth-child(3),
-            tr td:nth-child(5) {
+            tr td:nth-child(6) {
                 color: var(--black);
                 font-weight: 600;
+            }
+
+            tr td:nth-child(5) div {
+                min-width: 110px;
             }
 
             th,

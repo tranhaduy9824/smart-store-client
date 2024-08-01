@@ -57,6 +57,11 @@
         &.is-user {
             height: max-content;
         }
+
+        &.cart {
+            width: max-content;
+            height: auto;
+        }
     }
 
     .avatar {

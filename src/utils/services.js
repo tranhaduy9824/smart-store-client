@@ -18,7 +18,7 @@ export const postRequest = async (url, body, token = null, formData = false) => 
 export const getRequest = async (url, params = {}, token = null) => {
     const config = {
         headers: {},
-        params, 
+        params,
     };
 
     if (token) {
@@ -31,3 +31,34 @@ export const getRequest = async (url, params = {}, token = null) => {
 
     return data;
 };
+
+export const deleteRequest = async (url, body, token = null) => {
+    const config = {
+        headers: {
+            Authorization: token ? `Bearer ${token}` : '',
+        },
+        data: body,
+    };
+
+    const response = await axios.delete(url, config);
+
+    const data = await response.data;
+
+    return data;
+};
+
+export const patchRequest = async (url, body, token = null) => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: token ? `Bearer ${token}` : '',
+        },
+    };
+
+    const response = await axios.patch(url, JSON.stringify(body), config);
+
+    const data = await response.data;
+
+    return data;
+}; 
+

@@ -9,7 +9,7 @@ import Signup from '~/pages/Signup';
 import ResetPassword from '~/pages/ResetPassword';
 import NullLayout from '~/layouts/NullLayout';
 import ProductDetail from '~/pages/ProductDetail';
-import Favourite from '~/pages/Favourite';
+import WishList from '~/pages/WishList';
 
 export const routes = [
     {
@@ -54,8 +54,8 @@ export const routes = [
         private: true,
     },
     {
-        path: '/favourite',
-        component: Favourite,
+        path: '/wishlist',
+        component: WishList,
         private: true,
     },
 ];

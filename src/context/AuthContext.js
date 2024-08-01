@@ -1,3 +1,6 @@
+/* eslint-disable no-useless-escape */
+/* eslint-disable no-control-regex */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, useCallback, useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { useDispatch } from 'react-redux';
@@ -145,7 +148,7 @@ export const AuthContextProvider = ({ children }) => {
             } catch (error) {
                 dispatch(hideLoading());
                 if (error.response && error.response.status === 409) {
-                    dispatch(showAlert('Mail exists!'));
+                    dispatch(showAlert('Email đã tồn tại!'));
                 } else {
                     dispatch(showAlert('Điền đầy đủ thông tin!'));
                 }

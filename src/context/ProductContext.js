@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { showAlert } from '~/redux/actions/alert';
@@ -122,30 +123,37 @@ export const ProductContextProvider = ({ children }) => {
         }
     }, []);
 
-    const addProductToRecent = useCallback((product) => {
-        const recentProducts = JSON.parse(localStorage.getItem('recentProducts')) || [];
+    const addProductToRecent = useCallback(
+        (product) => {
+            const recentProducts = JSON.parse(localStorage.getItem('recentProducts')) || [];
 
-        const index = recentProducts.findIndex((p) => p.id === product._id);
+            const index = recentProducts.findIndex((p) => p.id === product._id);
 
-        if (index > -1) {
-            recentProducts.splice(index, 1);
-        }
+            if (index > -1) {
+                recentProducts.splice(index, 1);
+            }
 
-        recentProducts.unshift({
-            id: product._id,
-            imageUrl: product.files.photos[0],
-        });
+            recentProducts.unshift({
+                id: product._id,
+                imageUrl: product.files.photos[0],
+            });
 
-        if (recentProducts.length > 10) {
-            recentProducts.pop();
-        }
+            if (recentProducts.length > 10) {
+                recentProducts.pop();
+            }
 
-        localStorage.setItem('recentProducts', JSON.stringify(recentProducts));
-    }, []);
+            localStorage.setItem('recentProducts', JSON.stringify(recentProducts));
+            setRecentProducts(recentProducts);
+        },
+        [setRecentProducts],
+    );
 
     const getRecentProducts = useCallback(() => {
-        setRecentProducts(JSON.parse(localStorage.getItem('recentProducts')) || []);
-    }, []);
+        const storedRecentProducts = JSON.parse(localStorage.getItem('recentProducts')) || [];
+        if (JSON.stringify(storedRecentProducts) !== JSON.stringify(recentProducts)) {
+            setRecentProducts(storedRecentProducts);
+        }
+    }, [recentProducts]);
 
     useEffect(() => {
         getNewProducts();
