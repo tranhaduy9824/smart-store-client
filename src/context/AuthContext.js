@@ -209,9 +209,9 @@ export const AuthContextProvider = ({ children }) => {
     const handleUpdate = useCallback(
         async (data) => {
             try {
-                if (data.avatar || data.password) dispatch(showLoading());
+                if (data.avatar || data.password || data.address) dispatch(showLoading());
                 const response = await postRequest('/users/update-user', data, user.token, data.avatar !== undefined);
-                if (data.avatar || data.password) dispatch(hideLoading());
+                if (data.avatar || data.password || data.address) dispatch(hideLoading());
                 if (data.password) dispatch(showAlert('Đổi mật khẩu thành công'));
 
                 const updatedUser = {
@@ -223,12 +223,17 @@ export const AuthContextProvider = ({ children }) => {
                 setUser(updatedUser);
                 sessionStorage.setItem('User', JSON.stringify(updatedUser));
             } catch (error) {
+                console.log(error);
                 if (data.email && !emailRegex.test(data.email)) {
                     dispatch(showAlert('Email không đúng định dạng!'));
                 } else if (data.phone && !vietnamesePhoneRegex.test(data.phone)) {
                     dispatch(showAlert('Số điện thoại không đúng định dạng!'));
                 } else if (data.avatar) {
                     dispatch(hideLoading());
+                    dispatch(showAlert('Không đúng định dạng hình ảnh!'));
+                } else if (data.address) {
+                    dispatch(hideLoading());
+                    dispatch(showAlert('Vui lòng điền đủ thông tin!'));
                 } else {
                     dispatch(showAlert('Hết thời gian, vui lòng đăng nhập lại!'));
                 }

@@ -13,6 +13,7 @@ import { AuthContext } from '~/context/AuthContext';
 import Avatar from '~/components/Avatar';
 import { handleValidation } from '~/handle/handleValidation';
 import { useDispatch } from 'react-redux';
+import AddAddress from '~/components/AddAddress';
 
 const cx = classNames.bind(styles);
 
@@ -31,6 +32,8 @@ function Profile() {
     const [confirmNewPasswrod, setConfirmNewPassword] = useState('');
     const [showChangePassword, setShowChangePassword] = useState(false);
     const [contentSelected, setContentSelected] = useState(0);
+    const [showAddAddress, setShowAddAddress] = useState(false);
+    const [updateAddress, setUpdateAddress] = useState(null);
 
     const { user, handleUpdate } = useContext(AuthContext);
 
@@ -235,15 +238,29 @@ function Profile() {
                             <div className={cx('address')}>
                                 <div className={cx('title')}>
                                     <p>Địa chỉ của tôi</p>
-                                    <div className={cx('add-address')}>
+                                    <div className={cx('add-address')} onClick={() => setShowAddAddress(true)}>
                                         <FontAwesomeIcon icon={faPlus} /> Thêm địa chỉ mới
                                     </div>
                                 </div>
                                 <div className={cx('list-address')}>
                                     <p>Địa chỉ</p>
-                                    <AddressItem />
-                                    <AddressItem />
-                                    <AddressItem />
+                                    {user?.user?.address
+                                        .sort((a, b) => {
+                                            if (a.isDefault && !b.isDefault) return -1;
+                                            if (!a.isDefault && b.isDefault) return 1;
+
+                                            return 0;
+                                        })
+                                        .map((item, index) => (
+                                            <AddressItem
+                                                data={item}
+                                                key={index}
+                                                onUpdate={(addressData) => {
+                                                    setUpdateAddress(addressData);
+                                                    setShowAddAddress(true);
+                                                }}
+                                            />
+                                        ))}
                                 </div>
                             </div>
                         )}
@@ -275,6 +292,22 @@ function Profile() {
                 <div className={cx('btn-change-pw')} onClick={handleChangePassword}>
                     Đổi mật khẩu
                 </div>
+            </WrapperModel>
+            <WrapperModel
+                classNameContent={cx('model-add-address')}
+                show={showAddAddress}
+                onClose={() => {
+                    setShowAddAddress(false);
+                    setUpdateAddress(null);
+                }}
+            >
+                <AddAddress
+                    updateAddress={updateAddress}
+                    onSuccess={() => {
+                        setShowAddAddress(false);
+                        setUpdateAddress(null);
+                    }}
+                />
             </WrapperModel>
         </>
     );

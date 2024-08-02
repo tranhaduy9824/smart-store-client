@@ -127,15 +127,15 @@ export const ProductContextProvider = ({ children }) => {
         (product) => {
             const recentProducts = JSON.parse(localStorage.getItem('recentProducts')) || [];
 
-            const index = recentProducts.findIndex((p) => p.id === product._id);
+            const index = recentProducts.findIndex((p) => p.id === product?._id);
 
             if (index > -1) {
                 recentProducts.splice(index, 1);
             }
 
             recentProducts.unshift({
-                id: product._id,
-                imageUrl: product.files.photos[0],
+                id: product?._id,
+                imageUrl: product?.files?.photos[0],
             });
 
             if (recentProducts.length > 10) {

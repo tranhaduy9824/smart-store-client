@@ -12,8 +12,8 @@ function BoxInput({ value, onChange, onKeyPress, label, email = false, onFocus, 
     const uniqueId = useId();
 
     const handleEyePassword = () => {
-        setEye(!eye)
-    }
+        setEye(!eye);
+    };
 
     useEffect(() => {
         if (onFocus) {
@@ -23,17 +23,19 @@ function BoxInput({ value, onChange, onKeyPress, label, email = false, onFocus, 
 
     return (
         <div className={cx('wrapper', className)}>
-            <label htmlFor={`input-${uniqueId}`} className={cx({focus: focus})}>{label}</label>
+            <label htmlFor={`input-${uniqueId}`} className={cx({ focus: focus })}>
+                {label}
+            </label>
             <input
                 id={`input-${uniqueId}`}
                 value={value}
                 onChange={onChange}
                 onKeyPress={onKeyPress}
-                type={email ? 'email' : (isPassword ? (!eye ? 'password' : 'text') : 'text')}
+                type={email ? 'email' : isPassword ? (!eye ? 'password' : 'text') : 'text'}
                 onFocus={() => setFocus(true)}
                 onBlur={() => !value && setFocus(false)}
                 required
-                className={cx({password: isPassword})}
+                className={cx({ password: isPassword })}
             />
             {isPassword && (
                 <FontAwesomeIcon

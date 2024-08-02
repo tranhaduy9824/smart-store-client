@@ -1,28 +1,41 @@
 import classNames from 'classnames/bind';
 import styles from './AddressItem.module.scss';
+import { useContext } from 'react';
+import { AuthContext } from '~/context/AuthContext';
 
 const cx = classNames.bind(styles);
 
-function AddressItem({ data, className }) {
+function AddressItem({ data, onUpdate, className }) {
+    const { handleUpdate } = useContext(AuthContext);
+
     return (
         <div className={cx('wrapper', { [className]: className })}>
             <div className={cx('box-left')}>
                 <div className={cx('info-user')}>
-                    <span className={cx('name')}>Trần Hà Duy</span>
-                    <span className={cx('phone-number')}>| 0867125575</span>
+                    <span className={cx('name')}>{data.fullname}</span>
+                    <span className={cx('phone-number')}>| {data.phone}</span>
                 </div>
                 <div className={cx('info-address')}>
-                    <p>Thôn Lâm Yên Đại Minh Đại Lộc Quảng Nam Vietnam</p>
-                    <p>Xã Đại Minh, Huyện Đại Lộc, Quảng Nam</p>
+                    <p>{data.address}</p>
+                    <p>{data.specificAddress}</p>
                 </div>
-                <div className={cx('default-address')}>Mặc định</div>
+                {data.isDefault && <div className={cx('default-address')}>Mặc định</div>}
             </div>
             <div className={cx('box-right')}>
                 <div className={cx('action-text')}>
-                    <div>Cập nhập</div>
-                    <div>Xóa</div>
+                    <div onClick={() => onUpdate(data)}>Cập nhập</div>
+                    <div onClick={() => handleUpdate({ addressId: data._id })}>Xóa</div>
                 </div>
-                <div className={cx('change-default')}>Thiết lập mặc định</div>
+                {!data.isDefault && (
+                    <div
+                        className={cx('change-default')}
+                        onClick={() => {
+                            handleUpdate({ setDefault: true, addressId: data._id });
+                        }}
+                    >
+                        Thiết lập mặc định
+                    </div>
+                )}
             </div>
         </div>
     );
