@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
-function Button({ div, iconLeft, iconRight, to, onClick, className, classNameIcon, classNameSub, children }) {
+function Button({ div, state, iconLeft, iconRight, to, onClick, className, classNameIcon, classNameSub, children }) {
     let Component = 'div';
 
     if (onClick) {
@@ -32,6 +32,7 @@ function Button({ div, iconLeft, iconRight, to, onClick, className, classNameIco
                     'icon-left': iconLeft,
                     'icon-right': iconRight,
                 })}
+                state={state}
             >
                 {children}
             </Component>

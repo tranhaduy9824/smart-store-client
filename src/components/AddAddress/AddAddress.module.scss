@@ -53,6 +53,23 @@
         }
     }
 
+    .btn-comeback {
+        width: max-content;
+        height: max-content;
+        margin-top: 10px;
+        padding: 5px 10px;
+        border: 1px solid var(--primary);
+        background-color: var(--background);
+        border-radius: var(--border-radius);
+
+        button {
+            width: max-content;
+            padding-left: 5px;
+            background-color: transparent;
+            color: var(--black);
+        }
+    }
+
     button {
         width: 150px;
         float: right;

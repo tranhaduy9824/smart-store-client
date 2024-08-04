@@ -10,6 +10,7 @@ import ResetPassword from '~/pages/ResetPassword';
 import NullLayout from '~/layouts/NullLayout';
 import ProductDetail from '~/pages/ProductDetail';
 import WishList from '~/pages/WishList';
+import Payment from '~/pages/Payment';
 
 export const routes = [
     {
@@ -56,6 +57,11 @@ export const routes = [
     {
         path: '/wishlist',
         component: WishList,
+        private: true,
+    },
+    {
+        path: '/payment',
+        component: Payment,
         private: true,
     },
 ];

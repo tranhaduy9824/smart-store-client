@@ -5,7 +5,7 @@ import { AuthContext } from '~/context/AuthContext';
 
 const cx = classNames.bind(styles);
 
-function AddressItem({ data, onUpdate, className }) {
+function AddressItem({ data, onUpdate, className, payPage }) {
     const { handleUpdate } = useContext(AuthContext);
 
     return (
@@ -23,10 +23,17 @@ function AddressItem({ data, onUpdate, className }) {
             </div>
             <div className={cx('box-right')}>
                 <div className={cx('action-text')}>
-                    <div onClick={() => onUpdate(data)}>Cập nhập</div>
-                    <div onClick={() => handleUpdate({ addressId: data._id })}>Xóa</div>
+                    <div
+                        onClick={(e) => {
+                            onUpdate(data);
+                            e.stopPropagation();
+                        }}
+                    >
+                        Cập nhập
+                    </div>
+                    {!payPage && <div onClick={() => handleUpdate({ addressId: data._id })}>Xóa</div>}
                 </div>
-                {!data.isDefault && (
+                {!payPage && !data.isDefault && (
                     <div
                         className={cx('change-default')}
                         onClick={() => {

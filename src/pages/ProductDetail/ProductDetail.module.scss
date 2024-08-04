@@ -135,6 +135,23 @@
             }
         }
 
+        .shipping-cost {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+
+            img {
+                width: 30px;
+                margin-right: 10px;
+            }
+
+            span {
+                margin-left: 5px;
+                font-size: 1.7rem;
+                color: #2f8a33;
+            }
+        }
+
         .des,
         > h3 {
             margin-top: 20px;

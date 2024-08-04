@@ -8,6 +8,7 @@ const images = {
     background_slide: require('~/assets/images/background_slide.jpg'),
     logo_no_background: require('~/assets/images/logo_no_background.png'),
     play_btn: require('~/assets/images/play_btn.webp'),
+    delivery_truck: require('~/assets/images/delivery-truck.png'),
 };
 
 export default images;

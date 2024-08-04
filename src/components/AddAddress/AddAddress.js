@@ -6,10 +6,12 @@ import styles from './AddAddress.module.scss';
 import BoxInput from '../BoxInput';
 import Button from '../Button';
 import { AuthContext } from '~/context/AuthContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
-function AddAddress({ updateAddress, onSuccess }) {
+function AddAddress({ updateAddress, onSuccess, comeback }) {
     const [fullname, setFullname] = useState('');
     const [phone, setPhone] = useState('');
     const [addressDetail, setAddressDetail] = useState('');
@@ -44,6 +46,18 @@ function AddAddress({ updateAddress, onSuccess }) {
                     setWards(district.Wards || []);
                 }
             }
+        } else {
+            setFullname('');
+            setPhone('');
+            setAddressDetail('');
+            setIsDefault(false);
+            setAddress({
+                city: '',
+                district: '',
+                ward: '',
+            });
+            setDistricts([]);
+            setWards([]);
         }
     }, [updateAddress, cities]);
 
@@ -184,6 +198,15 @@ function AddAddress({ updateAddress, onSuccess }) {
                     />
                     <label htmlFor="set-default">Đặt làm địa chỉ mặc định</label>
                 </div>
+            )}
+            {comeback && (
+                <Button
+                    className={cx('btn-comeback')}
+                    onClick={comeback}
+                    iconLeft={<FontAwesomeIcon icon={faArrowLeft} />}
+                >
+                    Quay lại
+                </Button>
             )}
             <Button
                 onClick={() => {

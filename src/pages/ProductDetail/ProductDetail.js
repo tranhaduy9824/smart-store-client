@@ -216,6 +216,11 @@ function ProductDetail() {
                             <span className={cx('price')}>{price}</span>
                         )}
                     </div>
+                    <div className={cx('shipping-cost')}>
+                        <img src={images.delivery_truck} alt="Icon delivery truck" />
+                        Chi phí vận chuyển:{' '}
+                        <span>{product?.shippingCost === 0 ? 'Miễn phí' : formatPrice(product?.shippingCost)}</span>
+                    </div>
                     <h3>Số lượng</h3>
                     <div className={cx('box-quantity')}>
                         <span onClick={minusQuantity}>
@@ -237,7 +242,13 @@ function ProductDetail() {
                         >
                             Thêm giỏ hàng
                         </Button>
-                        <Button className={cx('btn-buy')}>Mua ngay</Button>
+                        <Button
+                            className={cx('btn-buy')}
+                            to="/payment"
+                            state={{ items: [{ productId: product, quantity: quantityValue, price: product?.price }] }}
+                        >
+                            Mua ngay
+                        </Button>
                     </div>
                     <h3>Cửa hàng</h3>
                     <div className={cx('info-shop')}>

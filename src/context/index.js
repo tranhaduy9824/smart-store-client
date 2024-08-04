@@ -1,6 +1,7 @@
 import { AuthContextProvider } from './AuthContext';
 import { CartContextProvider } from './CartContext';
 import { CategoryContextProvider } from './CategoryContext';
+import { OrderContextProvider } from './OrderContext';
 import { ProductContextProvider } from './ProductContext';
 import { ReviewContextProvider } from './ReviewContext';
 import { WishlistContextProvider } from './WishlistContext';
@@ -12,7 +13,9 @@ function ContextProvider({ children }) {
                 <ProductContextProvider>
                     <ReviewContextProvider>
                         <CartContextProvider>
-                            <WishlistContextProvider>{children}</WishlistContextProvider>
+                            <WishlistContextProvider>
+                                <OrderContextProvider>{children}</OrderContextProvider>
+                            </WishlistContextProvider>
                         </CartContextProvider>
                     </ReviewContextProvider>
                 </ProductContextProvider>

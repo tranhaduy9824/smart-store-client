@@ -49,7 +49,7 @@ function ViewQuickCart({ cart }) {
                     <Button className={cx('btn-control')} to="/cart">
                         Xem giỏ hàng
                     </Button>
-                    <Button className={cx('btn-control')} to="/payment">
+                    <Button className={cx('btn-control')} to="/payment" state={{ items: cart?.items }}>
                         Thanh toán
                     </Button>
                 </p>

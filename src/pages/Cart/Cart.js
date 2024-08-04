@@ -13,6 +13,7 @@ import { CartContext } from '~/context/CartContext';
 import { AuthContext } from '~/context/AuthContext';
 import useDebounce from '~/hooks/useDebounce';
 import { ProductContext } from '~/context/ProductContext';
+import { highestShippingCost } from '~/handle/highestShippingCost';
 
 const cx = classNames.bind(styles);
 
@@ -37,10 +38,6 @@ function Cart() {
             updateCartItemQuantity(productId, debouncedQuantity, user.token);
         }
     }, [debouncedQuantity, productId, user, updateCartItemQuantity]);
-
-    const highestShippingCost = () => {
-        return cart?.items.length > 0 ? Math.max(...cart.items.map((item) => item.productId.shippingCost || 0)) : 0;
-    };
 
     return (
         <div className={cx('wrapper')}>
@@ -128,16 +125,18 @@ function Cart() {
                     </div>
                     <div className={cx('text')}>
                         <span>Phí vận chuyển</span>
-                        <span>{formatPrice(highestShippingCost())}</span>
+                        <span>{formatPrice(highestShippingCost(cart?.items))}</span>
                     </div>
                     <hr />
                     <div className={cx('text', 'total-cart')}>
                         <span>Tổng cộng</span>
                         <span className={cx('text-total-cart')}>
-                            {formatPrice(highestShippingCost() + cart?.totalPrice)}
+                            {formatPrice(highestShippingCost(cart?.items) + cart?.totalPrice)}
                         </span>
                     </div>
-                    <Button className={cx('btn-check')}>Tiến hành thanh toán</Button>
+                    <Button className={cx('btn-check')} to="/payment" state={{ items: cart?.items }}>
+                        Tiến hành thanh toán
+                    </Button>
                 </div>
             </div>
         </div>
