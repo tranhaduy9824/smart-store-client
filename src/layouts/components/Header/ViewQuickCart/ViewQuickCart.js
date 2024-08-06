@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import classNames from 'classnames/bind';
 import styles from './ViewQuickCart.module.scss';
 import { Link } from 'react-router-dom';

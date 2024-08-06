@@ -26,6 +26,7 @@ import { CategoryContext } from '~/context/CategoryContext';
 import { ProductContext } from '~/context/ProductContext';
 import { CartContext } from '~/context/CartContext';
 import ViewQuickCart from './ViewQuickCart';
+import { WishlistContext } from '~/context/WishlistContext';
 
 const cx = classNames.bind(style);
 
@@ -35,6 +36,7 @@ function Header() {
     const { categories } = useContext(CategoryContext);
     const { recentProducts, getRecentProducts, addProductToRecent } = useContext(ProductContext);
     const { cart } = useContext(CartContext);
+    const { wishlist } = useContext(WishlistContext);
 
     useEffect(() => {
         getRecentProducts();
@@ -77,7 +79,11 @@ function Header() {
                         )}
                     </WrapperHover>
                     <WrapperHover content="Yêu thích" end className={cx('box-hover')}>
-                        <ButtonIcon count="0" to="/wishlist" className={cx('icon-header-user', 'favourite-icon')}>
+                        <ButtonIcon
+                            count={wishlist?.products?.length || '0'}
+                            to="/wishlist"
+                            className={cx('icon-header-user', 'favourite-icon')}
+                        >
                             <FavouriteIcon />
                         </ButtonIcon>
                     </WrapperHover>
@@ -87,7 +93,11 @@ function Header() {
                         className={cx('box-hover', { cart: user && cart?.items?.length > 0 })}
                     >
                         <div className={cx('box-cart')}>
-                            <ButtonIcon count="0" to="/cart" className={cx('icon-header-user', 'cart-icon')}>
+                            <ButtonIcon
+                                count={cart?.items?.length || '0'}
+                                to="/cart"
+                                className={cx('icon-header-user', 'cart-icon')}
+                            >
                                 <CartIcon />
                             </ButtonIcon>
                             <NavLink to="/cart">

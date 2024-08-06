@@ -1,7 +1,7 @@
-import { createContext, useCallback, useContext, useEffect } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { showAlert } from '~/redux/actions/alert';
-import { getRequest, postRequest } from '~/utils/services';
+import { getRequest, patchRequest, postRequest } from '~/utils/services';
 import { AuthContext } from './AuthContext';
 import { hideLoading, showLoading } from '~/redux/actions/loading';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -11,10 +11,82 @@ export const OrderContext = createContext();
 export const OrderContextProvider = ({ children }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [orders, setOrders] = useState([]);
+    const [changeItemId, setChangeItemId] = useState(null);
 
     const { user } = useContext(AuthContext);
 
     const [searchParams] = useSearchParams();
+
+    const createPayment = useCallback(
+        async (amount, orderId, token = user?.token) => {
+            try {
+                const payment = await postRequest(
+                    '/payment',
+                    {
+                        amount: amount,
+                        orderId: orderId,
+                    },
+                    token,
+                );
+                window.location.href = payment.redirectUrl;
+            } catch (error) {
+                console.log(error);
+                dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
+            }
+        },
+        [dispatch, user],
+    );
+
+    const createOrder = useCallback(
+        async (data, token = user?.token) => {
+            try {
+                dispatch(showLoading());
+                const response = await postRequest('/orders', data, token);
+                dispatch(hideLoading());
+
+                if (response.order.paymentMethod === 'cash_on_delivery') {
+                    navigate('/profile');
+                    dispatch(showAlert('Đặt hàng thành công!'));
+                } else {
+                    createPayment(response.order.totalPrice, response.order._id, token);
+                }
+            } catch (error) {
+                console.log(error);
+                dispatch(hideLoading());
+                dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
+            }
+        },
+        [dispatch, user, navigate, createPayment],
+    );
+
+    const getOrders = useCallback(
+        async (token = user?.token) => {
+            try {
+                const response = await getRequest('/orders', {}, token);
+                setOrders(response.orders);
+            } catch (error) {
+                console.log(error);
+                dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
+            }
+        },
+        [dispatch, user],
+    );
+
+    const updateOrder = useCallback(
+        async (data, token = user?.token, orderId) => {
+            try {
+                setChangeItemId(orderId);
+                await patchRequest(`/orders/${orderId}`, data, token);
+                await getOrders(token);
+                setChangeItemId(null);
+            } catch (error) {
+                console.log(error);
+                dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
+            }
+        },
+        [dispatch, user, getOrders],
+    );
 
     useEffect(() => {
         const handleVNPayReturn = async () => {
@@ -41,35 +113,9 @@ export const OrderContextProvider = ({ children }) => {
         }
     }, [searchParams, dispatch, user, navigate]);
 
-    const createOrder = useCallback(
-        async (data, token = user?.token) => {
-            try {
-                dispatch(showLoading());
-                const response = await postRequest('/orders', data, token);
-                dispatch(hideLoading());
-
-                if (response.order.paymentMethod === 'cash_on_delivery') {
-                    navigate('/profile');
-                    dispatch(showAlert('Đặt hàng thành công!'));
-                } else {
-                    const payment = await postRequest(
-                        '/payment',
-                        {
-                            amount: response.order.totalPrice,
-                            orderId: response.order._id,
-                        },
-                        token,
-                    );
-                    window.location.href = payment.redirectUrl;
-                }
-            } catch (error) {
-                console.log(error);
-                dispatch(hideLoading());
-                dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
-            }
-        },
-        [dispatch, user, navigate],
+    return (
+        <OrderContext.Provider value={{ changeItemId, createPayment, createOrder, orders, getOrders, updateOrder }}>
+            {children}
+        </OrderContext.Provider>
     );
-
-    return <OrderContext.Provider value={{ createOrder }}>{children}</OrderContext.Provider>;
 };

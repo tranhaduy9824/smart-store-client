@@ -384,3 +384,125 @@ export const LocalIcon = () => (
         ></path>
     </svg>
 );
+
+export const OrderIcon = () => (
+    <svg enable-background="new 0 0 32 32" viewBox="0 0 32 32" x="0" y="0" classname="shopee-svg-icon icon-order-order">
+        <g>
+            <path
+                d="m5 3.4v23.7c0 .4.3.7.7.7.2 0 .3 0 .3-.2.5-.4 1-.5 1.7-.5.9 0 1.7.4 2.2 1.1.2.2.3.4.5.4s.3-.2.5-.4c.5-.7 1.4-1.1 2.2-1.1s1.7.4 2.2 1.1c.2.2.3.4.5.4s.3-.2.5-.4c.5-.7 1.4-1.1 2.2-1.1.9 0 1.7.4 2.2 1.1.2.2.3.4.5.4s.3-.2.5-.4c.5-.7 1.4-1.1 2.2-1.1.7 0 1.2.2 1.7.5.2.2.3.2.3.2.3 0 .7-.4.7-.7v-23.7z"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-miterlimit="10"
+                stroke-width="3"
+            ></path>
+            <g>
+                <line
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-miterlimit="10"
+                    stroke-width="3"
+                    x1="10"
+                    x2="22"
+                    y1="11.5"
+                    y2="11.5"
+                ></line>
+                <line
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-miterlimit="10"
+                    stroke-width="3"
+                    x1="10"
+                    x2="22"
+                    y1="18.5"
+                    y2="18.5"
+                ></line>
+            </g>
+        </g>
+    </svg>
+);
+
+export const PaymentIcon = () => (
+    <svg enable-background="new 0 0 32 32" viewBox="0 0 32 32" x="0" y="0" className="shopee-svg-icon icon-order-paid">
+        <g>
+            <path
+                clip-rule="evenodd"
+                d="m24 22h-21c-.5 0-1-.5-1-1v-15c0-.6.5-1 1-1h21c .5 0 1 .4 1 1v15c0 .5-.5 1-1 1z"
+                fill="none"
+                fill-rule="evenodd"
+                stroke-miterlimit="10"
+                stroke-width="3"
+            ></path>
+            <path
+                clip-rule="evenodd"
+                d="m24.8 10h4.2c.5 0 1 .4 1 1v15c0 .5-.5 1-1 1h-21c-.6 0-1-.4-1-1v-4"
+                fill="none"
+                fill-rule="evenodd"
+                stroke-miterlimit="10"
+                stroke-width="3"
+            ></path>
+            <path
+                d="m12.9 17.2c-.7-.1-1.5-.4-2.1-.9l.8-1.2c.6.5 1.1.7 1.7.7.7 0 1-.3 1-.8 0-1.2-3.2-1.2-3.2-3.4 0-1.2.7-2 1.8-2.2v-1.3h1.2v1.2c.8.1 1.3.5 1.8 1l-.9 1c-.4-.4-.8-.6-1.3-.6-.6 0-.9.2-.9.8 0 1.1 3.2 1 3.2 3.3 0 1.2-.6 2-1.9 2.3v1.2h-1.2z"
+                stroke="currentColor"
+            ></path>
+        </g>
+    </svg>
+);
+
+export const ReceiveIcon = () => (
+    <svg enable-background="new 0 0 32 32" viewBox="0 0 32 32" x="0" y="0" className="shopee-svg-icon icon-order-received">
+        <g>
+            <polygon
+                fill="none"
+                points="2 28 2 19.2 10.6 19.2 11.7 21.5 19.8 21.5 20.9 19.2 30 19.1 30 28"
+                stroke-linejoin="round"
+                stroke-miterlimit="10"
+                stroke-width="3"
+            ></polygon>
+            <polyline
+                fill="none"
+                points="21 8 27 8 30 19.1"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-miterlimit="10"
+                stroke-width="3"
+            ></polyline>
+            <polyline
+                fill="none"
+                points="2 19.2 5 8 11 8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-miterlimit="10"
+                stroke-width="3"
+            ></polyline>
+            <line
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-miterlimit="10"
+                stroke-width="3"
+                x1="16"
+                x2="16"
+                y1="4"
+                y2="14"
+            ></line>
+            <path
+                d="m20.1 13.4-3.6 3.6c-.3.3-.7.3-.9 0l-3.6-3.6c-.4-.4-.1-1.1.5-1.1h7.2c.5 0 .8.7.4 1.1z"
+                stroke="none"
+            ></path>
+        </g>
+    </svg>
+);
+
+export const ReviewIcon = () => (
+    <svg enable-background="new 0 0 32 32" viewBox="0 0 32 32" x="0" y="0" className="shopee-svg-icon icon-order-rating">
+        <polygon
+            fill="none"
+            points="16 3.2 20.2 11.9 29.5 13 22.2 19 24.3 28.8 16 23.8 7.7 28.8 9.8 19 2.5 13 11.8 11.9"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-miterlimit="10"
+            stroke-width="3"
+        ></polygon>
+    </svg>
+);

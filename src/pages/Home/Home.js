@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useContext, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
@@ -90,7 +91,13 @@ function Home() {
                                             <del>{formatPrice(item.price)}</del>
                                         </i>
                                     </p>
-                                    <Button className={cx('btn-buy')}>Mua ngay</Button>
+                                    <Button
+                                        className={cx('btn-buy')}
+                                        to="/payment"
+                                        state={{ items: [{ productId: item, quantity: 1, price: item?.price }] }}
+                                    >
+                                        Mua ngay
+                                    </Button>
                                 </div>
                                 <div
                                     className={cx('image')}

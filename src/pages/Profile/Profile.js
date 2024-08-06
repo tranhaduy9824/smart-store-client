@@ -14,6 +14,7 @@ import Avatar from '~/components/Avatar';
 import { handleValidation } from '~/handle/handleValidation';
 import { useDispatch } from 'react-redux';
 import AddAddress from '~/components/AddAddress';
+import { OrderContext } from '~/context/OrderContext';
 
 const cx = classNames.bind(styles);
 
@@ -31,11 +32,18 @@ function Profile() {
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPasswrod, setConfirmNewPassword] = useState('');
     const [showChangePassword, setShowChangePassword] = useState(false);
-    const [contentSelected, setContentSelected] = useState(0);
+    const [contentSelected, setContentSelected] = useState('wait_confirm');
     const [showAddAddress, setShowAddAddress] = useState(false);
     const [updateAddress, setUpdateAddress] = useState(null);
 
     const { user, handleUpdate } = useContext(AuthContext);
+    const { orders, getOrders } = useContext(OrderContext);
+
+    useEffect(() => {
+        if (user) {
+            getOrders(user.token);
+        }
+    }, [user, getOrders]);
 
     useEffect(() => {
         if (user) {
@@ -196,43 +204,42 @@ function Profile() {
                 <div className={cx('box-content')}>
                     <div className={cx('header')}>
                         <div
-                            className={cx('header-item', { selected: contentSelected === 0 })}
-                            onClick={() => setContentSelected(0)}
+                            className={cx('header-item', { selected: contentSelected === 'wait_confirm' })}
+                            onClick={() => setContentSelected('wait_confirm')}
                         >
                             Chờ xác nhận
                         </div>
                         <div
-                            className={cx('header-item', { selected: contentSelected === 1 })}
-                            onClick={() => setContentSelected(1)}
+                            className={cx('header-item', { selected: contentSelected === 'delivering' })}
+                            onClick={() => setContentSelected('delivering')}
                         >
                             Đang vận chuyển
                         </div>
                         <div
-                            className={cx('header-item', { selected: contentSelected === 2 })}
-                            onClick={() => setContentSelected(2)}
+                            className={cx('header-item', { selected: contentSelected === 'done' })}
+                            onClick={() => setContentSelected('done')}
                         >
                             Hoàn thành
                         </div>
                         <div
-                            className={cx('header-item', { selected: contentSelected === 3 })}
-                            onClick={() => setContentSelected(3)}
+                            className={cx('header-item', { selected: contentSelected === 'cancelled' })}
+                            onClick={() => setContentSelected('cancelled')}
                         >
                             Đã hủy
                         </div>
                         <div
-                            className={cx('header-item', { selected: contentSelected === 4 })}
-                            onClick={() => setContentSelected(4)}
+                            className={cx('header-item', { selected: contentSelected === 'address' })}
+                            onClick={() => setContentSelected('address')}
                         >
                             Địa chỉ nhận hàng
                         </div>
                     </div>
                     <div className={cx('content')}>
-                        {contentSelected < 4 ? (
+                        {contentSelected !== 'address' ? (
                             <div className={cx('order')}>
-                                <OrderItem />
-                                <OrderItem />
-                                <OrderItem />
-                                <OrderItem />
+                                {orders?.map((order, index) => (
+                                    <OrderItem data={order} key={index} status={contentSelected} />
+                                ))}
                             </div>
                         ) : (
                             <div className={cx('address')}>
