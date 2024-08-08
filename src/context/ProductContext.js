@@ -127,23 +127,19 @@ export const ProductContextProvider = ({ children }) => {
         (product) => {
             const recentProducts = JSON.parse(localStorage.getItem('recentProducts')) || [];
 
-            const index = recentProducts.findIndex((p) => p.id === product?._id);
+            const updatedRecentProducts = recentProducts.filter((p) => p.id !== product?._id);
 
-            if (index > -1) {
-                recentProducts.splice(index, 1);
-            }
-
-            recentProducts.unshift({
+            updatedRecentProducts.unshift({
                 id: product?._id,
                 imageUrl: product?.files?.photos[0],
             });
 
-            if (recentProducts.length > 10) {
-                recentProducts.pop();
+            if (updatedRecentProducts.length > 10) {
+                updatedRecentProducts.pop();
             }
 
-            localStorage.setItem('recentProducts', JSON.stringify(recentProducts));
-            setRecentProducts(recentProducts);
+            localStorage.setItem('recentProducts', JSON.stringify(updatedRecentProducts));
+            setRecentProducts(updatedRecentProducts);
         },
         [setRecentProducts],
     );
@@ -158,8 +154,11 @@ export const ProductContextProvider = ({ children }) => {
     useEffect(() => {
         getNewProducts();
         getSaleProducts();
-        getRecommendProducts();
     }, []);
+
+    useEffect(() => {
+        getRecommendProducts();
+    }, [user]);
 
     return (
         <ProductContext.Provider

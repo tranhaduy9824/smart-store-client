@@ -2,34 +2,19 @@ import classNames from 'classnames/bind';
 import styles from './Reviews.module.scss';
 import RatingStar from '~/components/RatingStar';
 import Pagination from '~/components/Pagination';
-import { useContext, useEffect, useState } from 'react';
-import { ReviewContext } from '~/context/ReviewContext';
 import moment from 'moment';
 
 const cx = classNames.bind(styles);
 
-function Reviews({ productId }) {
-    const [reviews, setReviews] = useState([]);
-
-    const { getReviewsByProductId } = useContext(ReviewContext);
-
-    useEffect(() => {
-        const fetchReviews = async () => {
-            const reviews = await getReviewsByProductId(productId);
-            setReviews(reviews);
-        };
-
-        if (productId) {
-            fetchReviews();
-        }
-    }, [productId, getReviewsByProductId]);
+function Reviews({ reviews }) {
+    const reviewsReverse = [...(reviews?.items || [])].reverse();
 
     return (
         <div className={cx('wrapper')}>
             <h2>Đánh giá</h2>
             <ul className={cx('list-comment')}>
-                {reviews && (
-                    <Pagination data={reviews?.items} limit={5}>
+                {reviewsReverse && (
+                    <Pagination data={reviewsReverse} limit={5}>
                         {({ item, index }) => (
                             <li className={cx('item-comment')} key={index}>
                                 <img src={item?.userId.avatar} alt="Avatar" />
@@ -44,7 +29,7 @@ function Reviews({ productId }) {
                         )}
                     </Pagination>
                 )}
-                {!reviews?.items?.length && <li>Chưa có đánh giá nào</li>}
+                {!reviewsReverse?.items?.length && <li>Chưa có đánh giá nào</li>}
             </ul>
         </div>
     );

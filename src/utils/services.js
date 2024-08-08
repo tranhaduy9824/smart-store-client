@@ -15,10 +15,10 @@ export const postRequest = async (url, body, token = null, formData = false) => 
     return data;
 };
 
-export const getRequest = async (url, params = {}, token = null) => {
+export const getRequest = async (url, query = {}, token = null) => {
     const config = {
         headers: {},
-        params,
+        params: query,
     };
 
     if (token) {
@@ -60,5 +60,4 @@ export const patchRequest = async (url, body, token = null) => {
     const data = await response.data;
 
     return data;
-}; 
-
+};

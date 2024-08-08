@@ -20,6 +20,7 @@ import { AuthContext } from '~/context/AuthContext';
 import { CartContext } from '~/context/CartContext';
 import { WishlistContext } from '~/context/WishlistContext';
 import { isWishlist } from '~/handle/isWishlist';
+import { ReviewContext } from '~/context/ReviewContext';
 
 const cx = classNames.bind(styles);
 
@@ -29,13 +30,26 @@ function ProductDetail() {
     const [owner, setOwner] = useState(null);
     const [productShop, setProductShop] = useState([]);
     const { id } = useParams(null);
+    const [reviews, setReviews] = useState([]);
 
     const { product, setProduct, getProduct, getProductsByShop } = useContext(ProductContext);
     const { user, getUserById } = useContext(AuthContext);
     const { addCart } = useContext(CartContext);
     const { wishlist, addWishlist, removeWishlist } = useContext(WishlistContext);
+    const { getReviewsByProductId } = useContext(ReviewContext);
 
     const [imageCurrent, setImageCurrent] = useState(product?.files && product.files.video ? 0 : 1);
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            const reviews = await getReviewsByProductId(product?._id);
+            setReviews(reviews);
+        };
+
+        if (product?._id) {
+            fetchReviews();
+        }
+    }, [product, getReviewsByProductId]);
 
     useEffect(() => {
         if (wishlist) {
@@ -199,7 +213,7 @@ function ProductDetail() {
                     <h2>{product && product.name}</h2>
                     <div className={cx('rating')}>
                         <RatingStar rating={product?.rating} />
-                        <span className={cx('number-rating')}>({product?.numberRating})</span>
+                        <span className={cx('number-rating')}>({reviews?.items?.length || 0})</span>
                     </div>
                     <div className={cx('price')}>
                         {product?.sale ? (
@@ -275,7 +289,7 @@ function ProductDetail() {
                     ></div>
                 </div>
             </div>
-            <Reviews productId={product?._id} />
+            <Reviews reviews={reviews} />
             <div className={cx('box-product-shop')}>
                 <div className={cx('title')}>
                     <h2>Các sản phẩm khác của shop</h2>

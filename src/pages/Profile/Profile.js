@@ -32,7 +32,7 @@ function Profile() {
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPasswrod, setConfirmNewPassword] = useState('');
     const [showChangePassword, setShowChangePassword] = useState(false);
-    const [contentSelected, setContentSelected] = useState('wait_confirm');
+    const [contentSelected, setContentSelected] = useState('all');
     const [showAddAddress, setShowAddAddress] = useState(false);
     const [updateAddress, setUpdateAddress] = useState(null);
 
@@ -203,6 +203,12 @@ function Profile() {
                 </div>
                 <div className={cx('box-content')}>
                     <div className={cx('header')}>
+                        <div
+                            className={cx('header-item', { selected: contentSelected === 'all' })}
+                            onClick={() => setContentSelected('all')}
+                        >
+                            Tất cả
+                        </div>
                         <div
                             className={cx('header-item', { selected: contentSelected === 'wait_confirm' })}
                             onClick={() => setContentSelected('wait_confirm')}
