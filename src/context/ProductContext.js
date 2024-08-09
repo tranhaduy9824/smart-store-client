@@ -131,7 +131,7 @@ export const ProductContextProvider = ({ children }) => {
 
             updatedRecentProducts.unshift({
                 id: product?._id,
-                imageUrl: product?.files?.photos[0],
+                imageUrl: product?.files?.photos[0] || product?.imageUrl,
             });
 
             if (updatedRecentProducts.length > 10) {

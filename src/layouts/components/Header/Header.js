@@ -225,7 +225,12 @@ function Header() {
                             <ul>
                                 {recentProducts?.map((product, index) => (
                                     <li key={index}>
-                                        <Link to={`/product/${product.id}`} onClick={() => addProductToRecent(product)}>
+                                        <Link
+                                            to={`/product/${product.id}`}
+                                            onClick={() =>
+                                                addProductToRecent({ _id: product?.id, imageUrl: product?.imageUrl})
+                                            }
+                                        >
                                             <img src={product.imageUrl} alt="Ảnh được xem gần đây" />
                                         </Link>
                                     </li>

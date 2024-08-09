@@ -117,7 +117,7 @@
         }
     }
 
-    .image img{
+    .image img {
         width: 60px;
         margin-right: 20px;
         margin-left: 10px;
@@ -134,6 +134,23 @@
         }
     }
 
+    .rating-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 2px;
+
+        & > span:first-child > div {
+            display: flex;
+            align-items: center;
+        }
+
+        & > span:last-child {
+            font-size: 1.4rem;
+            color: var(--second-text);
+        }
+    }
+
     .price-item {
         margin-top: 15px;
 
@@ -143,7 +160,7 @@
             font-weight: 700;
             padding-right: 7px;
         }
-    
+
         .price-old {
             color: var(--second-text);
             font-size: 1.5rem;

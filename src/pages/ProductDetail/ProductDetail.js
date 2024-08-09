@@ -213,7 +213,7 @@ function ProductDetail() {
                     <h2>{product && product.name}</h2>
                     <div className={cx('rating')}>
                         <RatingStar rating={product?.rating} />
-                        <span className={cx('number-rating')}>({reviews?.items?.length || 0})</span>
+                        <span className={cx('number-rating')}>({product?.numberRating})</span>
                     </div>
                     <div className={cx('price')}>
                         {product?.sale ? (

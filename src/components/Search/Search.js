@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
@@ -131,7 +133,10 @@ function Search() {
                                     {result.name}
                                 </NavLink>
                                 <div className={cx('rating-item')}>
-                                    <RatingStar rating={result.rating} />
+                                    <span>
+                                        <RatingStar rating={result.rating} />
+                                    </span>{' '}
+                                   <span>({result?.numberRating})</span>
                                 </div>
                                 <div className={cx('price-item')}>
                                     {result.sale ? (
