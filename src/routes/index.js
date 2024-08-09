@@ -11,6 +11,7 @@ import NullLayout from '~/layouts/NullLayout';
 import ProductDetail from '~/pages/ProductDetail';
 import WishList from '~/pages/WishList';
 import Payment from '~/pages/Payment';
+import Shop from '~/pages/Shop';
 
 export const routes = [
     {
@@ -24,6 +25,10 @@ export const routes = [
     {
         path: '/product/:id',
         component: ProductDetail,
+    },
+    {
+        path: '/shop',
+        component: Shop,
     },
     {
         path: '/news',

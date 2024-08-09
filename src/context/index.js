@@ -4,6 +4,7 @@ import { CategoryContextProvider } from './CategoryContext';
 import { OrderContextProvider } from './OrderContext';
 import { ProductContextProvider } from './ProductContext';
 import { ReviewContextProvider } from './ReviewContext';
+import { ShopContextProvider } from './ShopContext';
 import { WishlistContextProvider } from './WishlistContext';
 
 function ContextProvider({ children }) {
@@ -14,7 +15,9 @@ function ContextProvider({ children }) {
                     <ReviewContextProvider>
                         <CartContextProvider>
                             <WishlistContextProvider>
-                                <OrderContextProvider>{children}</OrderContextProvider>
+                                <OrderContextProvider>
+                                    <ShopContextProvider>{children}</ShopContextProvider>
+                                </OrderContextProvider>
                             </WishlistContextProvider>
                         </CartContextProvider>
                     </ReviewContextProvider>

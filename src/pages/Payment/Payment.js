@@ -58,16 +58,20 @@ function Payment() {
                             <span>Địa chỉ nhận hàng</span>
                         </p>
                         <div className={cx('address-user')}>
-                            <span>
-                                {selectedAddress?.fullname} {selectedAddress?.phone}
-                            </span>
-                            <p>
-                                {selectedAddress?.specificAddress}, {selectedAddress?.address}
-                            </p>
-                            {selectedAddress?.isDefault && <div>Mặc dịnh</div>}
-                            <p className={cx('change')} onClick={() => setShowChangeAddress(true)}>
-                                Thay đổi
-                            </p>
+                            {user && user.user.address.length !== 0 && (
+                                <>
+                                    <span>
+                                        {selectedAddress?.fullname} {selectedAddress?.phone}
+                                    </span>
+                                    <p>
+                                        {selectedAddress?.specificAddress}, {selectedAddress?.address}
+                                    </p>
+                                    {selectedAddress?.isDefault && <div>Mặc dịnh</div>}
+                                    <p className={cx('change')} onClick={() => setShowChangeAddress(true)}>
+                                        Thay đổi
+                                    </p>
+                                </>
+                            )}
                             {user && user.user.address.length === 0 && (
                                 <div onClick={() => setShowAddAddress(true)}>Thêm địa chỉ</div>
                             )}

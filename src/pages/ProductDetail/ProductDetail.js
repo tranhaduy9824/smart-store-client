@@ -14,7 +14,7 @@ import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faRocketchat } from '@fortawesome/free-brands-svg-icons';
 import Reviews from './Reviews';
 import ProductItem from '~/components/ProductItem';
-import { NavLink, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ProductContext } from '~/context/ProductContext';
 import { AuthContext } from '~/context/AuthContext';
 import { CartContext } from '~/context/CartContext';
@@ -266,9 +266,13 @@ function ProductDetail() {
                     </div>
                     <h3>Cửa hàng</h3>
                     <div className={cx('info-shop')}>
-                        <img src={owner?.avatar} alt="Image shop" />
+                        <Link to="/shop" state={{ productShop, shop: product?.shop, avatar: owner?.avatar }}>
+                            <img src={owner?.avatar} alt="Image shop" />
+                        </Link>
                         <div className={cx('content-shop')}>
-                            <h3>{product?.shop.name}</h3>
+                            <Link to="/shop" state={{ productShop, shop: product?.shop, avatar: owner?.avatar }}>
+                                <h3>{product?.shop.name}</h3>
+                            </Link>
                             <p>Số sản phẩm: {productShop.length}</p>
                         </div>
                         <div className={cx('btn-shop')}>
@@ -279,7 +283,13 @@ function ProductDetail() {
                             >
                                 Chat Ngay
                             </Button>
-                            <Button className={cx('view-shop')}>Xem shop</Button>
+                            <Button
+                                className={cx('view-shop')}
+                                to="/shop"
+                                state={{ productShop, shop: product?.shop, avatar: owner?.avatar }}
+                            >
+                                Xem shop
+                            </Button>
                         </div>
                     </div>
                     <h3>Mô tả</h3>
@@ -293,9 +303,9 @@ function ProductDetail() {
             <div className={cx('box-product-shop')}>
                 <div className={cx('title')}>
                     <h2>Các sản phẩm khác của shop</h2>
-                    <NavLink to={`/shop/${product?.shop._id}`}>
+                    <Link to="/shop" state={{ productShop, shop: product?.shop, avatar: owner?.avatar }}>
                         Xem tất cả <FontAwesomeIcon icon={faChevronRight} />
-                    </NavLink>
+                    </Link>
                 </div>
                 <div className={cx('list-product')}>
                     {productShop.slice(0, 10).map((item, index) => (

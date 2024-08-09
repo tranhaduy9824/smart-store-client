@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import classNames from 'classnames/bind';
 import styles from './Product.module.scss';
 import { BarsIcon, DownIcon, GridIcon } from '~/components/Icons';
