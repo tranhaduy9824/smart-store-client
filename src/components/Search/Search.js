@@ -8,7 +8,7 @@ import classNames from 'classnames/bind';
 import styles from './Search.module.scss';
 import { LoadingIcon, SearchIcon } from '../Icons';
 import useDebounce from '~/hooks/useDebounce';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import RatingStar from '../RatingStar';
 import { formatPrice } from '~/handle/formatPrice';
 import { CategoryContext } from '~/context/CategoryContext';
@@ -16,7 +16,7 @@ import { ProductContext } from '~/context/ProductContext';
 
 const cx = classNames.bind(styles);
 
-function Search() {
+function Search({ className, onClickProduct = () => {} }) {
     const [inputValue, setInputValue] = useState('');
     const [selectedValue, setSelectedValue] = useState('0');
     const [inputing, setInputing] = useState(true);
@@ -63,7 +63,7 @@ function Search() {
     }, [debouceValue, selectedValue]);
 
     return (
-        <div className={cx('wrapper')}>
+        <div className={cx('wrapper', { [className]: className })}>
             <div className={cx('box-search')}>
                 <select
                     className={cx('select-category')}
@@ -120,23 +120,32 @@ function Search() {
                     {searchResult.map((result, index) => (
                         <div key={index} className={cx('item-result')}>
                             <div className={cx('image')}>
-                                <NavLink to={`/product/${result._id}`} onClick={() => addProductToRecent(result)}>
+                                <Link
+                                    to={`/product/${result._id}`}
+                                    onClick={() => {
+                                        addProductToRecent(result);
+                                        onClickProduct();
+                                    }}
+                                >
                                     <img src={result.files.photos[0]} alt="Image" />
-                                </NavLink>
+                                </Link>
                             </div>
                             <div className={cx('content-item')}>
-                                <NavLink
+                                <Link
                                     to={`/product/${result._id}`}
-                                    onClick={() => addProductToRecent(result)}
+                                    onClick={() => {
+                                        addProductToRecent(result);
+                                        onClickProduct();
+                                    }}
                                     className={cx('title-item')}
                                 >
                                     {result.name}
-                                </NavLink>
+                                </Link>
                                 <div className={cx('rating-item')}>
                                     <span>
                                         <RatingStar rating={result.rating} />
                                     </span>{' '}
-                                   <span>({result?.numberRating})</span>
+                                    <span>({result?.numberRating})</span>
                                 </div>
                                 <div className={cx('price-item')}>
                                     {result.sale ? (

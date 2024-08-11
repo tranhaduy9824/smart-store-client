@@ -15,7 +15,7 @@
     .box-logo {
         width: 17%;
 
-        img{
+        img {
             width: 160px;
         }
     }
@@ -81,12 +81,12 @@
     .account-icon {
         margin: 0 20px;
     }
-    
+
     .box-cart {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        
+
         svg {
             width: 2.5rem;
         }
@@ -107,7 +107,7 @@
 
         .cart-price-total {
             color: var(--black);
-            font-weight: 700;   
+            font-weight: 700;
             font-size: 1.7rem;
             line-height: 1;
             display: block;
@@ -202,13 +202,13 @@
             width: auto;
             padding: 11px 21px;
             cursor: pointer;
-    
+
             .icon-left-item,
             .icon-right-item,
             .item-navigate {
                 transition: color 0.3s ease-in-out;
             }
-        
+
             &:hover {
                 .icon-left-item,
                 .icon-right-item,
@@ -217,14 +217,14 @@
                 }
             }
         }
-    
+
         .item-navigate {
             font-size: 1.4rem;
             background-color: var(--white);
             color: var(--black);
             font-weight: 500;
         }
-    
+
         .icon-left-item {
             margin-right: 5px;
             font-weight: 600;
@@ -289,5 +289,16 @@
             line-height: 11px;
             font-weight: 600;
         }
+    }
+}
+
+@media screen and (max-width: 63.9375em) {
+    .wrapper {
+        height: max-content;
+    }
+
+    .header-main,
+    .header-bottom {
+        display: none;
     }
 }

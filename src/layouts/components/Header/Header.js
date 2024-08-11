@@ -27,6 +27,7 @@ import { ProductContext } from '~/context/ProductContext';
 import { CartContext } from '~/context/CartContext';
 import ViewQuickCart from './ViewQuickCart';
 import { WishlistContext } from '~/context/WishlistContext';
+import HeaderMobile from './HeaderMobile';
 
 const cx = classNames.bind(style);
 
@@ -252,6 +253,7 @@ function Header() {
                     </WrapperHover>
                 </div>
             </div>
+            <HeaderMobile categories={categories} />
         </header>
     );
 }
