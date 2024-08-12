@@ -139,3 +139,33 @@
     border-top: 1px solid #dcdcdc;
     color: var(--second-text);
 }
+
+@media screen and (max-width: 46.1875em) {
+    .footer-center-item:first-child {
+        min-width: 100%;
+        padding: 0 !important;
+        padding-bottom: 30px !important;
+    }
+
+    .footer-center-item:last-child {
+        min-width: 100%;
+        padding: 0 !important;
+        padding-top: 30px !important;
+    }
+
+    .footer-center {
+        flex-wrap: wrap;
+    }
+    
+    .footer-center-item:nth-child(2) {
+        flex-wrap: wrap;
+        min-width: 100%;
+        justify-content: flex-start !important;
+        gap: 20px;
+
+        > div {
+            flex-grow: 1;
+            padding: 0 !important;
+        }
+    }
+}
