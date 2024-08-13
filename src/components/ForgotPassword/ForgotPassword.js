@@ -43,7 +43,7 @@ function ForgotPassword({ show, onClose, email }) {
                         <BoxInput
                             value={inputEmail}
                             onChange={(e) => setInputEmail(e.target.value)}
-                            label="Enter email"
+                            label="Nhập email"
                             email
                             onFocus={focused}
                             onKeyPress={(e) => handleKeyPress(e)}

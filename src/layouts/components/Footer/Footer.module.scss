@@ -40,7 +40,7 @@
 
     .content-des {
         color: var(--second-text);
-        letter-spacing: -.5px;
+        letter-spacing: -0.5px;
         font-size: 1.5rem;
     }
 }
@@ -65,7 +65,7 @@
             font-size: 1.8rem;
             line-height: 24px;
             text-transform: capitalize;
-            letter-spacing: -.5px;
+            letter-spacing: -0.5px;
             padding-bottom: 33px;
         }
 
@@ -104,7 +104,7 @@
             padding: 7px 0;
             align-items: normal;
         }
-        
+
         a {
             color: var(--second-text);
             padding: 0;
@@ -121,7 +121,7 @@
         font-size: 18px;
         line-height: 24px;
         text-transform: capitalize;
-        letter-spacing: -.5px;
+        letter-spacing: -0.5px;
         padding-bottom: 33px;
     }
 
@@ -141,6 +141,11 @@
 }
 
 @media screen and (max-width: 46.1875em) {
+    .footer-top {
+        padding-right: 0;
+        padding-left: 0;
+    }
+
     .footer-center-item:first-child {
         min-width: 100%;
         padding: 0 !important;
@@ -156,7 +161,7 @@
     .footer-center {
         flex-wrap: wrap;
     }
-    
+
     .footer-center-item:nth-child(2) {
         flex-wrap: wrap;
         min-width: 100%;
