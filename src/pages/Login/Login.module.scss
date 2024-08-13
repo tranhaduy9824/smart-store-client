@@ -36,6 +36,7 @@
         top: 0;
         left: 0;
         bottom: 0;
+        z-index: 2;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -148,7 +149,7 @@
 
             img {
                 width: 85%;
-                height: 25%;
+                height: 27%;
             }
         }
 
@@ -171,4 +172,7 @@
 }
 
 @media screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+    .content {
+        padding: 0 !important;
+    }
 }
