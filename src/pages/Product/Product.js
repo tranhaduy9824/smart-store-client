@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import classNames from 'classnames/bind';
 import styles from './Product.module.scss';
-import { BarsIcon, DownIcon, GridIcon } from '~/components/Icons';
+import { BarsIcon, DownIcon, FilterIcon, GridIcon } from '~/components/Icons';
 import WrapperHover from '~/components/WrapperHover';
 import { NavLink, useLocation } from 'react-router-dom';
 import { formatPrice } from '~/handle/formatPrice';
@@ -12,6 +12,7 @@ import ProductItem from '~/components/ProductItem';
 import Pagination from '~/components/Pagination';
 import { ProductContext } from '~/context/ProductContext';
 import { CategoryContext } from '~/context/CategoryContext';
+import WrapperModel from '~/components/WrapperModel';
 
 const cx = classNames.bind(styles);
 
@@ -24,6 +25,7 @@ function Product() {
     const [selectedPriceRange, setSelectedPriceRange] = useState({});
     const [selectedSort, setSelectedSort] = useState(state?.selectedSort || 0);
     const [sale, setSale] = useState(state?.sale || false);
+    const [showFilter, setShowFilter] = useState(false);
 
     const { products, setProducts, getProducts } = useContext(ProductContext);
     const { categories } = useContext(CategoryContext);
@@ -119,6 +121,91 @@ function Product() {
         }
     };
 
+    const sideBarContent = (
+        <div className={cx('sidebar')}>
+            <div className={cx('box-categories')}>
+                <h2>Tất cả danh mục</h2>
+                <ul className={cx('list-category')}>
+                    {categories &&
+                        categories.map((category, index) => (
+                            <>
+                                <li key={index} className={cx('category-main')}>
+                                    <NavLink
+                                        onClick={() => {
+                                            if (selectedCategory === category.name && selectedCategorySub === '') {
+                                                setSelectedCategory('');
+                                            } else {
+                                                setSelectedCategory(category.name);
+                                            }
+                                            setSelectedCategorySub('');
+                                        }}
+                                        className={cx({ selected: category.name === selectedCategory })}
+                                    >
+                                        {category.name}{' '}
+                                        <span className={cx('number-category-sub')}>{category.categorySub.length}</span>
+                                    </NavLink>
+                                    <span onClick={() => handleSpanClick(index)}>
+                                        {!showCategorySub[index] ? (
+                                            <FontAwesomeIcon icon={faChevronDown} />
+                                        ) : (
+                                            <FontAwesomeIcon icon={faChevronUp} />
+                                        )}
+                                    </span>
+                                </li>
+                                <ul key={index} className={cx('category-sub', { show: showCategorySub[index] })}>
+                                    {category.categorySub.map((item, index) => (
+                                        <li key={index}>
+                                            <NavLink
+                                                onClick={() => {
+                                                    if (selectedCategorySub === item) {
+                                                        setSelectedCategorySub('');
+                                                    } else {
+                                                        setSelectedCategorySub(item);
+                                                        setSelectedCategory(category.name);
+                                                    }
+                                                }}
+                                                className={cx({ selected: item === selectedCategorySub })}
+                                            >
+                                                {item}
+                                            </NavLink>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </>
+                        ))}
+                </ul>
+            </div>
+            <div className={cx('box-price')}>
+                <h2>Phạm vi giá</h2>
+                <ul className={cx('list-price')}>
+                    <li className={cx('selected-sale')}>
+                        <input checked={sale} type="checkbox" id="sale-price" onChange={() => setSale(!sale)} />
+                        <label for="sale-price">Giá đặc biệt</label>
+                    </li>
+                    {priceRange.map((item, index) => (
+                        <li key={index}>
+                            {item.to ? (
+                                <NavLink
+                                    onClick={() => handleClickPriceRange(item)}
+                                    className={cx({ selected: selectedPriceRange.from === item.from })}
+                                >
+                                    {formatPrice(item.from)} - {formatPrice(item.to)}
+                                </NavLink>
+                            ) : (
+                                <NavLink
+                                    onClick={() => handleClickPriceRange(item)}
+                                    className={cx({ selected: selectedPriceRange.from === item.from })}
+                                >
+                                    {formatPrice(item.from)} +
+                                </NavLink>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('top-product')}>
@@ -126,6 +213,11 @@ function Product() {
                     <h1>Sản phẩm</h1>
                 </div>
                 <div className={cx('control-content')}>
+                    {window.matchMedia('(max-width: 46.1875em)').matches && (
+                        <span onClick={() => setShowFilter(true)}>
+                            <FilterIcon /> Lọc
+                        </span>
+                    )}
                     <div className={cx('box-sort')}>
                         <span className={cx('label-control')}>Sắp xếp theo:</span>
                         <WrapperHover
@@ -161,96 +253,18 @@ function Product() {
                 </div>
             </div>
             <div className={cx('bottom-product')}>
-                <div className={cx('sidebar')}>
-                    <div className={cx('box-categories')}>
-                        <h2>Tất cả danh mục</h2>
-                        <ul className={cx('list-category')}>
-                            {categories &&
-                                categories.map((category, index) => (
-                                    <>
-                                        <li key={index} className={cx('category-main')}>
-                                            <NavLink
-                                                onClick={() => {
-                                                    if (
-                                                        selectedCategory === category.name &&
-                                                        selectedCategorySub === ''
-                                                    ) {
-                                                        setSelectedCategory('');
-                                                    } else {
-                                                        setSelectedCategory(category.name);
-                                                    }
-                                                    setSelectedCategorySub('');
-                                                }}
-                                                className={cx({ selected: category.name === selectedCategory })}
-                                            >
-                                                {category.name}{' '}
-                                                <span className={cx('number-category-sub')}>
-                                                    {category.categorySub.length}
-                                                </span>
-                                            </NavLink>
-                                            <span onClick={() => handleSpanClick(index)}>
-                                                {!showCategorySub[index] ? (
-                                                    <FontAwesomeIcon icon={faChevronDown} />
-                                                ) : (
-                                                    <FontAwesomeIcon icon={faChevronUp} />
-                                                )}
-                                            </span>
-                                        </li>
-                                        <ul
-                                            key={index}
-                                            className={cx('category-sub', { show: showCategorySub[index] })}
-                                        >
-                                            {category.categorySub.map((item, index) => (
-                                                <li key={index}>
-                                                    <NavLink
-                                                        onClick={() => {
-                                                            if (selectedCategorySub === item) {
-                                                                setSelectedCategorySub('');
-                                                            } else {
-                                                                setSelectedCategorySub(item);
-                                                                setSelectedCategory(category.name);
-                                                            }
-                                                        }}
-                                                        className={cx({ selected: item === selectedCategorySub })}
-                                                    >
-                                                        {item}
-                                                    </NavLink>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </>
-                                ))}
-                        </ul>
-                    </div>
-                    <div className={cx('box-price')}>
-                        <h2>Phạm vi giá</h2>
-                        <ul className={cx('list-price')}>
-                            <li className={cx('selected-sale')}>
-                                <input checked={sale} type="checkbox" id="sale-price" onChange={() => setSale(!sale)} />
-                                <label for="sale-price">Giá đặc biệt</label>
-                            </li>
-                            {priceRange.map((item, index) => (
-                                <li key={index}>
-                                    {item.to ? (
-                                        <NavLink
-                                            onClick={() => handleClickPriceRange(item)}
-                                            className={cx({ selected: selectedPriceRange.from === item.from })}
-                                        >
-                                            {formatPrice(item.from)} - {formatPrice(item.to)}
-                                        </NavLink>
-                                    ) : (
-                                        <NavLink
-                                            onClick={() => handleClickPriceRange(item)}
-                                            className={cx({ selected: selectedPriceRange.from === item.from })}
-                                        >
-                                            {formatPrice(item.from)} +
-                                        </NavLink>
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
+                {window.matchMedia('(max-width: 46.1875em)').matches ? (
+                    <WrapperModel
+                        className={cx('box-filter')}
+                        showToRight
+                        show={showFilter}
+                        onClose={() => setShowFilter(false)}
+                    >
+                        {sideBarContent}
+                    </WrapperModel>
+                ) : (
+                    sideBarContent
+                )}
                 <div className={cx('content')}>
                     <div className={cx({ 'list-product': typeViewList, 'grid-product': !typeViewList })}>
                         <Pagination data={products} limit={10}>
