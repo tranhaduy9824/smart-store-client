@@ -14,6 +14,7 @@ import { AuthContext } from '~/context/AuthContext';
 import useDebounce from '~/hooks/useDebounce';
 import { ProductContext } from '~/context/ProductContext';
 import { highestShippingCost } from '~/handle/highestShippingCost';
+import snippet from '~/handle/snippet';
 
 const cx = classNames.bind(styles);
 
@@ -76,26 +77,47 @@ function Cart() {
                                         <img src={item?.productId.files.photos[0]} alt="Image" />
                                     </Link>
                                 </td>
+                                {!window.matchMedia('(max-width: 46.1875em)').matches && (
+                                    <>
+                                        <td>
+                                            <Link
+                                                to={`/product/${item.productId._id}`}
+                                                className={cx('navigate')}
+                                                onClick={() => addProductToRecent(item.productId)}
+                                            >
+                                                {item?.productId.name}
+                                            </Link>
+                                        </td>
+                                        <td>{formatPrice(item?.productId.price)}</td>
+                                        <td>{formatPrice(item?.productId.shippingCost)}</td>
+                                    </>
+                                )}
                                 <td>
-                                    <Link
-                                        to={`/product/${item.productId._id}`}
-                                        className={cx('navigate')}
-                                        onClick={() => addProductToRecent(item.productId)}
-                                    >
-                                        {item?.productId.name}
-                                    </Link>
-                                </td>
-                                <td>{formatPrice(item?.productId.price)}</td>
-                                <td>{formatPrice(item?.productId.shippingCost)}</td>
-                                <td>
+                                    {window.matchMedia('(max-width: 46.1875em)').matches && (
+                                        <>
+                                            <Link
+                                                to={`/product/${item.productId._id}`}
+                                                className={cx('navigate')}
+                                                onClick={() => addProductToRecent(item.productId)}
+                                            >
+                                                {snippet(item?.productId.name, 50)}
+                                            </Link>
+                                            <p>Giá: {formatPrice(item?.productId.price)}</p>
+                                        </>
+                                    )}
                                     <Quantity
                                         productId={item?.productId._id}
                                         quantityValue={item?.quantity}
                                         setQuantityValue={(newQuantity) => handleQuantityChange(index, newQuantity)}
                                         className={cx('box-quantity')}
                                     />
+                                    {window.matchMedia('(max-width: 46.1875em)').matches && (
+                                        <p>Tổng tiền: {formatPrice(item?.productId.price * item?.quantity)}</p>
+                                    )}
                                 </td>
-                                <td>{formatPrice(item?.productId.price * item?.quantity)}</td>
+                                {!window.matchMedia('(max-width: 46.1875em)').matches && (
+                                    <td>{formatPrice(item?.productId.price * item?.quantity)}</td>
+                                )}
                                 <td>
                                     <span onClick={() => deleteItemToCart(item?.productId._id)}>
                                         <TrashIcon />

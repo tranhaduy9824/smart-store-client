@@ -140,9 +140,52 @@
 }
 
 @media screen and (max-width: 46.1875em) {
+    .wrapper {
+        padding: 40px var(--horizontal-spacing-mobile);
 
+        .site {
+            margin-bottom: 40px;
+        }
+
+        table {
+            border: none !important;
+
+            tr:first-child {
+                display: none;
+            }
+
+            img {
+                height: auto;
+                aspect-ratio: 1/1;
+            }
+
+            p {
+                font-weight: 500;
+                color: var(--black);
+                line-height: 1.8;
+            }
+        }
+
+        .action {
+            gap: 20px;
+
+            .action-right {
+                width: 100%;
+            }
+        }
+
+        table td {
+            padding: 20px 10px !important;
+        }
+    }
 }
 
 @media screen and (min-width: 46.25em) and (max-width: 63.9375em) {
-    
+    .wrapper {
+        padding: 40px var(--horizontal-spacing-mobile);
+
+        table td {
+            padding: 20px 10px !important;
+        }
+    }
 }
