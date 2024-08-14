@@ -46,8 +46,14 @@ function Home() {
     };
 
     const getCategoryTransform = (index, currentIndexCategory) => {
-        if (categories.length > 8) {
-            return `translateX(calc(-${currentIndexCategory * 100}% - ${currentIndexCategory * 30}px))`;
+        if (window.matchMedia('(max-width: 46.1875em)').matches) {
+            if (categories.length > 2) {
+                return `translateX(calc(-${currentIndexCategory * 100}% - ${currentIndexCategory * 30}px))`;
+            }
+        } else {
+            if (categories.length > 8) {
+                return `translateX(calc(-${currentIndexCategory * 100}% - ${currentIndexCategory * 30}px))`;
+            }
         }
         return 'none';
     };
@@ -60,6 +66,16 @@ function Home() {
             }
         }
     }, [location]);
+
+    let showNumber;
+
+    if (window.matchMedia('(max-width: 46.1875em)').matches) {
+        showNumber = 1;
+    } else if (window.matchMedia('(min-width: 46.25em) and (max-width: 63.9375em)').matches) {
+        showNumber = 4;
+    } else {
+        showNumber = 5;
+    }
 
     return (
         <div className={cx('wrapper')}>
@@ -125,7 +141,7 @@ function Home() {
                 <SlideHome
                     data={categories}
                     setCurrentIndex={setCurrentIndexCategory}
-                    showNumber={8}
+                    showNumber={window.matchMedia('(max-width: 46.1875em)').matches ? 2 : 8}
                     title="Tìm kiếm bằng danh mục"
                     subTitle="Xem tất cả"
                     link="/product"
@@ -151,7 +167,7 @@ function Home() {
                     <SlideHome
                         data={recommendProducts}
                         setCurrentIndex={setCurrentIndexRecommend}
-                        showNumber={5}
+                        showNumber={showNumber}
                         title="Gợi ý"
                         subTitle="Xem tất cả"
                         link="/product"
@@ -174,7 +190,7 @@ function Home() {
                     <SlideHome
                         data={newProducts}
                         setCurrentIndex={setCurrentIndexNews}
-                        showNumber={5}
+                        showNumber={showNumber}
                         title="Mới nhất"
                         subTitle="Xem tất cả"
                         link="/product"

@@ -58,3 +58,32 @@
     text-align: center;
     color: var(--second-text);
 }
+
+@media screen and (max-width: 46.1875em) {
+    .cat-header {
+        padding-bottom: 0;
+    }
+
+    h3 {
+        font-size: 1.8rem !important;
+    }
+
+    .box-title  a {
+        display: none;
+    }
+
+    .controls button {
+        width: 30px;
+        height: 30px;
+    }
+
+    .list-item {
+        padding: 20px 0;
+    }
+}
+
+@media screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+    .list-item {
+        padding: 20px 0;
+    }
+}

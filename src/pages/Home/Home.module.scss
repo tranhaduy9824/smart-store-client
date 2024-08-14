@@ -92,12 +92,12 @@
             width: 150px;
             cursor: pointer;
 
-            &:hover > div {
+            &:hover > a {
                 background-color: var(--primary);
                 color: var(--white);
             }
 
-            > div {
+            > a {
                 background-color: transparent;
                 color: var(--primary);
                 border: 1px solid var(--primary);
@@ -192,4 +192,109 @@
 
 .box-news {
     margin-top: 40px;
+}
+
+@media screen and (max-width: 46.1875em) {
+    .box-slide {
+        height: max-content;
+        padding: 40px var(--horizontal-spacing-mobile);
+
+        .slide-item {
+            min-width: 100%;
+            height: max-content;
+            min-height: 300px;
+            padding: 30px;
+            align-items: flex-start;
+
+            .heading {
+                font-size: 1.8rem;
+            }
+
+            .name {
+                font-size: 1.5rem;
+            }
+
+            .image {
+                height: auto;
+                aspect-ratio: 1 / 1;
+            }
+
+            .price {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+                font-weight: 500;
+
+                span {
+                    color: var(--primary);
+                    margin-right: 10px;
+                }
+            }
+
+            .btn-buy {
+                width: 100px;
+                height: 35px;
+
+                & > a {
+                    font-size: 1.4rem;
+                }
+            }
+        }
+
+        .controls {
+            width: 100%;
+            padding: 0;
+        }
+    }
+
+    .box-categories {
+        padding: 40px var(--horizontal-spacing-mobile);
+    }
+
+    .box-recommend,
+    .box-news {
+        padding: 0 var(--horizontal-spacing-mobile);
+
+        .news,
+        .recommend {
+            padding: 20px 10px;
+        }
+    }
+}
+
+@media screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+    .box-slide {
+        height: max-content;
+        padding: 40px var(--horizontal-spacing-mobile);
+
+        .slide-item {
+            min-width: 85%;
+            height: max-content;
+            min-height: 300px;
+            align-items: flex-start;
+
+            .image {
+                height: auto;
+                aspect-ratio: 1 / 1;
+            }
+        }
+
+        .controls {
+            width: 100%;
+            padding: 0;
+        }
+    }
+
+    .box-categories {
+        padding: 40px var(--horizontal-spacing-mobile);
+    }
+
+    .box-recommend,
+    .box-news {
+        padding: 0 var(--horizontal-spacing-mobile);
+
+        .news,
+        .recommend {
+            padding: 20px 10px;
+        }
+    }
 }

@@ -298,3 +298,31 @@
         }
     }
 }
+
+@media screen and (max-width: 46.1875em) {
+    .box-item {
+        min-width: 50%;
+
+        .image img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1/1;
+        }
+    }
+}
+
+@media screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+    .box-item {
+        min-width: 20%;
+
+        .image img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1/1;
+        }
+    }
+
+    .box-add-cart {
+        width: calc(100% + 2px) !important;
+    }
+}
