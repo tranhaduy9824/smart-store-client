@@ -1,7 +1,6 @@
 // Layouts
 import Home from '~/pages/Home';
 import Product from '~/pages/Product';
-import News from '~/pages/News';
 import Cart from '~/pages/Cart';
 import Profile from '~/pages/Profile';
 import Login from '~/pages/Login';
@@ -29,10 +28,6 @@ export const routes = [
     {
         path: '/shop',
         component: Shop,
-    },
-    {
-        path: '/news',
-        component: News,
     },
     {
         path: '/login',

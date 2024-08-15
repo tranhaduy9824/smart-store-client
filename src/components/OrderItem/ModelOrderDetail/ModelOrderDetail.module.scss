@@ -197,3 +197,62 @@
         }
     }
 }
+
+@media screen and (max-width: 46.1875em) {
+    .wrapper {
+        width: 90vw;
+        max-height: 80vh;
+        overflow-y: auto;
+
+        .status {
+            display: none;
+        }
+
+        .content {
+            flex-wrap: wrap;
+
+            .item {
+                flex-wrap: wrap;
+            }
+
+            .info-item {
+                width: 240px;
+            }
+
+            .status-text {
+                width: auto;
+                margin-left: auto;
+            }
+        }
+
+        .products {
+            width: 100%;
+            padding-right: 0;
+        }
+
+        .bill-address {
+            margin-left: auto;
+        }
+    }
+}
+
+@media screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+    .wrapper {
+        width: 90vw;
+        max-height: 80vh;
+        overflow-y: auto;
+
+        .content {
+            flex-wrap: wrap;
+        }
+
+        .products {
+            width: 100%;
+            padding-right: 0;
+        }
+
+        .bill-address {
+            margin-left: auto;
+        }
+    }
+}

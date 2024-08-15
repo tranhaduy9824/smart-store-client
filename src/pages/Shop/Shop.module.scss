@@ -174,3 +174,29 @@
         }
     }
 }
+
+@media screen and (max-width: 46.1875em) {
+    .wrapper {
+        padding: 40px var(--horizontal-spacing-mobile);
+
+        .product-item img {
+            height: auto !important;
+            aspect-ratio: 1/1;
+        }
+    }
+
+    .shop {
+        flex-wrap: wrap;
+    }
+}
+
+@media screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+    .wrapper {
+        padding: 40px var(--horizontal-spacing-mobile);
+
+        .product-item img {
+            height: auto !important;
+            aspect-ratio: 1/1;
+        }
+    }
+}

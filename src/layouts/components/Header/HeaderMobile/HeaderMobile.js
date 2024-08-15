@@ -48,7 +48,9 @@ function HeaderMobile({ categories }) {
             >
                 <div className={cx('header')}>
                     {user ? (
-                        <Avatar url={user?.user?.avatar} className={cx('avatar')} />
+                        <Link to="/profile" onClick={handleClickLinkLeft}>
+                            <Avatar url={user?.user?.avatar} className={cx('avatar')} />
+                        </Link>
                     ) : (
                         <>
                             <AccountIcon />

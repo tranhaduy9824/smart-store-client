@@ -24,26 +24,37 @@
             width: 100%;
             display: flex;
             flex-wrap: wrap;
-    
+
             .product-item {
                 width: 20%;
                 height: auto;
                 border: 1px solid transparent;
                 transition: border 0.3s linear;
-        
+
                 &:hover {
                     border: 1px solid var(--border-color);
                 }
-        
+
                 img {
                     width: 100%;
                     height: 180px;
                 }
-        
+
                 > div:nth-child(3) {
                     width: calc(100% + 2px);
                 }
             }
+        }
+    }
+}
+
+@media screen and (max-width: 63.9375em) {
+    .wrapper {
+        padding: 40px var(--horizontal-spacing-mobile);
+
+        img {
+            height: auto !important;
+            aspect-ratio: 1/1;
         }
     }
 }

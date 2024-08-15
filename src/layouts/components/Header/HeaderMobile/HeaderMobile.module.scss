@@ -65,6 +65,9 @@
 }
 
 .list-item {
+    height: calc(100% - 70px);
+    overflow-y: auto;
+
     a {
         display: flex;
     }

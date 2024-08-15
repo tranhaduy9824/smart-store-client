@@ -167,3 +167,25 @@
         }
     }
 }
+
+@media screen and (max-width: 46.1875em) {
+    .wrapper .content {
+        flex-wrap: wrap;
+
+        .info-item {
+            width: 100px;
+        }
+
+        .info-order {
+            margin-left: auto;
+        }
+    }
+
+    .total {
+        justify-content: flex-end !important;
+
+        p:first-child {
+            display: none;
+        }
+    }
+}
