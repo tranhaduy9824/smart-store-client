@@ -28,6 +28,7 @@ import { CartContext } from '~/context/CartContext';
 import ViewQuickCart from './ViewQuickCart';
 import { WishlistContext } from '~/context/WishlistContext';
 import HeaderMobile from './HeaderMobile';
+import { ShopContext } from '~/context/ShopContext';
 
 const cx = classNames.bind(style);
 
@@ -38,10 +39,17 @@ function Header() {
     const { recentProducts, getRecentProducts, addProductToRecent } = useContext(ProductContext);
     const { cart } = useContext(CartContext);
     const { wishlist } = useContext(WishlistContext);
+    const { myShop, getMyShop } = useContext(ShopContext);
 
     useEffect(() => {
         getRecentProducts();
     }, []);
+
+    useEffect(() => {
+        if (user) {
+            getMyShop(user?.token);
+        }
+    }, [user, getMyShop]);
 
     return (
         <header className={cx('wrapper')}>
@@ -60,10 +68,16 @@ function Header() {
                     <WrapperHover
                         content={
                             user
-                                ? [
-                                      { title: 'Thông tin', to: '/profile' },
-                                      { title: 'Đăng xuất', onClick: handleLogout },
-                                  ]
+                                ? myShop
+                                    ? [
+                                          { title: 'Thông tin', to: '/profile' },
+                                          { title: 'Cửa hàng', to: '/myshop' },
+                                          { title: 'Đăng xuất', onClick: handleLogout },
+                                      ]
+                                    : [
+                                          { title: 'Thông tin', to: '/profile' },
+                                          { title: 'Đăng xuất', onClick: handleLogout },
+                                      ]
                                 : 'Đăng nhập'
                         }
                         end
@@ -229,7 +243,7 @@ function Header() {
                                         <Link
                                             to={`/product/${product.id}`}
                                             onClick={() =>
-                                                addProductToRecent({ _id: product?.id, imageUrl: product?.imageUrl})
+                                                addProductToRecent({ _id: product?.id, imageUrl: product?.imageUrl })
                                             }
                                         >
                                             <img src={product.imageUrl} alt="Ảnh được xem gần đây" />
@@ -253,7 +267,7 @@ function Header() {
                     </WrapperHover>
                 </div>
             </div>
-            <HeaderMobile categories={categories} />
+            <HeaderMobile categories={categories} myShop={myShop} />
         </header>
     );
 }

@@ -11,6 +11,7 @@ import ProductDetail from '~/pages/ProductDetail';
 import WishList from '~/pages/WishList';
 import Payment from '~/pages/Payment';
 import Shop from '~/pages/Shop';
+import MyShop from '~/pages/MyShop';
 
 export const routes = [
     {
@@ -43,6 +44,10 @@ export const routes = [
         path: '/reset-password/:id/:token',
         component: ResetPassword,
         layout: NullLayout,
+    },
+    {
+        path: '/myshop',
+        component: MyShop,
     },
     {
         path: '/cart',

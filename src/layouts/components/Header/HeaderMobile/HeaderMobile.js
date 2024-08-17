@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faBars, faChevronRight, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { Link, NavLink } from 'react-router-dom';
 import images from '~/assets/images';
-import { AccountIcon, CartIcon, FavouriteIcon, SearchIcon } from '~/components/Icons';
+import { AccountIcon, CartIcon, FavouriteIcon, ProductIcon, SearchIcon } from '~/components/Icons';
 import { useContext, useState } from 'react';
 import WrapperModel from '~/components/WrapperModel';
 import { CartContext } from '~/context/CartContext';
@@ -15,7 +15,7 @@ import Search from '~/components/Search';
 
 const cx = classNames.bind(styles);
 
-function HeaderMobile({ categories }) {
+function HeaderMobile({ categories, myShop }) {
     const [showHeaderLeft, setShowHeaderLeft] = useState(false);
     const [showHeaderRight, setShowHeaderRight] = useState(false);
     const [isShowLevel2, setIsShowLevel2] = useState(null);
@@ -126,6 +126,14 @@ function HeaderMobile({ categories }) {
                                 <Link to="/profile" onClick={handleClickLinkLeft}>
                                     <AccountIcon />
                                     Thông tin
+                                </Link>
+                            </li>
+                        )}
+                        {user && myShop && (
+                            <li>
+                                <Link to="/myshop" onClick={handleClickLinkLeft}>
+                                    <ProductIcon />
+                                    Cửa hàng
                                 </Link>
                             </li>
                         )}
