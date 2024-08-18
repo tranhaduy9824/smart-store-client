@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { showAlert } from '~/redux/actions/alert';
+import { hideAlert, showAlert } from '~/redux/actions/alert';
 import { getRequest, patchRequest, postRequest } from '~/utils/services';
 import { AuthContext } from './AuthContext';
 import { hideLoading, showLoading } from '~/redux/actions/loading';
@@ -76,10 +76,17 @@ export const OrderContextProvider = ({ children }) => {
     const updateOrder = useCallback(
         async (data, token = user?.token, orderId) => {
             try {
-                setChangeItemId(orderId);
-                await patchRequest(`/orders/${orderId}`, data, token);
-                await getOrders(token);
-                setChangeItemId(null);
+                const isConfirm = await new Promise((resolve) => {
+                    dispatch(showAlert('Bạn có chắc muốn cập nhật đơn hàng này?', resolve));
+                });
+
+                dispatch(hideAlert());
+                if (isConfirm) {
+                    setChangeItemId(orderId);
+                    await patchRequest(`/orders/${orderId}`, data, token);
+                    await getOrders(token);
+                    setChangeItemId(null);
+                }
             } catch (error) {
                 console.log(error);
                 dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));

@@ -182,40 +182,6 @@
         border: 1px solid var(--primary);
         border-radius: var(--border-radius);
 
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            > div {
-                flex-grow: 1;
-                text-align: center;
-                padding: 10px 0;
-                cursor: pointer;
-                position: relative;
-                overflow: hidden;
-                font-size: 1.7rem;
-                font-weight: 500;
-
-                &:before {
-                    content: '';
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    width: 0;
-                    height: 5px;
-                    background-color: var(--primary);
-                    transition: width 0.3s linear;
-                    border-radius: var(--border-radius);
-                }
-
-                &.selected:before,
-                &:hover:before {
-                    width: 100%;
-                }
-            }
-        }
-
         .content {
             height: calc(100% - 50px);
             margin: 20px 0;
@@ -254,6 +220,24 @@
             .order > div:last-child,
             .list-address > div:last-child {
                 border-bottom: none;
+            }
+
+            .not-found {
+                margin: auto;
+                margin-top: 70px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+    
+                svg {
+                    width: 100px;
+                }
+    
+                span {
+                    margin-top: 10px;
+                    color: var(--second-text);
+                    opacity: 0.6;
+                }
             }
         }
     }

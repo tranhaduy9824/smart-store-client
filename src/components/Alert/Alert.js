@@ -7,7 +7,7 @@ import { hideAlert } from '~/redux/actions/alert';
 const cx = classNames.bind(styles);
 
 function Alert() {
-    const { show, message } = useSelector((state) => state.alert);
+    const { show, message, onConfirm } = useSelector((state) => state.alert);
     const dispatch = useDispatch();
 
     const onClose = () => {
@@ -21,6 +21,16 @@ function Alert() {
                     <span>Thông báo</span>
                 </div>
                 <p className={cx('message')}>{message}</p>
+                {onConfirm && (
+                    <div className={cx('actions')}>
+                        <button className={cx('btn', 'confirm')} onClick={onConfirm}>
+                            Xác nhận
+                        </button>
+                        <button className={cx('btn', 'cancel')} onClick={onClose}>
+                            Hủy
+                        </button>
+                    </div>
+                )}
             </div>
         </WrapperModel>
     );

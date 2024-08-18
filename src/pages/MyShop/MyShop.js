@@ -11,6 +11,8 @@ import Overview from './Overview';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import EditShop from './EditShop';
+import ManageOrder from './ManageOrder';
+import ManageProduct from './ManageProduct';
 
 const cx = classNames.bind(styles);
 
@@ -19,7 +21,6 @@ function MyShop() {
     const [isLoading, setIsLoading] = useState(true);
     const [productShop, setProductShop] = useState([]);
     const [showManageOrder, setShowManageOrder] = useState(true);
-    const [showManageProduct, setShowManageProduct] = useState(true);
     const [showCustomerCare, setShowCustomerCare] = useState(true);
     const [content, setContent] = useState('overview');
 
@@ -76,7 +77,10 @@ function MyShop() {
                         >
                             Sửa thông tin
                         </li>
-                        <li onClick={() => setShowManageOrder(!showManageOrder)}>
+                        <li
+                            className={cx({ selected: content === 'manage-order' })}
+                            onClick={() => setShowManageOrder(!showManageOrder)}
+                        >
                             Quản lý đơn hàng
                             <FontAwesomeIcon
                                 icon={faChevronRight}
@@ -84,21 +88,20 @@ function MyShop() {
                             />
                         </li>
                         <ul className={cx({ isShow: showManageOrder })}>
-                            <li className={cx('level-2')}>Tất cả</li>
-                            <li className={cx('level-2')}>Đơn hủy</li>
+                            <li className={cx('level-2')} onClick={() => setContent('manage-order')}>
+                                Tất cả
+                            </li>
+                            <li className={cx('level-2')} onClick={() => setContent('manage-order')}>
+                                Đã hủy
+                            </li>
                             <li className={cx('level-2')}>Cài đặt vận chuyển</li>
                         </ul>
-                        <li onClick={() => setShowManageProduct(!showManageProduct)}>
+                        <li
+                            className={cx({ selected: content === 'manage-product' })}
+                            onClick={() => setContent('manage-product')}
+                        >
                             Quản lý sản phẩm
-                            <FontAwesomeIcon
-                                icon={faChevronRight}
-                                className={cx('right-icon', { isShow: showManageProduct })}
-                            />
                         </li>
-                        <ul className={cx({ isShow: showManageProduct })}>
-                            <li className={cx('level-2')}>Tất cả sản phẩm</li>
-                            <li className={cx('level-2')}>Thêm sản phẩm</li>
-                        </ul>
                         <li onClick={() => setShowCustomerCare(!showCustomerCare)}>
                             Chăm sóc khánh hàng
                             <FontAwesomeIcon
@@ -116,6 +119,8 @@ function MyShop() {
                 <div className={cx('content')}>
                     {content === 'overview' && <Overview />}
                     {content === 'edit-shop' && <EditShop />}
+                    {content === 'manage-order' && <ManageOrder />}
+                    {content === 'manage-product' && <ManageProduct />}
                 </div>
             </div>
         </div>

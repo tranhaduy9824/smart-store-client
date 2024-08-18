@@ -13,7 +13,7 @@ import { ProductContext } from '~/context/ProductContext';
 
 const cx = classNames.bind(styles);
 
-function ModelOrderDetail({ data, showOrderDetail, setShowOrderDetail, setShowReview, setProductReview }) {
+function ModelOrderDetail({ myShop, data, showOrderDetail, setShowOrderDetail, setShowReview, setProductReview }) {
     const { review, getReviewByOrder } = useContext(ReviewContext);
     const { user } = useContext(AuthContext);
     const { addProductToRecent } = useContext(ProductContext);
@@ -147,23 +147,25 @@ function ModelOrderDetail({ data, showOrderDetail, setShowOrderDetail, setShowRe
                                         </p>
                                     </div>
                                 </div>
-                                <div className={cx('control')} key={index}>
-                                    {data?.allStatus === 'done' &&
-                                        (!productReview ? (
-                                            <div
-                                                className={cx('btn-review')}
-                                                onClick={() => {
-                                                    setShowReview(true);
-                                                    setProductReview(item?.productId);
-                                                }}
-                                            >
-                                                Đánh giá
-                                            </div>
-                                        ) : (
-                                            <RatingStar rating={productReview?.rating} />
-                                        ))}
-                                    <div className={cx('contact')}>Liên hệ người bán</div>
-                                </div>
+                                {!myShop && (
+                                    <div className={cx('control')} key={index}>
+                                        {data?.allStatus === 'done' &&
+                                            (!productReview ? (
+                                                <div
+                                                    className={cx('btn-review')}
+                                                    onClick={() => {
+                                                        setShowReview(true);
+                                                        setProductReview(item?.productId);
+                                                    }}
+                                                >
+                                                    Đánh giá
+                                                </div>
+                                            ) : (
+                                                <RatingStar rating={productReview?.rating} />
+                                            ))}
+                                        <div className={cx('contact')}>Liên hệ người bán</div>
+                                    </div>
+                                )}
                             </>
                         );
                     })}

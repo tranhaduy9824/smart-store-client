@@ -36,42 +36,42 @@ function EditShop() {
                 </div>
                 <div className={cx('info-text')}>
                     <div className={cx('item-info')}>
-                        <label for="name-shop">Tên cửa hàng</label>
+                        <label htmlFor="name-shop">Tên cửa hàng</label>
                         <input id="name-shop" />
                     </div>
                     <div className={cx('item-info')}>
-                        <label for="des-shop">Mô tả</label>
+                        <label htmlFor="des-shop">Mô tả</label>
                         <textarea id="des-shop" />
                     </div>
                     <div className={cx('item-info')}>
-                        <label for="phone-shop">Số điện thoại</label>
+                        <label htmlFor="phone-shop">Số điện thoại</label>
                         <input id="phone-shop" />
                     </div>
                     <div className={cx('item-info')}>
-                        <label for="email-shop">Email</label>
+                        <label htmlFor="email-shop">Email</label>
                         <input id="email-shop" />
                     </div>
                     <div className={cx('item-info')}>
-                        <label for="address-shop">Địa chỉ</label>
+                        <label htmlFor="address-shop">Địa chỉ</label>
                         <input id="address-shop" />
                     </div>
                     <div className={cx('item-info')}>
                         <label>Liên kết</label>
                         <div className={cx('socials')}>
                             <div>
-                                <label for="facebook-url">Facebook</label>
+                                <label htmlFor="facebook-url">Facebook</label>
                                 <input id="facebook-url" />
-                            </div>  
+                            </div>
                             <div>
-                                <label for="instagram-url">Instagram</label>
+                                <label htmlFor="instagram-url">Instagram</label>
                                 <input id="instagram-url" />
                             </div>
                             <div>
-                                <label for="twitter-url">Twitter</label>
+                                <label htmlFor="twitter-url">Twitter</label>
                                 <input id="twitter-url" />
                             </div>
                             <div>
-                                <label for="tiktok-url">Tiktok</label>
+                                <label htmlFor="tiktok-url">Tiktok</label>
                                 <input id="tiktok-url" />
                             </div>
                         </div>

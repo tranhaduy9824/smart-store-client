@@ -146,8 +146,8 @@
             border-radius: var(--border-radius);
             color: var(--white);
         }
-
-        .detail-btn {
+        .confirm-btn,
+        .buy-again {
             color: var(--black);
             background-color: var(--background-sub);
         }
@@ -160,7 +160,7 @@
             background-color: var(--primary);
         }
 
-        .buy-again {
+        .detail-btn {
             border: 1px solid var(--primary);
             color: var(--black);
             background-color: var(--background);

@@ -14,7 +14,7 @@ import { ProductContext } from '~/context/ProductContext';
 
 const cx = classNames.bind(styles);
 
-function OrderItem({ data, status, className }) {
+function OrderItem({ myShop = false, data, status, className }) {
     const navigate = useNavigate();
     const [showOrderDetail, setShowOrderDetail] = useState(false);
     const [showReview, setShowReview] = useState(false);
@@ -80,12 +80,12 @@ function OrderItem({ data, status, className }) {
                     </p>
                 </div>
                 <div className={cx('action')}>
-                    <div
+                    {!myShop && <div
                         className={cx('buy-again')}
                         onClick={() => navigate('/payment', { state: { items: data?.items } })}
                     >
                         Mua lại
-                    </div>
+                    </div>}
                     <div className={cx('detail-btn')} onClick={() => setShowOrderDetail(true)}>
                         Xem chi tiết
                     </div>
@@ -95,6 +95,14 @@ function OrderItem({ data, status, className }) {
                             onClick={() => updateOrder({ allStatus: 'cancelled' }, user?.token, data?._id)}
                         >
                             Hủy đơn hàng
+                        </div>
+                    )}
+                    {data?.allStatus === 'wait_confirm' && myShop && (
+                        <div
+                            className={cx('confirm-btn')}
+                            onClick={() => updateOrder({ allStatus: 'cancelled' }, user?.token, data?._id)}
+                        >
+                            Xác nhận
                         </div>
                     )}
                     {data?.allStatus === 'wait_confirm' && data?.paymentMethod === 'digital_wallet' && (
@@ -112,6 +120,7 @@ function OrderItem({ data, status, className }) {
                     setShowOrderDetail={setShowOrderDetail}
                     setShowReview={setShowReview}
                     setProductReview={setProductReview}
+                    myShop={myShop}
                 />
                 <ModelReview
                     orderId={data?._id}

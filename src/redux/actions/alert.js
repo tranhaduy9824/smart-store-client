@@ -1,6 +1,9 @@
-export const showAlert = (message) => ({
+export const showAlert = (message, onConfirm = null) => ({
     type: 'SHOW_ALERT',
-    message,
+    payload: {
+        message,
+        onConfirm,
+    },
 });
 
 export const hideAlert = () => ({

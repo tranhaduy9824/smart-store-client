@@ -15,6 +15,8 @@ import { handleValidation } from '~/handle/handleValidation';
 import { useDispatch } from 'react-redux';
 import AddAddress from '~/components/AddAddress';
 import { OrderContext } from '~/context/OrderContext';
+import { BillIcon } from '~/components/Icons';
+import HeaderSelect from '~/components/HeaderSelect/HeaderSelect';
 
 const cx = classNames.bind(styles);
 
@@ -83,6 +85,33 @@ function Profile() {
             handleChangePassword();
         }
     };
+
+    const listHeader = [
+        {
+            content: 'all',
+            title: 'Tất cả',
+        },
+        {
+            content: 'wait_confirm',
+            title: 'Chờ xác nhận',
+        },
+        {
+            content: 'delivering',
+            title: 'Đang vận chuyển',
+        },
+        {
+            content: 'done',
+            title: 'Hoàn thành',
+        },
+        {
+            content: 'cancelled',
+            title: 'Đã hủy',
+        },
+        {
+            content: 'address',
+            title: 'Địa chỉ nhận hàng',
+        },
+    ];
 
     return (
         <>
@@ -202,50 +231,25 @@ function Profile() {
                     </div>
                 </div>
                 <div className={cx('box-content')}>
-                    <div className={cx('header')}>
-                        <div
-                            className={cx('header-item', { selected: contentSelected === 'all' })}
-                            onClick={() => setContentSelected('all')}
-                        >
-                            Tất cả
-                        </div>
-                        <div
-                            className={cx('header-item', { selected: contentSelected === 'wait_confirm' })}
-                            onClick={() => setContentSelected('wait_confirm')}
-                        >
-                            Chờ xác nhận
-                        </div>
-                        <div
-                            className={cx('header-item', { selected: contentSelected === 'delivering' })}
-                            onClick={() => setContentSelected('delivering')}
-                        >
-                            Đang vận chuyển
-                        </div>
-                        <div
-                            className={cx('header-item', { selected: contentSelected === 'done' })}
-                            onClick={() => setContentSelected('done')}
-                        >
-                            Hoàn thành
-                        </div>
-                        <div
-                            className={cx('header-item', { selected: contentSelected === 'cancelled' })}
-                            onClick={() => setContentSelected('cancelled')}
-                        >
-                            Đã hủy
-                        </div>
-                        <div
-                            className={cx('header-item', { selected: contentSelected === 'address' })}
-                            onClick={() => setContentSelected('address')}
-                        >
-                            Địa chỉ nhận hàng
-                        </div>
-                    </div>
+                    <HeaderSelect
+                        listHeader={listHeader}
+                        contentSelected={contentSelected}
+                        setContentSelected={setContentSelected}
+                    />
                     <div className={cx('content')}>
                         {contentSelected !== 'address' ? (
                             <div className={cx('order')}>
-                                {orders?.map((order, index) => (
-                                    <OrderItem data={order} key={index} status={contentSelected} />
-                                ))}
+                                {contentSelected === 'all' ||
+                                orders.filter((order) => order.allStatus === contentSelected).length > 0 ? (
+                                    orders?.map((order, index) => (
+                                        <OrderItem data={order} key={index} status={contentSelected} />
+                                    ))
+                                ) : (
+                                    <div className={cx('not-found')}>
+                                        <BillIcon />
+                                        <span>Không tìm thấy đơn hàng</span>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <div className={cx('address')}>
