@@ -15,6 +15,7 @@ import ManageOrder from './ManageOrder';
 import ManageProduct from './ManageProduct';
 import ManageReview from './ManageReview';
 import Balance from './Balance';
+import { OrderContext } from '~/context/OrderContext';
 
 const cx = classNames.bind(styles);
 
@@ -25,10 +26,12 @@ function MyShop() {
     const [showManageOrder, setShowManageOrder] = useState(true);
     const [showCustomerCare, setShowCustomerCare] = useState(true);
     const [content, setContent] = useState('overview');
+    const [orderStatus, setOrderStatus] = useState('all');
 
     const { user } = useContext(AuthContext);
     const { myShop, getMyShop } = useContext(ShopContext);
     const { getProductsByShop } = useContext(ProductContext);
+    const { ordersShop, getOrdersShop } = useContext(OrderContext);
 
     useEffect(() => {
         const fetchMyShop = async () => {
@@ -36,6 +39,7 @@ function MyShop() {
                 if (user && myShop?._id !== prevMyShopId.current) {
                     prevMyShopId.current = myShop?._id;
                     await getMyShop(user.token);
+                    await getOrdersShop(user.token);
                     const productShop = await getProductsByShop(myShop?._id);
                     setProductShop(productShop);
                     setIsLoading(false);
@@ -93,7 +97,13 @@ function MyShop() {
                             <li className={cx('level-2')} onClick={() => setContent('manage-order')}>
                                 Tất cả
                             </li>
-                            <li className={cx('level-2')} onClick={() => setContent('manage-order')}>
+                            <li
+                                className={cx('level-2')}
+                                onClick={() => {
+                                    setOrderStatus('cancelled');
+                                    setContent('manage-order');
+                                }}
+                            >
                                 Đã hủy
                             </li>
                             <li className={cx('level-2')}>Cài đặt vận chuyển</li>
@@ -126,9 +136,17 @@ function MyShop() {
                     </ul>
                 </div>
                 <div className={cx('content')}>
-                    {content === 'overview' && <Overview />}
-                    {content === 'edit-shop' && <EditShop />}
-                    {content === 'manage-order' && <ManageOrder />}
+                    {content === 'overview' && (
+                        <Overview
+                            productShop={productShop}
+                            ordersShop={ordersShop}
+                            myShop={myShop}
+                            setOrderStatus={setOrderStatus}
+                            setContent={setContent}
+                        />
+                    )}
+                    {content === 'edit-shop' && <EditShop myShop={myShop} />}
+                    {content === 'manage-order' && <ManageOrder myShop={myShop} ordersShop={ordersShop} orderStatus={orderStatus} />}
                     {content === 'manage-product' && <ManageProduct />}
                     {content === 'manage-review' && <ManageReview />}
                     {content === 'balance' && <Balance />}

@@ -12,6 +12,7 @@ export const OrderContextProvider = ({ children }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
+    const [ordersShop, setOrdersShop] = useState([]);
     const [changeItemId, setChangeItemId] = useState(null);
 
     const { user } = useContext(AuthContext);
@@ -73,6 +74,19 @@ export const OrderContextProvider = ({ children }) => {
         [dispatch, user],
     );
 
+    const getOrdersShop = useCallback(
+        async (token = user?.token) => {
+            try {
+                const response = await getRequest('/orders/shop', {}, token);
+                setOrdersShop(response.orders);
+            } catch (error) {
+                console.log(error);
+                dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
+            }
+        },
+        [dispatch, user],
+    );
+
     const updateOrder = useCallback(
         async (data, token = user?.token, orderId) => {
             try {
@@ -84,7 +98,12 @@ export const OrderContextProvider = ({ children }) => {
                 if (isConfirm) {
                     setChangeItemId(orderId);
                     await patchRequest(`/orders/${orderId}`, data, token);
-                    await getOrders(token);
+                    if (!data?.status) {
+                        await getOrdersShop(token);
+                        await getOrders(token);
+                    } else {
+                        await getOrdersShop(token);
+                    }
                     setChangeItemId(null);
                 }
             } catch (error) {
@@ -92,7 +111,7 @@ export const OrderContextProvider = ({ children }) => {
                 dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
             }
         },
-        [dispatch, user, getOrders],
+        [dispatch, user, getOrders, getOrdersShop],
     );
 
     useEffect(() => {
@@ -121,7 +140,18 @@ export const OrderContextProvider = ({ children }) => {
     }, [searchParams, dispatch, user, navigate]);
 
     return (
-        <OrderContext.Provider value={{ changeItemId, createPayment, createOrder, orders, getOrders, updateOrder }}>
+        <OrderContext.Provider
+            value={{
+                changeItemId,
+                createPayment,
+                createOrder,
+                orders,
+                getOrders,
+                updateOrder,
+                ordersShop,
+                getOrdersShop,
+            }}
+        >
             {children}
         </OrderContext.Provider>
     );

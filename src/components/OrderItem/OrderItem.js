@@ -14,7 +14,7 @@ import { ProductContext } from '~/context/ProductContext';
 
 const cx = classNames.bind(styles);
 
-function OrderItem({ myShop = false, data, status, className }) {
+function OrderItem({ myShop = false, data, status, hasConfirm, className }) {
     const navigate = useNavigate();
     const [showOrderDetail, setShowOrderDetail] = useState(false);
     const [showReview, setShowReview] = useState(false);
@@ -29,6 +29,16 @@ function OrderItem({ myShop = false, data, status, className }) {
         delivering: 'Đang vận chuyển',
         cancelled: 'Đã hủy',
         done: 'Hoàn thành',
+    };
+
+    const handleConfirm = () => {
+        updateOrder(
+            {
+                status: 'delivering',
+            },
+            user?.token,
+            data?._id,
+        );
     };
 
     return (
@@ -80,15 +90,14 @@ function OrderItem({ myShop = false, data, status, className }) {
                     </p>
                 </div>
                 <div className={cx('action')}>
-                    {!myShop && <div
-                        className={cx('buy-again')}
-                        onClick={() => navigate('/payment', { state: { items: data?.items } })}
-                    >
-                        Mua lại
-                    </div>}
-                    <div className={cx('detail-btn')} onClick={() => setShowOrderDetail(true)}>
-                        Xem chi tiết
-                    </div>
+                    {!myShop && (
+                        <div
+                            className={cx('buy-again')}
+                            onClick={() => navigate('/payment', { state: { items: data?.items } })}
+                        >
+                            Mua lại
+                        </div>
+                    )}
                     {data?.allStatus === 'wait_confirm' && (
                         <div
                             className={cx('cancel-btn')}
@@ -97,11 +106,8 @@ function OrderItem({ myShop = false, data, status, className }) {
                             Hủy đơn hàng
                         </div>
                     )}
-                    {data?.allStatus === 'wait_confirm' && myShop && (
-                        <div
-                            className={cx('confirm-btn')}
-                            onClick={() => updateOrder({ allStatus: 'cancelled' }, user?.token, data?._id)}
-                        >
+                    {data?.allStatus === 'wait_confirm' && myShop && !hasConfirm && (
+                        <div className={cx('confirm-btn')} onClick={handleConfirm}>
                             Xác nhận
                         </div>
                     )}
@@ -113,6 +119,9 @@ function OrderItem({ myShop = false, data, status, className }) {
                             Thanh toán
                         </div>
                     )}
+                    <div className={cx('detail-btn')} onClick={() => setShowOrderDetail(true)}>
+                        Xem chi tiết
+                    </div>
                 </div>
                 <ModelOrderDetail
                     data={data}

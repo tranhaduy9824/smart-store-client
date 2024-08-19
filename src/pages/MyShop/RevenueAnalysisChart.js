@@ -1,29 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { formatPrice } from '~/handle/formatPrice';
 
-const RevenueAnalysisChart = () => {
+const RevenueAnalysisChart = ({ revenueData }) => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
-
-        const revenueData = [
-            { day: '04/08', revenue: 1800000 },
-            { day: '05/08', revenue: 2100000 },
-            { day: '06/08', revenue: 1900000 },
-            { day: '07/08', revenue: 2300000 },
-            { day: '08/08', revenue: 2500000 },
-            { day: '09/08', revenue: 2800000 },
-            { day: '10/08', revenue: 2400000 },
-            { day: '11/08', revenue: 2000000 },
-            { day: '12/08', revenue: 2200000 },
-            { day: '13/08', revenue: 2600000 },
-            { day: '14/08', revenue: 2700000 },
-            { day: '15/08', revenue: 2800000 },
-            { day: '16/08', revenue: 2900000 },
-            { day: '17/08', revenue: 3000000 },
-        ];
 
         const maxRevenue = Math.max(...revenueData.map((item) => item.revenue));
         const minRevenue = Math.min(...revenueData.map((item) => item.revenue));
@@ -70,7 +53,7 @@ const RevenueAnalysisChart = () => {
             ctx.lineTo(canvas.width - 50, y);
         }
         ctx.stroke();
-    }, []);
+    }, [revenueData]);
 
     return <canvas ref={canvasRef} />;
 };
