@@ -7,13 +7,14 @@ import { faEdit, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { ProductContext } from '~/context/ProductContext';
 import { TrashIcon } from '~/components/Icons';
 import { Link } from 'react-router-dom';
-import ModelEditPrduct from './ModelEditPrduct';
+import ModelManageProduct from './ModelManageProduct';
 
 const cx = classNames.bind(styles);
 
 function ManageProduct() {
     const [contentSelected, setContentSelected] = useState('all');
     const [showEditProduct, setShowEditProduct] = useState(false);
+    const [showAddProduct, setShowAddProduct] = useState(false);
     const [productEdit, setProductEdit] = useState(null);
 
     const { newProducts } = useContext(ProductContext);
@@ -41,7 +42,7 @@ function ManageProduct() {
         <div className={cx('wrapper')}>
             <div className={cx('box-title')}>
                 <p className={cx('title')}>Quản lý sản phẩm</p>
-                <div className={cx('add-product')}>
+                <div className={cx('add-product')} onClick={() => setShowAddProduct(true)}>
                     <FontAwesomeIcon icon={faPlus} /> Thêm sản phẩm
                 </div>
             </div>
@@ -77,11 +78,12 @@ function ManageProduct() {
                     </div>
                 ))}
             </div>
-            <ModelEditPrduct
+            <ModelManageProduct
                 productEdit={productEdit}
                 showEditProduct={showEditProduct}
                 setShowEditProduct={setShowEditProduct}
             />
+            <ModelManageProduct showEditProduct={showAddProduct} setShowEditProduct={setShowAddProduct} />
         </div>
     );
 }

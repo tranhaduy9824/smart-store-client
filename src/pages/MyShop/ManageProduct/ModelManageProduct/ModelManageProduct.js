@@ -1,12 +1,12 @@
 import classNames from 'classnames/bind';
-import styles from './ModelEditProduct.module.scss';
+import styles from './ModelManageProduct.module.scss';
 import { useContext, useEffect, useState } from 'react';
 import WrapperModel from '~/components/WrapperModel';
 import { CategoryContext } from '~/context/CategoryContext';
 
 const cx = classNames.bind(styles);
 
-function ModelEditProduct({ productEdit, showEditProduct, setShowEditProduct }) {
+function ModelManageProduct({ productEdit, showEditProduct, setShowEditProduct }) {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState(0);
@@ -154,9 +154,13 @@ function ModelEditProduct({ productEdit, showEditProduct, setShowEditProduct }) 
                     />
                 </div>
             </div>
-            <div className={cx('save-btn')}>Lưu</div>
+            {productEdit ? (
+                <div className={cx('save-btn')}>Lưu</div>
+            ) : (
+                <div className={cx('save-btn')}>Thêm sản phẩm</div>
+            )}
         </WrapperModel>
     );
 }
 
-export default ModelEditProduct;
+export default ModelManageProduct;

@@ -190,7 +190,7 @@ function Header() {
                         content={[
                             { title: 'Sản phẩm', to: '/product' },
                             { title: 'Giỏ hàng', to: '/cart' },
-                            { title: 'Thanh toán', to: '/payment' },
+                            { title: 'Thanh toán', to: '/payment', state: { items: cart?.items } },
                         ]}
                         classNameWrapper={cx('wrapper-hover-navigate')}
                     >

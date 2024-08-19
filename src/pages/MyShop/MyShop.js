@@ -13,6 +13,8 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import EditShop from './EditShop';
 import ManageOrder from './ManageOrder';
 import ManageProduct from './ManageProduct';
+import ManageReview from './ManageReview';
+import Balance from './Balance';
 
 const cx = classNames.bind(styles);
 
@@ -102,7 +104,10 @@ function MyShop() {
                         >
                             Quản lý sản phẩm
                         </li>
-                        <li onClick={() => setShowCustomerCare(!showCustomerCare)}>
+                        <li
+                            className={cx({ selected: content === 'manage-review' })}
+                            onClick={() => setShowCustomerCare(!showCustomerCare)}
+                        >
                             Chăm sóc khánh hàng
                             <FontAwesomeIcon
                                 icon={faChevronRight}
@@ -111,9 +116,13 @@ function MyShop() {
                         </li>
                         <ul className={cx({ isShow: showCustomerCare })}>
                             <li className={cx('level-2')}>Quản lý Chat</li>
-                            <li className={cx('level-2')}>Quản lý đánh giá</li>
+                            <li className={cx('level-2')} onClick={() => setContent('manage-review')}>
+                                Quản lý đánh giá
+                            </li>
                         </ul>
-                        <li>Doanh thu</li>
+                        <li className={cx({ selected: content === 'balance' })} onClick={() => setContent('balance')}>
+                            Số dư
+                        </li>
                     </ul>
                 </div>
                 <div className={cx('content')}>
@@ -121,6 +130,8 @@ function MyShop() {
                     {content === 'edit-shop' && <EditShop />}
                     {content === 'manage-order' && <ManageOrder />}
                     {content === 'manage-product' && <ManageProduct />}
+                    {content === 'manage-review' && <ManageReview />}
+                    {content === 'balance' && <Balance />}
                 </div>
             </div>
         </div>

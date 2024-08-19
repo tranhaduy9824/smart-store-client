@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './WrapperHover.module.scss';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -33,10 +33,10 @@ function WrapperHover({
                     {Array.isArray(content) ? (
                         <ul>
                             {content.map((item, index) => {
-                                let Component = NavLink;
+                                let Component = Link;
                                 if (item?.onClick) Component = 'div';
                                 return<li key={index} onClick={() => onClick(index) || (item.onClick && item.onClick())}>
-                                    <Component to={item?.to || to}>{item?.title || item}</Component>
+                                    <Component to={item?.to || to} state={item?.state}>{item?.title || item}</Component>
                                 </li>
                             })}
                         </ul>
