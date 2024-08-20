@@ -134,18 +134,6 @@
                     cursor: pointer;
                 }
             }
-
-            .search-btn {
-                padding: 5px 15px;
-                color: var(--primary);
-                border: 2px solid var(--primary);
-                border-radius: var(--border-radius);
-
-                &:hover {
-                    cursor: pointer;
-                    background-color: var(--background);
-                }
-            }
         }
 
         .reviews {
@@ -166,7 +154,7 @@
                     width: 85px;
                 }
 
-                &:last-child {
+                &:nth-child(4) {
                     width: 40%;
                 }
             }

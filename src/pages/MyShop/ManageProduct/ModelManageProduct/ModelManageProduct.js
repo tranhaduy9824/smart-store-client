@@ -3,6 +3,8 @@ import styles from './ModelManageProduct.module.scss';
 import { useContext, useEffect, useState } from 'react';
 import WrapperModel from '~/components/WrapperModel';
 import { CategoryContext } from '~/context/CategoryContext';
+import { ProductContext } from '~/context/ProductContext';
+import { AuthContext } from '~/context/AuthContext';
 
 const cx = classNames.bind(styles);
 
@@ -18,7 +20,9 @@ function ModelManageProduct({ productEdit, showEditProduct, setShowEditProduct }
     const [shippingCost, setShippingCost] = useState(0);
     const [inStock, setInStock] = useState(true);
 
+    const { user } = useContext(AuthContext);
     const { categories } = useContext(CategoryContext);
+    const { updateProduct, addProduct } = useContext(ProductContext);
 
     useEffect(() => {
         setName(productEdit?.name || '');
@@ -30,23 +34,82 @@ function ModelManageProduct({ productEdit, showEditProduct, setShowEditProduct }
         setCategory(productEdit?.category || '');
         setCategorySub(productEdit?.categorySub || '');
         setShippingCost(productEdit?.shippingCost || 0);
-        setInStock(productEdit?.inStock || true);
+        setInStock(productEdit?.inStock);
     }, [productEdit]);
 
     const handlePhotoChange = (e) => {
         const files = Array.from(e.target.files);
-        const validPhotos = files.filter((file) => file.type.startsWith('image/'));
+        const validPhotos = files.filter((file) => file instanceof Blob && file.type.startsWith('image/'));
         setPhotos(validPhotos);
     };
 
     const handleVideoChange = (e) => {
         const file = e.target.files[0];
-        if (file && file.type === 'video/mp4') {
+        if (file && file instanceof Blob && file.type === 'video/mp4') {
             setVideo(file);
         } else {
             setVideo(null);
         }
     };
+
+    const handleUpdateProduct = async () => {
+        if (productEdit) {
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('des', description);
+            formData.append('price', price);
+            formData.append('sale', sale);
+            formData.append('category', category);
+            formData.append('categorySub', categorySub);
+            formData.append('shippingCost', shippingCost);
+            formData.append('inStock', inStock);
+
+            photos.forEach((photo) => formData.append('photos', photo));
+            if (video) {
+                formData.append('video', video);
+            }
+
+            await updateProduct(productEdit._id, formData, user?.token);
+            setShowEditProduct(false);
+            setPhotos([]);
+        }
+    };
+
+    const handleAddProduct = async () => {
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('des', description);
+        formData.append('price', price);
+        formData.append('sale', sale);
+        formData.append('category', category);
+        formData.append('categorySub', categorySub);
+        formData.append('shippingCost', shippingCost);
+        formData.append('inStock', inStock);
+
+        photos.forEach((photo) => formData.append('photos', photo));
+        if (video) {
+            formData.append('video', video);
+        }
+
+        await addProduct(formData, user?.token);
+        setShowEditProduct(false);
+        setPhotos([]);
+    };
+
+    useEffect(() => {
+        return () => {
+            photos.forEach((photo) => {
+                if (photo instanceof Blob) {
+                    URL.revokeObjectURL(photo);
+                }
+            });
+            if (video && video instanceof Blob) {
+                URL.revokeObjectURL(video);
+            }
+        };
+    }, [photos, video]);
+
+    const listPhoto = photos.length > 0 ? photos : productEdit?.files?.photos || [];
 
     return (
         <WrapperModel
@@ -54,7 +117,7 @@ function ModelManageProduct({ productEdit, showEditProduct, setShowEditProduct }
             onClose={() => setShowEditProduct(false)}
             classNameContent={cx('model-edit-product')}
         >
-            <h2>Edit Product</h2>
+            <h2>{productEdit ? 'Edit Product' : 'Add Product'}</h2>
             <div className={cx('info')}>
                 <div className={cx('item-info')}>
                     <label htmlFor="name">Tên</label>
@@ -69,31 +132,24 @@ function ModelManageProduct({ productEdit, showEditProduct, setShowEditProduct }
                     ></textarea>
                 </div>
                 <div className={cx('item-info')}>
-                    <label htmlFor="price">Giá</label>
+                    <label htmlFor="price">Giá (đ)</label>
                     <input type="number" id="price" value={price} onChange={(e) => setPrice(e.target.value)} />
                 </div>
                 <div className={cx('item-info')}>
-                    <label htmlFor="sale">Giảm giá</label>
+                    <label htmlFor="sale">Giảm giá (%)</label>
                     <input type="number" id="sale" value={sale} onChange={(e) => setSale(e.target.value)} />
                 </div>
                 <div className={cx('item-info')}>
                     <label htmlFor="photos">Ảnh</label>
                     <div className={cx('photo-preview')}>
-                        {photos.map((photo, index) => (
-                            <div key={index} className={cx('photo-item')}>
-                                <img src={photo} alt={`Ảnh ${index}`} />
-                                <button
-                                    className={cx('remove-btn')}
-                                    onClick={() => {
-                                        const newPhotos = [...photos];
-                                        newPhotos.splice(index, 1);
-                                        setPhotos(newPhotos);
-                                    }}
-                                >
-                                    x
-                                </button>
-                            </div>
-                        ))}
+                        {listPhoto.map((photo, index) => {
+                            const photoURL = photo instanceof Blob ? URL.createObjectURL(photo) : photo;
+                            return (
+                                <div key={index} className={cx('photo-item')}>
+                                    <img src={photoURL} alt={`Ảnh ${index}`} />
+                                </div>
+                            );
+                        })}
                     </div>
                     <input type="file" id="photos" multiple accept="image/*" onChange={handlePhotoChange} />
                 </div>
@@ -102,10 +158,7 @@ function ModelManageProduct({ productEdit, showEditProduct, setShowEditProduct }
                     <div className={cx('video-preview')}>
                         {video && (
                             <div className={cx('video-item')}>
-                                <video src={video} controls />
-                                <button className={cx('remove-btn')} onClick={() => setVideo(null)}>
-                                    x
-                                </button>
+                                <video src={video instanceof Blob ? URL.createObjectURL(video) : video} controls />
                             </div>
                         )}
                         <input type="file" id="video" accept="video/mp4" onChange={handleVideoChange} />
@@ -136,7 +189,7 @@ function ModelManageProduct({ productEdit, showEditProduct, setShowEditProduct }
                     </select>
                 </div>
                 <div className={cx('item-info')}>
-                    <label htmlFor="shippingCost">Chi phí vận chuyển</label>
+                    <label htmlFor="shippingCost">Phí vận chuyển</label>
                     <input
                         type="number"
                         id="shippingCost"
@@ -145,7 +198,7 @@ function ModelManageProduct({ productEdit, showEditProduct, setShowEditProduct }
                     />
                 </div>
                 <div className={cx('item-info')}>
-                    <label htmlFor="inStock">Trong kho</label>
+                    <label htmlFor="inStock">Còn hàng</label>
                     <input
                         type="checkbox"
                         id="inStock"
@@ -154,11 +207,9 @@ function ModelManageProduct({ productEdit, showEditProduct, setShowEditProduct }
                     />
                 </div>
             </div>
-            {productEdit ? (
-                <div className={cx('save-btn')}>Lưu</div>
-            ) : (
-                <div className={cx('save-btn')}>Thêm sản phẩm</div>
-            )}
+            <div className={cx('save-btn')} onClick={productEdit ? handleUpdateProduct : handleAddProduct}>
+                {productEdit ? 'Lưu' : 'Thêm sản phẩm'}
+            </div>
         </WrapperModel>
     );
 }

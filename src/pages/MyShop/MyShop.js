@@ -22,7 +22,6 @@ const cx = classNames.bind(styles);
 function MyShop() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
-    const [productShop, setProductShop] = useState([]);
     const [showManageOrder, setShowManageOrder] = useState(true);
     const [showCustomerCare, setShowCustomerCare] = useState(true);
     const [content, setContent] = useState('overview');
@@ -30,7 +29,7 @@ function MyShop() {
 
     const { user } = useContext(AuthContext);
     const { myShop, getMyShop } = useContext(ShopContext);
-    const { getProductsByShop } = useContext(ProductContext);
+    const { productsShop, getProductsMyShop } = useContext(ProductContext);
     const { ordersShop, getOrdersShop } = useContext(OrderContext);
 
     useEffect(() => {
@@ -40,8 +39,7 @@ function MyShop() {
                     prevMyShopId.current = myShop?._id;
                     await getMyShop(user.token);
                     await getOrdersShop(user.token);
-                    const productShop = await getProductsByShop(myShop?._id);
-                    setProductShop(productShop);
+                    await getProductsMyShop(user?.token);
                     setIsLoading(false);
                 }
             } catch (error) {
@@ -55,7 +53,7 @@ function MyShop() {
         return () => {
             window.scrollTo(0, 0);
         };
-    }, [user, getMyShop, getProductsByShop, myShop]);
+    }, [user, getMyShop, getProductsMyShop, myShop]);
 
     const prevMyShopId = useRef(null);
 
@@ -70,7 +68,7 @@ function MyShop() {
 
     return (
         <div className={cx('wrapper')}>
-            <InfoShop avatar={user?.user?.avatar} productShop={productShop} shop={myShop} myShop />
+            <InfoShop avatar={user?.user?.avatar} productShop={productsShop} shop={myShop} myShop />
             <div className={cx('box-content')}>
                 <div className={cx('controls')}>
                     <ul>
@@ -138,7 +136,7 @@ function MyShop() {
                 <div className={cx('content')}>
                     {content === 'overview' && (
                         <Overview
-                            productShop={productShop}
+                            productsShop={productsShop}
                             ordersShop={ordersShop}
                             myShop={myShop}
                             setOrderStatus={setOrderStatus}
@@ -146,10 +144,12 @@ function MyShop() {
                         />
                     )}
                     {content === 'edit-shop' && <EditShop myShop={myShop} />}
-                    {content === 'manage-order' && <ManageOrder myShop={myShop} ordersShop={ordersShop} orderStatus={orderStatus} />}
-                    {content === 'manage-product' && <ManageProduct />}
-                    {content === 'manage-review' && <ManageReview />}
-                    {content === 'balance' && <Balance />}
+                    {content === 'manage-order' && (
+                        <ManageOrder myShop={myShop} ordersShop={ordersShop} orderStatus={orderStatus} />
+                    )}
+                    {content === 'manage-product' && <ManageProduct productsShop={productsShop} />}
+                    {content === 'manage-review' && <ManageReview myShop={myShop} ordersShop={ordersShop} />}
+                    {content === 'balance' && <Balance ordersShop={ordersShop} />}
                 </div>
             </div>
         </div>

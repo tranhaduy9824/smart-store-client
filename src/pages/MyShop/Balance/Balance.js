@@ -1,17 +1,33 @@
 // Balance.js
 import classNames from 'classnames/bind';
 import styles from './Balance.module.scss';
+import { useEffect, useState } from 'react';
+import { formatPrice } from '~/handle/formatPrice';
 
 const cx = classNames.bind(styles);
 
-function Balance() {
+function Balance({ ordersShop }) {
+    const [balance, setBalance] = useState(0);
+
+    useEffect(() => {
+        if (ordersShop) {
+            const initialBalance = ordersShop.reduce((acc, order) => {
+                if (order.allStatus === 'done') {
+                    return acc + order.totalPrice;
+                }
+                return acc;
+            }, 0);
+
+            setBalance(initialBalance);
+        }
+    }, [ordersShop]);
+
     return (
         <div className={cx('wrapper')}>
             <h2 className={cx('title')}>Số dư</h2>
             <div className={cx('balance-content')}>
                 <div className={cx('balance-amount')}>
-                    <span className={cx('amount')}>1,234,567</span>
-                    <span className={cx('currency')}>đ</span>
+                    <span className={cx('amount')}>{formatPrice(balance)}</span>
                 </div>
                 <button className={cx('withdraw-btn')}>Rút tiền</button>
             </div>

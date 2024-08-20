@@ -59,8 +59,23 @@ export const ReviewContextProvider = ({ children }) => {
         [user],
     );
 
+    const getReviewsByShopId = useCallback(
+        async (token = user?.token) => {
+            try {
+                const response = await getRequest('/review/my-shop', {}, token);
+                return response.reviews;
+            } catch (error) {
+                console.log(error);
+                dispatch(showAlert('Đã xảy ra lỗi, vui lòng thử lại sau'));
+            }
+        },
+        [dispatch],
+    );
+
     return (
-        <ReviewContext.Provider value={{ review, setReview, getReviewsByProductId, createReview, getReviewByOrder }}>
+        <ReviewContext.Provider
+            value={{ review, setReview, getReviewsByProductId, createReview, getReviewByOrder, getReviewsByShopId }}
+        >
             {children}
         </ReviewContext.Provider>
     );

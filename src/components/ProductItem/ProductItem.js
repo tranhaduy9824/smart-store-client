@@ -81,6 +81,7 @@ function ProductItem({ data = [], index, item, currentIndex = 0, numberSnippet =
                 >
                     <img src={item.files && item.files.photos[0]} alt="Image" />
                     {item?.sale > 0 && <div className={cx('sale')}>- {item?.sale}%</div>}
+                    {item?.inStock === false && <div className={cx('out-stock')}>Hết hàng</div>}
                 </div>
                 <div className={cx('content')}>
                     <h2 className={cx('name')}>
@@ -174,6 +175,7 @@ function ProductItem({ data = [], index, item, currentIndex = 0, numberSnippet =
                             className={cx('image-selected')}
                         />
                     )}
+                    {item?.inStock === false && <div className={cx('out-stock')}>Hết hàng</div>}
                     <div className={cx('list-image')}>
                         {item.files &&
                             [item.files.video && { type: 'video', src: item.files.video }, ...item.files.photos].map(

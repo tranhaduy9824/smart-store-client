@@ -111,7 +111,7 @@ function OrderItem({ myShop = false, data, status, hasConfirm, className }) {
                             Xác nhận
                         </div>
                     )}
-                    {data?.allStatus === 'wait_confirm' && data?.paymentMethod === 'digital_wallet' && (
+                    {data?.allStatus === 'wait_confirm' && data?.paymentMethod === 'digital_wallet' && !myShop && (
                         <div
                             className={cx('pay-btn')}
                             onClick={() => createPayment(data?.totalPrice, data?._id, user?.token)}

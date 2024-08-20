@@ -119,6 +119,22 @@
     }
 }
 
+.out-stock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35%;
+    height: 35%;
+    border-radius: 100%;
+    background-color: var(--color-times);
+    color: var(--white);
+    font-weight: 500;
+}
+
 .price {
     margin-top: 15px;
 
@@ -181,10 +197,19 @@
         border-radius: var(--border-radius);
 
         .box-image {
+            position: relative;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             gap: 20px;
+
+            .out-stock {
+                top: 10px;
+                left: 10px;
+                width: 85px;
+                height: 85px;
+                transform: none;
+            }
         }
 
         .video-selected {

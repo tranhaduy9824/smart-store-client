@@ -14,6 +14,21 @@
         height: max-content;
         top: 20px;
 
+        .out-stock {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 85px;
+            height: 85px;
+            border-radius: 100%;
+            background-color: var(--color-times);
+            color: var(--white);
+            font-weight: 500;
+        }
+
         .image-selected {
             width: 100%;
             height: auto;

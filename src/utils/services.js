@@ -47,15 +47,15 @@ export const deleteRequest = async (url, body, token = null) => {
     return data;
 };
 
-export const patchRequest = async (url, body, token = null) => {
+export const patchRequest = async (url, body, token = null, formData = false) => {
     const config = {
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': formData ? 'multipart/form-data' : 'application/json',
             Authorization: token ? `Bearer ${token}` : '',
         },
     };
 
-    const response = await axios.patch(url, JSON.stringify(body), config);
+    const response = await axios.patch(url, formData ? body : JSON.stringify(body), config);
 
     const data = await response.data;
 

@@ -5,7 +5,7 @@ import moment from 'moment';
 
 const cx = classNames.bind(styles);
 
-function Overview({ productShop = [], ordersShop = [], myShop, setOrderStatus, setContent }) {
+function Overview({ productsShop = [], ordersShop = [], myShop, setOrderStatus, setContent }) {
     const waitConfirmOrders = ordersShop.filter((order) =>
         order.items.some(
             (item) =>
@@ -28,8 +28,8 @@ function Overview({ productShop = [], ordersShop = [], myShop, setOrderStatus, s
     const doneOrders = ordersShop.filter((order) => order.allStatus === 'done').length;
     const cancelledOrders = ordersShop.filter((order) => order.allStatus === 'cancelled').length;
 
-    const notApprovedProducts = productShop.filter((product) => product.status === 'not approved').length;
-    const outOfStockProducts = productShop.filter((product) => !product.inStock).length;
+    const notApprovedProducts = productsShop.filter((product) => product.status === 'not approved').length;
+    const outOfStockProducts = productsShop.filter((product) => !product.inStock).length;
 
     const revenueData = Array.from({ length: 14 }, (_, i) => {
         const day = moment().subtract(i, 'days').format('DD/MM');

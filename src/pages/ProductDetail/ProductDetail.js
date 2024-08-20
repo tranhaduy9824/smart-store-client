@@ -151,6 +151,7 @@ function ProductDetail() {
                             className={cx('image-selected')}
                         />
                     )}
+                    {product?.inStock === false && <div className={cx('out-stock')}>Hết hàng</div>}
                     <div className={cx('list-image')}>
                         {product?.files &&
                             [
